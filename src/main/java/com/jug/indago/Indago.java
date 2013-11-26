@@ -106,7 +106,11 @@ public class Indago {
 	/**
 	 * Divider location of the horizontal SplitPane.
 	 */
-	public static int DIVIDER_LOCATION = 400;
+	public static int HORIZONTAL_DIVIDER_LOCATION = 400;
+	/**
+	 * Divider location of the horizontal SplitPane.
+	 */
+	public static int VERTICAL_DIVIDER_LOCATION = 300;
 	/**
 	 * The path to usually open JFileChoosers at (except for initial load
 	 * dialog).
@@ -137,7 +141,8 @@ public class Indago {
 		GUI_POS_Y = Integer.parseInt( props.getProperty( "GUI_POS_Y", Integer.toString( DEFAULT_GUI_POS_X ) ) );
 		GUI_WIDTH = Integer.parseInt( props.getProperty( "GUI_WIDTH", Integer.toString( GUI_WIDTH ) ) );
 		GUI_HEIGHT = Integer.parseInt( props.getProperty( "GUI_HEIGHT", Integer.toString( GUI_HEIGHT ) ) );
-		DIVIDER_LOCATION = Integer.parseInt( props.getProperty( "DIVIDER_LOCATION", Integer.toString( DIVIDER_LOCATION ) ) );
+		HORIZONTAL_DIVIDER_LOCATION = Integer.parseInt( props.getProperty( "HORIZONTAL_DIVIDER_LOCATION", Integer.toString( HORIZONTAL_DIVIDER_LOCATION ) ) );
+		VERTICAL_DIVIDER_LOCATION = Integer.parseInt( props.getProperty( "VERTICAL_DIVIDER_LOCATION", Integer.toString( VERTICAL_DIVIDER_LOCATION ) ) );
 		// Iterate over all currently attached monitors and check if screen position is actually possible,
 		// otherwise fall back to the DEFAULT values and ignore the ones coming from the properties-file.
 		boolean pos_ok = false;
@@ -179,7 +184,35 @@ public class Indago {
 	 *            the JFrame containing the MotherMachine.
 	 */
 	private void initMainWindow( final JFrame guiFrame ) {
+		initConsolePane();
+
+		// Set window-closing action...
+		guiFrame.addWindowListener( new WindowAdapter() {
+
+			@Override
+			public void windowClosing( final WindowEvent we ) {
+				saveParams();
+				System.exit( 0 );
+			}
+		} );
+//		final java.net.URL url = Indago.class.getResource( "gui/media/IconIndago128.png" );
+//		final Toolkit kit = Toolkit.getDefaultToolkit();
+//		final Image img = kit.createImage( url );
+//		if ( !OSValidator.isMac() ) {
+//			guiFrame.setIconImage( img );
+//		}
+//		if ( OSValidator.isMac() ) {
+//			Application.getApplication().setDockIconImage( img );
+//		}
+	}
+
+	/**
+	 * Initializes the console and bends stdio and stderr to it...
+	 */
+	public void initConsolePane() {
 		this.txtConsole = new JTextArea();
+
+		this.txtConsole.append( Indago.getAboutString() );
 
 		this.consolePane = new JScrollPane( txtConsole );
 		consolePane.setBorder( BorderFactory.createEmptyBorder( 0, 15, 0, 0 ) );
@@ -231,25 +264,13 @@ public class Indago {
 		// Bend stdout and stderr to console...
 		System.setOut( new PrintStream( out, true ) );
 		System.setErr( new PrintStream( err, true ) );
+	}
 
-		// Set window-closing action...
-		guiFrame.addWindowListener( new WindowAdapter() {
-
-			@Override
-			public void windowClosing( final WindowEvent we ) {
-				saveParams();
-				System.exit( 0 );
-			}
-		} );
-//		final java.net.URL url = Indago.class.getResource( "gui/media/IconIndago128.png" );
-//		final Toolkit kit = Toolkit.getDefaultToolkit();
-//		final Image img = kit.createImage( url );
-//		if ( !OSValidator.isMac() ) {
-//			guiFrame.setIconImage( img );
-//		}
-//		if ( OSValidator.isMac() ) {
-//			Application.getApplication().setDockIconImage( img );
-//		}
+	/**
+	 * @return A String containing basic Information about Indago.
+	 */
+	private static String getAboutString() {
+		return "- - - - - - - - - - - - - - - - - - -\nIndago V1.0 using Influit V1.0\nAll systems up and running... enjoy!\n- - - - - - - - - - - - - - - - - - -\n\n";
 	}
 
 	private void updateConsoleTextArea( final String text ) {
@@ -323,13 +344,15 @@ public class Indago {
 			GUI_POS_Y = loc.y;
 			GUI_WIDTH = guiFrame.getWidth();
 			GUI_HEIGHT = guiFrame.getHeight();
-			DIVIDER_LOCATION = gui.getDividerLocation();
+			HORIZONTAL_DIVIDER_LOCATION = gui.getHorizontalDividerLocation();
+			VERTICAL_DIVIDER_LOCATION = gui.getVerticalDividerLocation();
 
 			props.setProperty( "GUI_POS_X", Integer.toString( GUI_POS_X ) );
 			props.setProperty( "GUI_POS_Y", Integer.toString( GUI_POS_Y ) );
 			props.setProperty( "GUI_WIDTH", Integer.toString( GUI_WIDTH ) );
 			props.setProperty( "GUI_HEIGHT", Integer.toString( GUI_HEIGHT ) );
-			props.setProperty( "DIVIDER_LOCATION", Integer.toString( DIVIDER_LOCATION ) );
+			props.setProperty( "HORIZONTAL_DIVIDER_LOCATION", Integer.toString( HORIZONTAL_DIVIDER_LOCATION ) );
+			props.setProperty( "VERTICAL_DIVIDER_LOCATION", Integer.toString( VERTICAL_DIVIDER_LOCATION ) );
 
 			props.store( out, "Indago properties" );
 		} catch ( final Exception e ) {

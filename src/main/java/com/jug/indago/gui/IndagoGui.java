@@ -38,9 +38,13 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 	private final IndagoModel model;
 
 	/**
-	 * The hirzontal JSplitPane.
+	 * The horizontal JSplitPane.
 	 */
-	private JSplitPane splitPane;
+	private JSplitPane horizontalSplitPane;
+	/**
+	 * The vertical JSplitPane.
+	 */
+	private JSplitPane verticalSplitPane;
 
 	/**
 	 * The <code>InfluitPanel</code> hosts the data-flow diagram.
@@ -59,6 +63,7 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 	 */
 	private JTabbedPane tabsViewer;
 
+
 	/**
 	 * @param model
 	 */
@@ -73,7 +78,6 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 	 */
 	private void buildGui() {
 		this.setLayout( new BorderLayout() );
-		final JPanel panelLeft = new JPanel( new BorderLayout() );
 
 		influitPanel = new InfluitPanel( model );
 		tabsProps = new JTabbedPane();
@@ -81,18 +85,23 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 		tabsViewer = new JTabbedPane();
 		tabsViewer.add( "Console", model.getConsole() );
 
-		panelLeft.add( influitPanel, BorderLayout.NORTH );
-		panelLeft.add( tabsProps, BorderLayout.CENTER );
+		verticalSplitPane = new JSplitPane( JSplitPane.VERTICAL_SPLIT, influitPanel, tabsProps );
+		verticalSplitPane.setOneTouchExpandable( true );
+		verticalSplitPane.setDividerLocation( Indago.VERTICAL_DIVIDER_LOCATION );
 
-		splitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, panelLeft, tabsViewer );
-		splitPane.setOneTouchExpandable( true );
-		splitPane.setDividerLocation( Indago.DIVIDER_LOCATION );
+		horizontalSplitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, verticalSplitPane, tabsViewer );
+		horizontalSplitPane.setOneTouchExpandable( true );
+		horizontalSplitPane.setDividerLocation( Indago.HORIZONTAL_DIVIDER_LOCATION );
 
-		this.add( splitPane, BorderLayout.CENTER );
+		this.add( horizontalSplitPane, BorderLayout.CENTER );
 	}
 
-	public int getDividerLocation() {
-		return this.splitPane.getDividerLocation();
+	public int getHorizontalDividerLocation() {
+		return this.horizontalSplitPane.getDividerLocation();
+	}
+
+	public int getVerticalDividerLocation() {
+		return this.verticalSplitPane.getDividerLocation();
 	}
 
 	/**
