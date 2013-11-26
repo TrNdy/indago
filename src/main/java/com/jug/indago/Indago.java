@@ -16,11 +16,17 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Properties;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 import com.jug.indago.gui.IndagoGui;
 import com.jug.indago.model.IndagoModel;
@@ -52,6 +58,14 @@ public class Indago {
 	 * The IndagoGui.
 	 */
 	private static IndagoGui gui;
+	/**
+	 * The Pane that is used as console for this app.
+	 */
+	private JScrollPane consolePane;
+	/**
+	 * The JTextArea that hosts the console text.
+	 */
+	private JTextArea txtConsole;
 
 	/**
 	 * Properties to configure app (loaded and saved to properties file!).
@@ -165,6 +179,60 @@ public class Indago {
 	 *            the JFrame containing the MotherMachine.
 	 */
 	private void initMainWindow( final JFrame guiFrame ) {
+		this.txtConsole = new JTextArea();
+
+		this.consolePane = new JScrollPane( txtConsole );
+		consolePane.setBorder( BorderFactory.createEmptyBorder( 0, 15, 0, 0 ) );
+
+		final OutputStream out = new OutputStream() {
+
+			private final PrintStream original = new PrintStream( System.out );
+
+			@Override
+			public void write( final int b ) throws IOException {
+				updateConsoleTextArea( String.valueOf( ( char ) b ) );
+				original.print( String.valueOf( ( char ) b ) );
+			}
+
+			@Override
+			public void write( final byte[] b, final int off, final int len ) throws IOException {
+				updateConsoleTextArea( new String( b, off, len ) );
+				original.print( new String( b, off, len ) );
+			}
+
+			@Override
+			public void write( final byte[] b ) throws IOException {
+				write( b, 0, b.length );
+			}
+		};
+
+		final OutputStream err = new OutputStream() {
+
+			private final PrintStream original = new PrintStream( System.out );
+
+			@Override
+			public void write( final int b ) throws IOException {
+				updateConsoleTextArea( String.valueOf( ( char ) b ) );
+				original.print( String.valueOf( ( char ) b ) );
+			}
+
+			@Override
+			public void write( final byte[] b, final int off, final int len ) throws IOException {
+				updateConsoleTextArea( new String( b, off, len ) );
+				original.print( new String( b, off, len ) );
+			}
+
+			@Override
+			public void write( final byte[] b ) throws IOException {
+				write( b, 0, b.length );
+			}
+		};
+
+		// Bend stdout and stderr to console...
+		System.setOut( new PrintStream( out, true ) );
+		System.setErr( new PrintStream( err, true ) );
+
+		// Set window-closing action...
 		guiFrame.addWindowListener( new WindowAdapter() {
 
 			@Override
@@ -182,6 +250,23 @@ public class Indago {
 //		if ( OSValidator.isMac() ) {
 //			Application.getApplication().setDockIconImage( img );
 //		}
+	}
+
+	private void updateConsoleTextArea( final String text ) {
+		SwingUtilities.invokeLater( new Runnable() {
+
+			@Override
+			public void run() {
+				txtConsole.append( text );
+			}
+		} );
+	}
+
+	/**
+	 * @return
+	 */
+	public JScrollPane getConsole() {
+		return consolePane;
 	}
 
 	/**

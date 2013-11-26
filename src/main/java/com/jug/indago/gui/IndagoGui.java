@@ -79,7 +79,7 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 		tabsProps = new JTabbedPane();
 		tabsProps.add( "None", new JButton( "no props" ) );
 		tabsViewer = new JTabbedPane();
-		tabsViewer.add( "None", new JButton( "no viewers" ) );
+		tabsViewer.add( "Console", model.getConsole() );
 
 		panelLeft.add( influitPanel, BorderLayout.NORTH );
 		panelLeft.add( tabsProps, BorderLayout.CENTER );

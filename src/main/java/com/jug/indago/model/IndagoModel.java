@@ -5,6 +5,8 @@ package com.jug.indago.model;
 
 import ij.ImagePlus;
 
+import javax.swing.JScrollPane;
+
 import com.jug.indago.Indago;
 
 
@@ -42,6 +44,13 @@ public class IndagoModel {
 	 */
 	public void setImgPlus( final ImagePlus imgPlus ) {
 		this.imgPlus = imgPlus;
+	}
+
+	/**
+	 * @return the console built in Indago main.
+	 */
+	public JScrollPane getConsole() {
+		return main.getConsole();
 	}
 
 }
