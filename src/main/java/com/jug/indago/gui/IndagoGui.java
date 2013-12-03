@@ -7,11 +7,13 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -79,7 +81,8 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 	private void buildGui() {
 		this.setLayout( new BorderLayout() );
 
-		influitPanel = new InfluitPanel( model );
+		influitPanel = new InfluitPanel( model ); // TODO eventually the InfluitPanel should be free of Indago-related stuff...
+		influitPanel.setBorder( BorderFactory.createBevelBorder( BevelBorder.RAISED ) );
 		tabsProps = new JTabbedPane();
 		tabsProps.add( "None", new JButton( "no props" ) );
 		tabsViewer = new JTabbedPane();
