@@ -8,6 +8,11 @@ import ij.ImagePlus;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.scijava.plugin.Menu;
+import org.scijava.plugin.Parameter;
+import org.scijava.plugin.Plugin;
+
+import com.jug.indago.gui.menu.MenuConstants;
 import com.jug.indago.influit.data.GenericInfluitDatum;
 import com.jug.indago.influit.data.InfluitDatum;
 import com.jug.indago.influit.exception.InfluitFormatException;
@@ -17,12 +22,21 @@ import com.jug.indago.influit.nodes.InfluitNode;
 /**
  * @author jug
  */
+@Plugin( type = ImagePlusNode.class,
+menu = {
+	@Menu(label = MenuConstants.NODES_LABEL, weight = MenuConstants.NODES_WEIGHT,
+		mnemonic = MenuConstants.NODES_MNEMONIC),
+	@Menu(label = "ImagePlusNode", weight = 1, mnemonic = 'i', accelerator = "^I") } )
 public class ImagePlusNode implements InfluitNode {
 
-	private final ImagePlus imp;
+	@Parameter
+	private ImagePlus imp;
 
 	public ImagePlusNode( final ImagePlus imp ) {
 		this.imp = imp;
+	}
+
+	public ImagePlusNode() {
 	}
 
 	/**
