@@ -8,21 +8,23 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Shape;
+import java.util.List;
 
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
 import org.apache.commons.collections15.functors.ChainedTransformer;
 import org.apache.commons.collections15.functors.ConstantTransformer;
+import org.scijava.plugin.PluginInfo;
 
-import com.jug.indago.influit.edges.GenericInfluitEdge;
+import com.jug.indago.GetNodes;
+import com.jug.indago.gui.menu.MenuConstants;
 import com.jug.indago.influit.edges.InfluitEdge;
-import com.jug.indago.influit.nodes.FilteredComponentTreeNode;
 import com.jug.indago.influit.nodes.InfluitNode;
-import com.jug.indago.influit.nodes.ij.ImagePlusNode;
-import com.jug.indago.influit.nodes.imglib2.HyperSlicerLoopNode;
 import com.jug.indago.influit.transformer.InfluitNodeShapeRenderer;
-import com.jug.indago.model.IndagoModel;
 
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -47,26 +49,32 @@ public class InfluitPanel extends JPanel {
 
 	private final Graph< InfluitNode, InfluitEdge > g;
 
+	private List< PluginInfo< InfluitNode >> nodeInfos;
+
+	private JMenuBar menuBar;
+
+	private JMenu menuFile;
+
+	private JMenu menuEdit;
+
+	private JMenu menuNodes;
+
+	private JMenu menuWindow;
+
+	private JMenu menuHelp;
+
 	// TODO This is only an example and the InfluitPanel should of course be unrelated to Indago in any way!!!
-	public InfluitPanel(final IndagoModel model) {
+	public InfluitPanel( final Dimension preferredSize, final boolean showMenu ) {
 		super( new BorderLayout() );
+
+		loadPlugins();
+		buildMenu();
+		if ( showMenu ) {
+			this.add( menuBar, BorderLayout.NORTH );
+		}
 
 		this.g = new DirectedSparseMultigraph< InfluitNode, InfluitEdge >();
 
-		final ImagePlusNode imgPlusNode = new ImagePlusNode( model.getImgPlus() );
-		final HyperSlicerLoopNode slicerLoopNode = new HyperSlicerLoopNode ( 4 );
-		final FilteredComponentTreeNode compTreeNode = new FilteredComponentTreeNode ();
-
-		final GenericInfluitEdge< ImagePlusNode, HyperSlicerLoopNode > edge1 = new GenericInfluitEdge< ImagePlusNode, HyperSlicerLoopNode >( imgPlusNode, slicerLoopNode );
-		final GenericInfluitEdge< HyperSlicerLoopNode, FilteredComponentTreeNode > edge2 = new GenericInfluitEdge< HyperSlicerLoopNode, FilteredComponentTreeNode >( slicerLoopNode, compTreeNode );
-
-		g.addVertex( imgPlusNode );
-		g.addVertex( slicerLoopNode );
-		g.addVertex( compTreeNode );
-		g.addEdge( edge1, imgPlusNode, slicerLoopNode );
-		g.addEdge( edge2, slicerLoopNode, compTreeNode );
-
-		final Dimension preferredSize = new Dimension( 400, 400 );
 		final Layout< InfluitNode, InfluitEdge > layout = new FRLayout< InfluitNode, InfluitEdge >( this.g );
 
 		final VisualizationModel< InfluitNode, InfluitEdge > visualizationModel = new DefaultVisualizationModel< InfluitNode, InfluitEdge >( layout, preferredSize );
@@ -111,6 +119,48 @@ public class InfluitPanel extends JPanel {
 	}
 
 	/**
+	 * Builds the menu structure that can be shown as part of the panel or can
+	 * be used within the menu of the enclosing GUI.
+	 */
+	private void buildMenu() {
+		this.menuBar = new JMenuBar();
+		this.menuFile = new JMenu( MenuConstants.FILE_LABEL );
+		this.menuEdit = new JMenu( MenuConstants.EDIT_LABEL );
+		this.menuNodes = new JMenu( MenuConstants.NODES_LABEL );
+		this.menuWindow = new JMenu( MenuConstants.WINDOW_LABEL );
+		this.menuHelp = new JMenu( MenuConstants.HELP_LABEL );
+		menuBar.add( menuFile );
+		menuBar.add( menuEdit );
+		menuBar.add( menuNodes );
+		menuBar.add( menuWindow );
+		menuBar.add( menuHelp );
+
+		for ( final PluginInfo< InfluitNode > info : this.nodeInfos ) {
+//			InfluitNode plugin;
+//			try {
+//				plugin = info.createInstance();
+//			} catch ( final InstantiableException e ) {
+//				System.err.println( String.format( "Plugin could not be instatiated -- %s", info.getClassName() ) );
+//				e.printStackTrace();
+//			}
+//			System.out.println( info );
+//			System.out.println( info.getLabel() );
+			menuNodes.add( new JMenuItem( info.getLabel() ) );
+		}
+
+//		final SwingJMenuBarCreator menuBarCreator = new SwingJMenuBarCreator();
+//		menuBarCreator.createMenus( root, this.menuBar );
+	}
+
+	/**
+	 * Loads all plugins of type InfluitNode and stores a List<PluginInfo> named
+	 * <code>nodeInfos</code>.
+	 */
+	private void loadPlugins() {
+		this.nodeInfos = GetNodes.getInfluitNodePlugins();
+	}
+
+	/**
 	 * Controls the shape and size for each vertex.
 	 */
 	private final static class InfluitVertexShape< V extends InfluitNode, E extends InfluitEdge > extends AbstractVertexShapeTransformer< V > implements Transformer< V, Shape > {
@@ -149,5 +199,25 @@ public class InfluitPanel extends JPanel {
 		public Shape transform( final V v ) {
 			return factory.getRoundRectangle( v );
 		}
+	}
+
+	/**
+	 * @param node
+	 *            the InfluitNode to be added.
+	 */
+	public void addNode( final InfluitNode node ) {
+		this.g.addVertex( node );
+	}
+
+	/**
+	 * @param edge
+	 *            intance of InfluitEdge to be added.
+	 * @param nodeFrom
+	 *            the source node adjacent to <code>edge</code>.
+	 * @param nodeTo
+	 *            the target node adjacent to <code>edge</code>.
+	 */
+	public void addEdge( final InfluitEdge edge, final InfluitNode nodeFrom, final InfluitNode nodeTo ) {
+		this.g.addEdge( edge, nodeFrom, nodeTo );
 	}
 }

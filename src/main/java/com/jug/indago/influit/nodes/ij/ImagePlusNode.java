@@ -22,11 +22,11 @@ import com.jug.indago.influit.nodes.InfluitNode;
 /**
  * @author jug
  */
-@Plugin( type = ImagePlusNode.class,
+@Plugin( type = ImagePlusNode.class, label = "ImagePlus Source",
 menu = {
 	@Menu(label = MenuConstants.NODES_LABEL, weight = MenuConstants.NODES_WEIGHT,
 		mnemonic = MenuConstants.NODES_MNEMONIC),
-	@Menu(label = "ImagePlusNode", weight = 1, mnemonic = 'i', accelerator = "^I") } )
+    @Menu( label = "Load as ImagePlus", weight = 1, mnemonic = 'i', accelerator = "^i" ) } )
 public class ImagePlusNode implements InfluitNode {
 
 	@Parameter

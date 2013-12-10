@@ -4,6 +4,7 @@
 package com.jug.indago.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,6 +20,10 @@ import javax.swing.event.ChangeListener;
 
 import com.jug.indago.Indago;
 import com.jug.indago.influit.InfluitPanel;
+import com.jug.indago.influit.edges.GenericInfluitEdge;
+import com.jug.indago.influit.nodes.FilteredComponentTreeNode;
+import com.jug.indago.influit.nodes.ij.ImagePlusNode;
+import com.jug.indago.influit.nodes.imglib2.HyperSlicerLoopNode;
 import com.jug.indago.model.IndagoModel;
 
 
@@ -81,8 +86,23 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 	private void buildGui() {
 		this.setLayout( new BorderLayout() );
 
-		influitPanel = new InfluitPanel( model ); // TODO eventually the InfluitPanel should be free of Indago-related stuff...
+		influitPanel = new InfluitPanel( new Dimension( 400, 400 ), true );
 		influitPanel.setBorder( BorderFactory.createBevelBorder( BevelBorder.RAISED ) );
+
+		// @TODO this must be replaced at some point!
+		final ImagePlusNode imgPlusNode = new ImagePlusNode( model.getImgPlus() );
+		final HyperSlicerLoopNode slicerLoopNode = new HyperSlicerLoopNode( 4 );
+		final FilteredComponentTreeNode compTreeNode = new FilteredComponentTreeNode();
+
+		final GenericInfluitEdge< ImagePlusNode, HyperSlicerLoopNode > edge1 = new GenericInfluitEdge< ImagePlusNode, HyperSlicerLoopNode >( imgPlusNode, slicerLoopNode );
+		final GenericInfluitEdge< HyperSlicerLoopNode, FilteredComponentTreeNode > edge2 = new GenericInfluitEdge< HyperSlicerLoopNode, FilteredComponentTreeNode >( slicerLoopNode, compTreeNode );
+
+		influitPanel.addNode( imgPlusNode );
+		influitPanel.addNode( slicerLoopNode );
+		influitPanel.addNode( compTreeNode );
+		influitPanel.addEdge( edge1, imgPlusNode, slicerLoopNode );
+		influitPanel.addEdge( edge2, slicerLoopNode, compTreeNode );
+
 		tabsProps = new JTabbedPane();
 		tabsProps.add( "None", new JButton( "no props" ) );
 		tabsViewer = new JTabbedPane();
