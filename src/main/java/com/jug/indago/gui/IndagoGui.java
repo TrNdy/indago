@@ -21,8 +21,8 @@ import javax.swing.event.ChangeListener;
 import com.jug.indago.Indago;
 import com.jug.indago.influit.InfluitPanel;
 import com.jug.indago.influit.edges.GenericInfluitEdge;
-import com.jug.indago.influit.nodes.FilteredComponentTreeNode;
 import com.jug.indago.influit.nodes.ij.ImagePlusNode;
+import com.jug.indago.influit.nodes.imglib2.FilteredComponentTreeNode;
 import com.jug.indago.influit.nodes.imglib2.HyperSlicerLoopNode;
 import com.jug.indago.model.IndagoModel;
 
@@ -91,7 +91,7 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 
 		// @TODO this must be replaced at some point!
 		final ImagePlusNode imgPlusNode = new ImagePlusNode( model.getImgPlus() );
-		final HyperSlicerLoopNode slicerLoopNode = new HyperSlicerLoopNode( 4 );
+		final HyperSlicerLoopNode slicerLoopNode = new HyperSlicerLoopNode();
 		final FilteredComponentTreeNode compTreeNode = new FilteredComponentTreeNode();
 
 		final GenericInfluitEdge< ImagePlusNode, HyperSlicerLoopNode > edge1 = new GenericInfluitEdge< ImagePlusNode, HyperSlicerLoopNode >( imgPlusNode, slicerLoopNode );

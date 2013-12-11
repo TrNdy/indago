@@ -5,6 +5,8 @@ package com.jug.indago.influit.nodes.imglib2;
 
 import java.util.List;
 
+import org.scijava.plugin.Plugin;
+
 import com.jug.indago.influit.data.InfluitDatum;
 import com.jug.indago.influit.exception.InfluitFormatException;
 import com.jug.indago.influit.nodes.InfluitNode;
@@ -13,6 +15,7 @@ import com.jug.indago.influit.nodes.InfluitNode;
 /**
  * @author jug
  */
+@Plugin( type = HyperSlicerLoopNode.class, label = "HyperSlicer Loop", menuPath = "Loops" )
 public class HyperSlicerLoopNode implements InfluitNode {
 
 	/**
@@ -24,10 +27,9 @@ public class HyperSlicerLoopNode implements InfluitNode {
 	}
 
 	/**
-	 * @param dimension
-	 *            the dimension to HyperSlice
+	 *
 	 */
-	public HyperSlicerLoopNode( final int dimension ) {
+	public HyperSlicerLoopNode() {
 		// TODO Auto-generated constructor stub
 	}
 

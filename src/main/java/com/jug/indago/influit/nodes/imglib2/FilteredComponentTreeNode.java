@@ -1,17 +1,21 @@
 /**
  *
  */
-package com.jug.indago.influit.nodes;
+package com.jug.indago.influit.nodes.imglib2;
 
 import java.util.List;
 
+import org.scijava.plugin.Plugin;
+
 import com.jug.indago.influit.data.InfluitDatum;
 import com.jug.indago.influit.exception.InfluitFormatException;
+import com.jug.indago.influit.nodes.InfluitNode;
 
 
 /**
  * @author jug
  */
+@Plugin( type = FilteredComponentTreeNode.class, label = "Filtered Comp.Tree", menuPath = "Segmentation Hypotheses" )
 public class FilteredComponentTreeNode implements InfluitNode {
 
 	/**

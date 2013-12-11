@@ -8,11 +8,9 @@ import ij.ImagePlus;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scijava.plugin.Menu;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-import com.jug.indago.gui.menu.MenuConstants;
 import com.jug.indago.influit.data.GenericInfluitDatum;
 import com.jug.indago.influit.data.InfluitDatum;
 import com.jug.indago.influit.exception.InfluitFormatException;
@@ -22,11 +20,7 @@ import com.jug.indago.influit.nodes.InfluitNode;
 /**
  * @author jug
  */
-@Plugin( type = ImagePlusNode.class, label = "ImagePlus Source",
-menu = {
-	@Menu(label = MenuConstants.NODES_LABEL, weight = MenuConstants.NODES_WEIGHT,
-		mnemonic = MenuConstants.NODES_MNEMONIC),
-    @Menu( label = "Load as ImagePlus", weight = 1, mnemonic = 'i', accelerator = "^i" ) } )
+@Plugin( type = ImagePlusNode.class, label = "ImagePlus Source", menuPath = "Data Sources>ImagePlus Source" )
 public class ImagePlusNode implements InfluitNode {
 
 	@Parameter
@@ -44,7 +38,11 @@ public class ImagePlusNode implements InfluitNode {
 	 */
 	@Override
 	public String toString() {
-		return imp.getTitle();
+		if ( imp == null ) {
+			return "ImgPlus: no file loaded";
+		} else {
+			return "ImgPlus: " + imp.getTitle();
+		}
 	}
 
 	/**
