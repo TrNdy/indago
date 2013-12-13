@@ -21,6 +21,7 @@ import javax.swing.event.ChangeListener;
 import com.jug.indago.Indago;
 import com.jug.indago.influit.InfluitPanel;
 import com.jug.indago.influit.edges.GenericInfluitEdge;
+import com.jug.indago.influit.exception.NoCommonInfluitFormatException;
 import com.jug.indago.influit.nodes.ij.ImagePlusNode;
 import com.jug.indago.influit.nodes.imglib2.FilteredComponentTreeNode;
 import com.jug.indago.influit.nodes.imglib2.HyperSlicerLoopNode;
@@ -97,11 +98,15 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 		final GenericInfluitEdge< ImagePlusNode, HyperSlicerLoopNode > edge1 = new GenericInfluitEdge< ImagePlusNode, HyperSlicerLoopNode >( imgPlusNode, slicerLoopNode );
 		final GenericInfluitEdge< HyperSlicerLoopNode, FilteredComponentTreeNode > edge2 = new GenericInfluitEdge< HyperSlicerLoopNode, FilteredComponentTreeNode >( slicerLoopNode, compTreeNode );
 
-		influitPanel.addNode( imgPlusNode );
-		influitPanel.addNode( slicerLoopNode );
-		influitPanel.addNode( compTreeNode );
-		influitPanel.addEdge( edge1, imgPlusNode, slicerLoopNode );
-		influitPanel.addEdge( edge2, slicerLoopNode, compTreeNode );
+		influitPanel.addNode( imgPlusNode, 100, 50 );
+		influitPanel.addNode( slicerLoopNode, 150, 150 );
+		influitPanel.addNode( compTreeNode, 200, 250 );
+		try {
+			influitPanel.addEdge( edge1, imgPlusNode, slicerLoopNode );
+			influitPanel.addEdge( edge2, slicerLoopNode, compTreeNode );
+		} catch ( final NoCommonInfluitFormatException e ) {
+			e.printStackTrace();
+		}
 
 		tabsProps = new JTabbedPane();
 		tabsProps.add( "None", new JButton( "no props" ) );

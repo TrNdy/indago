@@ -3,10 +3,14 @@
  */
 package com.jug.indago.influit.nodes.imglib2;
 
+import ij.ImagePlus;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.scijava.plugin.Plugin;
 
+import com.jug.indago.influit.data.GenericInfluitDatum;
 import com.jug.indago.influit.data.InfluitDatum;
 import com.jug.indago.influit.exception.InfluitFormatException;
 import com.jug.indago.influit.nodes.InfluitNode;
@@ -31,8 +35,9 @@ public class FilteredComponentTreeNode implements InfluitNode {
 	 */
 	@Override
 	public List< InfluitDatum > getSupportedInputFormats() {
-		// TODO Auto-generated method stub
-		return null;
+		final List< InfluitDatum > ret = new ArrayList< InfluitDatum >();
+		ret.add( new GenericInfluitDatum< ImagePlus >( new ImagePlus() ) );
+		return ret;
 	}
 
 	/**
@@ -40,8 +45,9 @@ public class FilteredComponentTreeNode implements InfluitNode {
 	 */
 	@Override
 	public List< InfluitDatum > getSupportedOutputFormats() {
-		// TODO Auto-generated method stub
-		return null;
+		final List< InfluitDatum > ret = new ArrayList< InfluitDatum >();
+		ret.add( new GenericInfluitDatum< ImagePlus >( new ImagePlus() ) );
+		return ret;
 	}
 
 	/**

@@ -3,6 +3,8 @@
  */
 package com.jug.indago.influit.edges;
 
+import java.util.List;
+
 import com.jug.indago.influit.data.InfluitDatum;
 
 /**
@@ -14,4 +16,6 @@ public interface InfluitEdge {
 	public String toString();
 
 	public InfluitDatum getFormat();
+
+	public List< InfluitDatum > getCommonFormats();
 }

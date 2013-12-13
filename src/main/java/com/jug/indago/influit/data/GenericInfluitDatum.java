@@ -7,7 +7,7 @@ package com.jug.indago.influit.data;
 /**
  * @author jug
  */
-public class GenericInfluitDatum<T> implements InfluitDatum {
+public class GenericInfluitDatum< T > implements InfluitDatum {
 
 	private T instance;
 

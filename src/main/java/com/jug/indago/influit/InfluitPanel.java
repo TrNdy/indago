@@ -7,6 +7,7 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,20 +25,24 @@ import org.scijava.InstantiableException;
 import org.scijava.plugin.PluginInfo;
 
 import com.jug.indago.GetNodes;
-import com.jug.indago.gui.menu.MenuConstants;
 import com.jug.indago.influit.edges.InfluitEdge;
+import com.jug.indago.influit.edges.InfluitEdgeFactory;
+import com.jug.indago.influit.exception.NoCommonInfluitFormatException;
 import com.jug.indago.influit.gui.dialog.AboutDialog;
+import com.jug.indago.influit.jung.visualization.control.InfluitPanelGraphMouse;
+import com.jug.indago.influit.menu.MenuConstants;
 import com.jug.indago.influit.nodes.InfluitNode;
+import com.jug.indago.influit.nodes.InfluitNodeVertexFactory;
 import com.jug.indago.influit.transformer.InfluitNodeShapeRenderer;
 
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.AbstractVertexShapeTransformer;
+import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.DefaultVertexLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.GradientVertexRenderer;
@@ -63,9 +68,9 @@ public class InfluitPanel extends JPanel implements ActionListener {
 	private JMenuItem menuItemFileLoad;
 	private JMenuItem menuItemFileSave;
 
-	private FRLayout< InfluitNode, InfluitEdge > jungLayout;
+	private StaticLayout< InfluitNode, InfluitEdge > jungLayout;
 	private InfluitNodeShapeRenderer nodeShapeRenderer;
-	private DefaultModalGraphMouse< InfluitNode, InfluitEdge > graphMouse;
+	private InfluitPanelGraphMouse graphMouse;
 	private DefaultVisualizationModel< InfluitNode, InfluitEdge > visualizationModel;
 	private VisualizationViewer< InfluitNode, InfluitEdge > visualizationViewer;
 
@@ -88,7 +93,7 @@ public class InfluitPanel extends JPanel implements ActionListener {
 	 * @param preferredSize
 	 */
 	public void initJungGraph( final Dimension preferredSize ) {
-		jungLayout = new FRLayout< InfluitNode, InfluitEdge >( this.g );
+		jungLayout = new StaticLayout< InfluitNode, InfluitEdge >( this.g );
 
 		visualizationModel = new DefaultVisualizationModel< InfluitNode, InfluitEdge >( jungLayout, preferredSize );
 		visualizationViewer = new VisualizationViewer< InfluitNode, InfluitEdge >( visualizationModel, preferredSize );
@@ -110,7 +115,8 @@ public class InfluitPanel extends JPanel implements ActionListener {
 		visualizationViewer.getRenderContext().setVertexShapeTransformer( nodeShapeRenderer );
 		visualizationViewer.getRenderContext().setVertexLabelRenderer( new DefaultVertexLabelRenderer( Color.red ) );
 		visualizationViewer.getRenderContext().setEdgeDrawPaintTransformer( new ConstantTransformer( Color.black ) );
-		visualizationViewer.getRenderContext().setEdgeStrokeTransformer( new ConstantTransformer( new BasicStroke( 2.5f ) ) );
+		visualizationViewer.getRenderContext().setEdgeStrokeTransformer( new ConstantTransformer( new BasicStroke( 1.8f ) ) );
+		visualizationViewer.getRenderContext().setEdgeShapeTransformer( new EdgeShape.CubicCurve< InfluitNode, InfluitEdge >() );
 
 		// customize the renderer
 		visualizationViewer.getRenderer().setVertexRenderer( new GradientVertexRenderer< InfluitNode, InfluitEdge >( Color.white, Color.white.darker(), false ) );
@@ -122,7 +128,7 @@ public class InfluitPanel extends JPanel implements ActionListener {
 		visualizationViewer.setVertexToolTipTransformer( new ToStringLabeller< InfluitNode >() );
 
 		// Create a graph mouse and add it to the visualization component
-		graphMouse = new DefaultModalGraphMouse< InfluitNode, InfluitEdge >();
+		graphMouse = new InfluitPanelGraphMouse( visualizationViewer.getRenderContext(), new InfluitNodeVertexFactory( this ), new InfluitEdgeFactory() );
 		graphMouse.setMode( ModalGraphMouse.Mode.TRANSFORMING );
 		visualizationViewer.setGraphMouse( graphMouse );
 		// Add the mouses mode key listener to work it needs to be added to the visualization component
@@ -170,7 +176,7 @@ public class InfluitPanel extends JPanel implements ActionListener {
 					InfluitNode instance;
 					try {
 						instance = info.createInstance();
-						addNode( instance );
+						addNode( instance, 75, 25 );
 						repaint();
 					} catch ( final InstantiableException e ) {
 						System.out.println( "ERROR: InfluitNode could not be instantiated!" );
@@ -227,6 +233,11 @@ public class InfluitPanel extends JPanel implements ActionListener {
 		this.g.addVertex( node );
 	}
 
+	public void addNode( final InfluitNode node, final int xPos, final int yPos ) {
+		addNode( node );
+		this.getJungLayout().setLocation( node, this.getJungVisualizationViewer().getRenderContext().getMultiLayerTransformer().inverseTransform( new Point( xPos, yPos ) ) );
+	}
+
 	/**
 	 * @param edge
 	 *            intance of InfluitEdge to be added.
@@ -234,9 +245,14 @@ public class InfluitPanel extends JPanel implements ActionListener {
 	 *            the source node adjacent to <code>edge</code>.
 	 * @param nodeTo
 	 *            the target node adjacent to <code>edge</code>.
+	 * @throws NoCommonInfluitFormatException
 	 */
-	public void addEdge( final InfluitEdge edge, final InfluitNode nodeFrom, final InfluitNode nodeTo ) {
-		this.g.addEdge( edge, nodeFrom, nodeTo );
+	public void addEdge( final InfluitEdge edge, final InfluitNode nodeFrom, final InfluitNode nodeTo ) throws NoCommonInfluitFormatException {
+		if ( edge.getFormat() != null ) {
+			this.g.addEdge( edge, nodeFrom, nodeTo );
+		} else {
+			throw new NoCommonInfluitFormatException( "Can not add InfluitEdge... no common data format could be found!" );
+		}
 	}
 
 	/**
@@ -253,5 +269,29 @@ public class InfluitPanel extends JPanel implements ActionListener {
 		if ( e.getSource().equals( this.menuItemFileSave ) ) {
 			// not yet implemented
 		}
+	}
+
+	/**
+	 * Returns a list of PluginInfo representing all InfluitNodes registered to
+	 * this InfluitPanel.
+	 *
+	 * @return the nodeInfos
+	 */
+	public List< PluginInfo< InfluitNode >> getNodeInfos() {
+		return nodeInfos;
+	}
+
+	/**
+	 * @return the visualizationViewer
+	 */
+	public VisualizationViewer< InfluitNode, InfluitEdge > getJungVisualizationViewer() {
+		return visualizationViewer;
+	}
+
+	/**
+	 * @return the jungLayout
+	 */
+	public StaticLayout< InfluitNode, InfluitEdge > getJungLayout() {
+		return jungLayout;
 	}
 }
