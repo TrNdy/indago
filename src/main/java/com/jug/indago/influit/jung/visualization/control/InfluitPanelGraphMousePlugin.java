@@ -8,6 +8,7 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -16,7 +17,9 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 import com.jug.indago.influit.edges.InfluitEdge;
 import com.jug.indago.influit.edges.InfluitEdgeFactory;
@@ -150,8 +153,12 @@ public class InfluitPanelGraphMousePlugin extends AbstractGraphMousePlugin imple
 				if ( vertex != null && startVertex != null ) {
 					final Graph< InfluitNode, InfluitEdge > graph = vv.getGraphLayout().getGraph();
 					final InfluitEdge edge = edgeFactory.createGenericInfluitEdge( startVertex, vertex );
-					graph.addEdge( edge, startVertex, vertex, edgeIsDirected );
-					vv.repaint();
+					if ( edge == null ) {
+						final Window frame = SwingUtilities.windowForComponent( e.getComponent() );
+						JOptionPane.showMessageDialog( frame, "No common data-formats could be determined.", "No Common Format", JOptionPane.ERROR_MESSAGE );
+					} else {
+						graph.addEdge( edge, startVertex, vertex, edgeIsDirected );
+					}
 				}
 			}
 			startVertex = null;
@@ -159,6 +166,7 @@ public class InfluitPanelGraphMousePlugin extends AbstractGraphMousePlugin imple
 			edgeIsDirected = EdgeType.UNDIRECTED;
 			vv.removePostRenderPaintable( edgePaintable );
 			vv.removePostRenderPaintable( arrowPaintable );
+			vv.repaint();
 		}
 	}
 

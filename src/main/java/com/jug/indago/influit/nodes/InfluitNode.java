@@ -8,6 +8,7 @@ import java.util.List;
 import org.scijava.plugin.SciJavaPlugin;
 
 import com.jug.indago.influit.data.InfluitDatum;
+import com.jug.indago.influit.data.InfluitFormatIdentifyer;
 import com.jug.indago.influit.exception.InfluitFormatException;
 
 /**
@@ -18,9 +19,9 @@ public interface InfluitNode extends SciJavaPlugin {
 	@Override
 	public String toString();
 
-	public List< String > getSupportedInputFormats();
+	public List< InfluitFormatIdentifyer > getSupportedInputFormats();
 
-	public List< String > getSupportedOutputFormats();
+	public List< InfluitFormatIdentifyer > getSupportedOutputFormats();
 
 	public boolean canEvaluate();
 

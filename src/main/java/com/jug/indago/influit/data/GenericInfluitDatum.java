@@ -15,11 +15,11 @@ public class GenericInfluitDatum< T > implements InfluitDatum {
 	 * Returns the hashCode of the class of the instance of T given during
 	 * construction.
 	 *
-	 * @see com.jug.indago.influit.data.InfluitDatum#getFormatUID()
+	 * @see com.jug.indago.influit.data.InfluitDatum#getFormatIdentifyer()
 	 */
 	@Override
-	public String getFormatUID() {
-		return "GenericInfluitDatum<" + instance.getClass().getName() + ">";
+	public InfluitFormatIdentifyer getFormatIdentifyer() {
+		return new InfluitFormatIdentifyer( "GenericInfluitDatum<" + instance.getClass().getName() + ">" );
 	}
 
 	/**

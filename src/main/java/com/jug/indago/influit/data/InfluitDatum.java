@@ -9,5 +9,5 @@ package com.jug.indago.influit.data;
  */
 public interface InfluitDatum {
 
-	public String getFormatUID();
+	public InfluitFormatIdentifyer getFormatIdentifyer();
 }

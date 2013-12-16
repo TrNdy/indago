@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
 
 import com.jug.indago.influit.data.GenericInfluitDatum;
 import com.jug.indago.influit.data.InfluitDatum;
+import com.jug.indago.influit.data.InfluitFormatIdentifyer;
 import com.jug.indago.influit.exception.InfluitFormatException;
 import com.jug.indago.influit.nodes.InfluitNode;
 
@@ -49,17 +50,17 @@ public class ImagePlusNode implements InfluitNode {
 	 * @see com.jug.indago.influit.nodes.InfluitNode#getSupportedInputFormats()
 	 */
 	@Override
-	public List< String > getSupportedInputFormats() {
-		return new ArrayList< String >();
+	public List< InfluitFormatIdentifyer > getSupportedInputFormats() {
+		return new ArrayList< InfluitFormatIdentifyer >();
 	}
 
 	/**
 	 * @see com.jug.indago.influit.nodes.InfluitNode#getSupportedOutputFormats()
 	 */
 	@Override
-	public List< String > getSupportedOutputFormats() {
-		final List< String > ret = new ArrayList< String >();
-		ret.add( new GenericInfluitDatum< ImagePlus >( new ImagePlus() ).getFormatUID() );
+	public List< InfluitFormatIdentifyer > getSupportedOutputFormats() {
+		final List< InfluitFormatIdentifyer > ret = new ArrayList< InfluitFormatIdentifyer >();
+		ret.add( new GenericInfluitDatum< ImagePlus >( new ImagePlus() ).getFormatIdentifyer() );
 		return ret;
 	}
 
