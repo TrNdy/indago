@@ -18,9 +18,9 @@ public interface InfluitNode extends SciJavaPlugin {
 	@Override
 	public String toString();
 
-	public List< InfluitDatum > getSupportedInputFormats();
+	public List< String > getSupportedInputFormats();
 
-	public List< InfluitDatum > getSupportedOutputFormats();
+	public List< String > getSupportedOutputFormats();
 
 	public boolean canEvaluate();
 

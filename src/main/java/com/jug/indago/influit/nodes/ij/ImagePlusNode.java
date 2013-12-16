@@ -49,17 +49,17 @@ public class ImagePlusNode implements InfluitNode {
 	 * @see com.jug.indago.influit.nodes.InfluitNode#getSupportedInputFormats()
 	 */
 	@Override
-	public List< InfluitDatum > getSupportedInputFormats() {
-		return new ArrayList< InfluitDatum >();
+	public List< String > getSupportedInputFormats() {
+		return new ArrayList< String >();
 	}
 
 	/**
 	 * @see com.jug.indago.influit.nodes.InfluitNode#getSupportedOutputFormats()
 	 */
 	@Override
-	public List< InfluitDatum > getSupportedOutputFormats() {
-		final List< InfluitDatum > ret = new ArrayList< InfluitDatum >();
-		ret.add( new GenericInfluitDatum< ImagePlus >( imp ) );
+	public List< String > getSupportedOutputFormats() {
+		final List< String > ret = new ArrayList< String >();
+		ret.add( new GenericInfluitDatum< ImagePlus >( new ImagePlus() ).getFormatUID() );
 		return ret;
 	}
 

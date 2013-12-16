@@ -6,7 +6,6 @@ package com.jug.indago.influit.edges;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jug.indago.influit.data.InfluitDatum;
 import com.jug.indago.influit.nodes.InfluitNode;
 
 
@@ -17,7 +16,7 @@ public class GenericInfluitEdge< T1 extends InfluitNode, T2 extends InfluitNode 
 
 	T1 nodeFrom;
 	T2 nodeTo;
-	InfluitDatum selectedFormat;
+	String selectedFormat;
 
 	/**
 	 * @param imgPlusNode
@@ -27,7 +26,7 @@ public class GenericInfluitEdge< T1 extends InfluitNode, T2 extends InfluitNode 
 		nodeFrom = sourceNode;
 		nodeTo = sinkNode;
 
-		final List< InfluitDatum > possibleFormats = getCommonFormats();
+		final List< String > possibleFormats = getCommonFormats();
 		if ( possibleFormats.size() > 0 ) {
 			selectedFormat = possibleFormats.get( 0 );
 		} else {
@@ -48,7 +47,7 @@ public class GenericInfluitEdge< T1 extends InfluitNode, T2 extends InfluitNode 
 	 * @see com.jug.indago.influit.edges.InfluitEdge#getFormat()
 	 */
 	@Override
-	public InfluitDatum getFormat() {
+	public String getFormat() {
 		return selectedFormat;
 	}
 
@@ -60,10 +59,10 @@ public class GenericInfluitEdge< T1 extends InfluitNode, T2 extends InfluitNode 
 	 * @see com.jug.indago.influit.edges.InfluitEdge#getCommonFormats()
 	 */
 	@Override
-	public List< InfluitDatum > getCommonFormats() {
-		final List< InfluitDatum > sourceFormats = nodeFrom.getSupportedOutputFormats();
-		final List< InfluitDatum > sinkFormats = nodeTo.getSupportedInputFormats();
-		final List< InfluitDatum > intersection = new ArrayList< InfluitDatum >();
+	public List< String > getCommonFormats() {
+		final List< String > sourceFormats = nodeFrom.getSupportedOutputFormats();
+		final List< String > sinkFormats = nodeTo.getSupportedInputFormats();
+		final List< String > intersection = new ArrayList< String >();
 		intersection.addAll( sourceFormats );
 		intersection.retainAll( sinkFormats );  // Here I need some smarter .equals or so... anyways... continue coding HERE!
 		return intersection;

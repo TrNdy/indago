@@ -18,8 +18,8 @@ public class GenericInfluitDatum< T > implements InfluitDatum {
 	 * @see com.jug.indago.influit.data.InfluitDatum#getFormatUID()
 	 */
 	@Override
-	public int getFormatUID() {
-		return instance.getClass().hashCode();
+	public String getFormatUID() {
+		return "GenericInfluitDatum<" + instance.getClass().getName() + ">";
 	}
 
 	/**

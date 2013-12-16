@@ -34,9 +34,9 @@ public class FilteredComponentTreeNode implements InfluitNode {
 	 * @see com.jug.indago.influit.nodes.InfluitNode#getSupportedInputFormats()
 	 */
 	@Override
-	public List< InfluitDatum > getSupportedInputFormats() {
-		final List< InfluitDatum > ret = new ArrayList< InfluitDatum >();
-		ret.add( new GenericInfluitDatum< ImagePlus >( new ImagePlus() ) );
+	public List< String > getSupportedInputFormats() {
+		final List< String > ret = new ArrayList< String >();
+		ret.add( new GenericInfluitDatum< ImagePlus >( new ImagePlus() ).getFormatUID() );
 		return ret;
 	}
 
@@ -44,9 +44,9 @@ public class FilteredComponentTreeNode implements InfluitNode {
 	 * @see com.jug.indago.influit.nodes.InfluitNode#getSupportedOutputFormats()
 	 */
 	@Override
-	public List< InfluitDatum > getSupportedOutputFormats() {
-		final List< InfluitDatum > ret = new ArrayList< InfluitDatum >();
-		ret.add( new GenericInfluitDatum< ImagePlus >( new ImagePlus() ) );
+	public List< String > getSupportedOutputFormats() {
+		final List< String > ret = new ArrayList< String >();
+		ret.add( new GenericInfluitDatum< ImagePlus >( new ImagePlus() ).getFormatUID() );
 		return ret;
 	}
 
