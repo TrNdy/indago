@@ -17,7 +17,6 @@ import com.jug.indago.influit.nodes.InfluitNodeVertexFactory;
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
@@ -74,26 +73,26 @@ public class InfluitPanelEditingPopupGraphMousePlugin extends AbstractPopupGraph
 
 								@Override
 								public void actionPerformed( final ActionEvent e ) {
-									graph.addEdge( edgeFactory.create(), other, vertex, EdgeType.DIRECTED );
+									graph.addEdge( edgeFactory.createGenericInfluitEdge( other, vertex ), other, vertex, EdgeType.DIRECTED );
 									vv.repaint();
 								}
 							} );
 						}
 					}
-					if ( graph instanceof DirectedGraph == false ) {
-						final JMenu undirectedMenu = new JMenu( "Create Undirected Edge" );
-						popup.add( undirectedMenu );
-						for ( final InfluitNode other : picked ) {
-							undirectedMenu.add( new AbstractAction( "[" + other + "," + vertex + "]" ) {
-
-								@Override
-								public void actionPerformed( final ActionEvent e ) {
-									graph.addEdge( edgeFactory.create(), other, vertex );
-									vv.repaint();
-								}
-							} );
-						}
-					}
+//					if ( graph instanceof DirectedGraph == false ) {
+//						final JMenu undirectedMenu = new JMenu( "Create Undirected Edge" );
+//						popup.add( undirectedMenu );
+//						for ( final InfluitNode other : picked ) {
+//							undirectedMenu.add( new AbstractAction( "[" + other + "," + vertex + "]" ) {
+//
+//								@Override
+//								public void actionPerformed( final ActionEvent e ) {
+//									graph.addEdge( edgeFactory.create(), other, vertex );
+//									vv.repaint();
+//								}
+//							} );
+//						}
+//					}
 				}
 				popup.add( new AbstractAction( "Delete Vertex" ) {
 

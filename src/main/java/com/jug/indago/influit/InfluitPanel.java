@@ -30,6 +30,7 @@ import com.jug.indago.influit.edges.InfluitEdgeFactory;
 import com.jug.indago.influit.exception.NoCommonInfluitFormatException;
 import com.jug.indago.influit.gui.dialog.AboutDialog;
 import com.jug.indago.influit.jung.visualization.control.InfluitPanelGraphMouse;
+import com.jug.indago.influit.jung.visualization.decorators.InfluitEdgeShape;
 import com.jug.indago.influit.menu.MenuConstants;
 import com.jug.indago.influit.nodes.InfluitNode;
 import com.jug.indago.influit.nodes.InfluitNodeVertexFactory;
@@ -42,7 +43,6 @@ import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.AbstractVertexShapeTransformer;
-import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.DefaultVertexLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.GradientVertexRenderer;
@@ -101,7 +101,7 @@ public class InfluitPanel extends JPanel implements ActionListener {
 		// this class will provide both label drawing and vertex shapes
 		nodeShapeRenderer = new InfluitNodeShapeRenderer( visualizationViewer.getRenderContext() );
 
-		// customize the render context
+		// VERTEX customization
 		visualizationViewer.getRenderContext().setVertexLabelTransformer(
 				// this chains together Transformers so that the html tags
 				// are prepended to the toString method output
@@ -114,18 +114,18 @@ public class InfluitPanel extends JPanel implements ActionListener {
 				} } ) );
 		visualizationViewer.getRenderContext().setVertexShapeTransformer( nodeShapeRenderer );
 		visualizationViewer.getRenderContext().setVertexLabelRenderer( new DefaultVertexLabelRenderer( Color.red ) );
-		visualizationViewer.getRenderContext().setEdgeDrawPaintTransformer( new ConstantTransformer( Color.black ) );
-		visualizationViewer.getRenderContext().setEdgeStrokeTransformer( new ConstantTransformer( new BasicStroke( 1.8f ) ) );
-		visualizationViewer.getRenderContext().setEdgeShapeTransformer( new EdgeShape.CubicCurve< InfluitNode, InfluitEdge >() );
-
-		// customize the renderer
 		visualizationViewer.getRenderer().setVertexRenderer( new GradientVertexRenderer< InfluitNode, InfluitEdge >( Color.white, Color.white.darker(), false ) );
 		visualizationViewer.getRenderer().setVertexLabelRenderer( nodeShapeRenderer );
+
+		// EDGE customization
+		visualizationViewer.getRenderContext().setEdgeStrokeTransformer( new ConstantTransformer( new BasicStroke( 1.5f ) ) );
+		visualizationViewer.getRenderContext().setEdgeShapeTransformer( new InfluitEdgeShape.CubicCurve< InfluitNode, InfluitEdge >() );
 
 		visualizationViewer.setBackground( Color.white );
 
 		// add a listener for ToolTips
 		visualizationViewer.setVertexToolTipTransformer( new ToStringLabeller< InfluitNode >() );
+		visualizationViewer.setEdgeToolTipTransformer( new ToStringLabeller< InfluitEdge >() );
 
 		// Create a graph mouse and add it to the visualization component
 		graphMouse = new InfluitPanelGraphMouse( visualizationViewer.getRenderContext(), new InfluitNodeVertexFactory( this ), new InfluitEdgeFactory() );

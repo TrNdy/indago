@@ -1,23 +1,22 @@
 /**
- * 
+ *
  */
 package com.jug.indago.influit.edges;
 
-import org.apache.commons.collections15.Factory;
+import com.jug.indago.influit.nodes.InfluitNode;
 
 
 /**
  * @author jug
  */
-public class InfluitEdgeFactory implements Factory< InfluitEdge > {
+public class InfluitEdgeFactory {
 
 	/**
-	 * @see org.apache.commons.collections15.Factory#create()
+	 *
 	 */
-	@Override
-	public InfluitEdge create() {
-		// TODO Auto-generated method stub
-		return null;
+	@SuppressWarnings( "rawtypes" )
+	public GenericInfluitEdge< ?, ? > createGenericInfluitEdge( final InfluitNode from, final InfluitNode to ) {
+		return new GenericInfluitEdge( from, to );
 	}
 
 }

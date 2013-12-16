@@ -12,7 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.CubicCurve2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 import javax.swing.JComponent;
@@ -45,7 +45,7 @@ public class InfluitPanelGraphMousePlugin extends AbstractGraphMousePlugin imple
 	protected InfluitNode startVertex;
 	protected Point2D down;
 
-	protected CubicCurve2D rawEdge = new CubicCurve2D.Float();
+	protected Line2D rawEdge = new Line2D.Float( 0.0f, 0.0f, 1.0f, 0.0f );
 	protected Shape edgeShape;
 	protected Shape rawArrowShape;
 	protected Shape arrowShape;
@@ -68,8 +68,7 @@ public class InfluitPanelGraphMousePlugin extends AbstractGraphMousePlugin imple
 		super( modifiers );
 		this.vertexFactory = vertexFactory;
 		this.edgeFactory = edgeFactory;
-		rawEdge.setCurve( 0.0f, 0.0f, 0.33f, 100, .66f, -50, 1.0f, 0.0f );
-		rawArrowShape = ArrowFactory.getNotchedArrow( 20, 16, 8 );
+		rawArrowShape = ArrowFactory.getNotchedArrow( 8, 14, 4 );
 		edgePaintable = new EdgePaintable();
 		arrowPaintable = new ArrowPaintable();
 		this.cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
@@ -150,7 +149,8 @@ public class InfluitPanelGraphMousePlugin extends AbstractGraphMousePlugin imple
 				final InfluitNode vertex = pickSupport.getVertex( layout, p.getX(), p.getY() );
 				if ( vertex != null && startVertex != null ) {
 					final Graph< InfluitNode, InfluitEdge > graph = vv.getGraphLayout().getGraph();
-					graph.addEdge( edgeFactory.create(), startVertex, vertex, edgeIsDirected );
+					final InfluitEdge edge = edgeFactory.createGenericInfluitEdge( startVertex, vertex );
+					graph.addEdge( edge, startVertex, vertex, edgeIsDirected );
 					vv.repaint();
 				}
 			}
@@ -226,7 +226,7 @@ public class InfluitPanelGraphMousePlugin extends AbstractGraphMousePlugin imple
 		public void paint( final Graphics g ) {
 			if ( edgeShape != null ) {
 				final Color oldColor = g.getColor();
-				g.setColor( Color.black );
+				g.setColor( Color.gray );
 				( ( Graphics2D ) g ).draw( edgeShape );
 				g.setColor( oldColor );
 			}
@@ -247,7 +247,7 @@ public class InfluitPanelGraphMousePlugin extends AbstractGraphMousePlugin imple
 		public void paint( final Graphics g ) {
 			if ( arrowShape != null ) {
 				final Color oldColor = g.getColor();
-				g.setColor( Color.black );
+				g.setColor( Color.gray );
 				( ( Graphics2D ) g ).fill( arrowShape );
 				g.setColor( oldColor );
 			}
