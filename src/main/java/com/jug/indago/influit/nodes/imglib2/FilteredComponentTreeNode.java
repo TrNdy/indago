@@ -8,6 +8,9 @@ import ij.ImagePlus;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JPanel;
+
+import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import com.jug.indago.influit.data.GenericInfluitDatum;
@@ -15,6 +18,7 @@ import com.jug.indago.influit.data.InfluitDatum;
 import com.jug.indago.influit.data.InfluitFormatIdentifyer;
 import com.jug.indago.influit.exception.InfluitFormatException;
 import com.jug.indago.influit.nodes.InfluitNode;
+import com.jug.indago.influit.nodes.InfluitNodePropertiesFactory;
 
 
 /**
@@ -22,6 +26,11 @@ import com.jug.indago.influit.nodes.InfluitNode;
  */
 @Plugin( type = FilteredComponentTreeNode.class, label = "Filtered Comp.Tree", menuPath = "Segmentation Hypotheses" )
 public class FilteredComponentTreeNode implements InfluitNode {
+
+	private JPanel propPanel = null;
+
+	@Parameter( label = "Filter param:" )
+	private int dummy;
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -76,6 +85,16 @@ public class FilteredComponentTreeNode implements InfluitNode {
 	public void getOutput( final InfluitDatum data ) throws InfluitFormatException {
 		// TODO Auto-generated method stub
 
+	}
+
+	/**
+	 * @see com.jug.indago.influit.nodes.InfluitNode#getPropertiesPanel()
+	 */
+	@Override
+	public JPanel getPropertiesPanel() {
+		if ( propPanel == null )
+			propPanel = InfluitNodePropertiesFactory.generatePanelFromAnnotations( this );
+		return propPanel;
 	}
 
 }

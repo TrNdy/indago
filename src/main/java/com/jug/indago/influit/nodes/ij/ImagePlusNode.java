@@ -8,6 +8,8 @@ import ij.ImagePlus;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
@@ -16,6 +18,7 @@ import com.jug.indago.influit.data.InfluitDatum;
 import com.jug.indago.influit.data.InfluitFormatIdentifyer;
 import com.jug.indago.influit.exception.InfluitFormatException;
 import com.jug.indago.influit.nodes.InfluitNode;
+import com.jug.indago.influit.nodes.InfluitNodePropertiesFactory;
 
 
 /**
@@ -24,8 +27,10 @@ import com.jug.indago.influit.nodes.InfluitNode;
 @Plugin( type = ImagePlusNode.class, label = "ImagePlus Source", menuPath = "Data Sources>ImagePlus Source" )
 public class ImagePlusNode implements InfluitNode {
 
-	@Parameter
+	@Parameter( label = "IJ Image:" )
 	private ImagePlus imp;
+
+	private JPanel propPanel = null;
 
 	public ImagePlusNode( final ImagePlus imp ) {
 		this.imp = imp;
@@ -92,6 +97,15 @@ public class ImagePlusNode implements InfluitNode {
 		} catch ( final ClassCastException e ) {
 			throw new InfluitFormatException( e );
 		}
+	}
+
+	/**
+	 * @see com.jug.indago.influit.nodes.InfluitNode#getPropertiesPanel()
+	 */
+	@Override
+	public JPanel getPropertiesPanel() {
+		if ( propPanel == null ) propPanel  = InfluitNodePropertiesFactory.generatePanelFromAnnotations( this );
+		return propPanel;
 	}
 
 }

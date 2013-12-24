@@ -5,6 +5,8 @@ package com.jug.indago.influit.nodes;
 
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import org.scijava.plugin.SciJavaPlugin;
 
 import com.jug.indago.influit.data.InfluitDatum;
@@ -28,4 +30,6 @@ public interface InfluitNode extends SciJavaPlugin {
 	public void evaluate();
 
 	public void getOutput( InfluitDatum data ) throws InfluitFormatException;
+
+	public JPanel getPropertiesPanel();
 }

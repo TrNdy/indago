@@ -11,6 +11,7 @@ import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.util.List;
 
 import javax.swing.JMenu;
@@ -73,7 +74,6 @@ public class InfluitPanel extends JPanel implements ActionListener {
 	private InfluitPanelGraphMouse graphMouse;
 	private DefaultVisualizationModel< InfluitNode, InfluitEdge > visualizationModel;
 	private VisualizationViewer< InfluitNode, InfluitEdge > visualizationViewer;
-
 
 	// TODO This is only an example and the InfluitPanel should of course be unrelated to Indago in any way!!!
 	public InfluitPanel( final Dimension preferredSize, final boolean showMenu ) {
@@ -293,5 +293,15 @@ public class InfluitPanel extends JPanel implements ActionListener {
 	 */
 	public StaticLayout< InfluitNode, InfluitEdge > getJungLayout() {
 		return jungLayout;
+	}
+
+	public void addInfluitNodeSelectionListener( final ItemListener l ) {
+		visualizationViewer.getPickedVertexState().addItemListener( l );
+//		visualizationViewer.getPickedEdgeState().addItemListener( l );
+	}
+
+	public void removeInfluitNodeSelectionListener( final ItemListener l ) {
+		visualizationViewer.getPickedVertexState().removeItemListener( l );
+//		visualizationViewer.getPickedEdgeState().removeItemListener( l );
 	}
 }

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -22,6 +21,7 @@ import com.jug.indago.Indago;
 import com.jug.indago.influit.InfluitPanel;
 import com.jug.indago.influit.edges.GenericInfluitEdge;
 import com.jug.indago.influit.exception.NoCommonInfluitFormatException;
+import com.jug.indago.influit.gui.TabbedInfluitProperties;
 import com.jug.indago.influit.nodes.ij.ImagePlusNode;
 import com.jug.indago.influit.nodes.imglib2.FilteredComponentTreeNode;
 import com.jug.indago.influit.nodes.imglib2.HyperSlicerLoopNode;
@@ -63,7 +63,7 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 	 * Panel showing the properties of the currently selected and all pinned
 	 * influit elements.
 	 */
-	private JTabbedPane tabsProps;
+	private TabbedInfluitProperties tabsProps;
 
 	/**
 	 * Panel showing the viewer-view of the currently selected and all pinned
@@ -108,8 +108,9 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 			e.printStackTrace();
 		}
 
-		tabsProps = new JTabbedPane();
-		tabsProps.add( "None", new JButton( "no props" ) );
+		tabsProps = new TabbedInfluitProperties();
+		influitPanel.addInfluitNodeSelectionListener( tabsProps );
+
 		tabsViewer = new JTabbedPane();
 		tabsViewer.add( "Console", model.getConsole() );
 
