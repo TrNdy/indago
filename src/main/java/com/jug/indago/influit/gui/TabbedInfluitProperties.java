@@ -6,7 +6,7 @@ package com.jug.indago.influit.gui;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import com.jug.indago.influit.nodes.InfluitNode;
@@ -28,12 +28,12 @@ public class TabbedInfluitProperties extends JTabbedPane implements ItemListener
 	public void itemStateChanged( final ItemEvent e ) {
 		if ( e.getItem() instanceof InfluitNode ) {
 			if ( e.getStateChange() == e.SELECTED ) {
-				final JPanel p = ( ( InfluitNode ) e.getItem() ).getPropertiesPanel();
+				final JScrollPane p = ( ( InfluitNode ) e.getItem() ).getPropertiesPanel();
 				if ( p != null ) {
 					this.add( ( ( InfluitNode ) e.getItem() ).toString(), p );
 				}
 			} else {
-				final JPanel p = ( ( InfluitNode ) e.getItem() ).getPropertiesPanel();
+				final JScrollPane p = ( ( InfluitNode ) e.getItem() ).getPropertiesPanel();
 				if ( p != null ) {
 					this.remove( p );
 				}

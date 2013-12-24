@@ -5,7 +5,7 @@ package com.jug.indago.influit.nodes;
 
 import java.util.List;
 
-import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.scijava.plugin.SciJavaPlugin;
 
@@ -31,5 +31,5 @@ public interface InfluitNode extends SciJavaPlugin {
 
 	public void getOutput( InfluitDatum data ) throws InfluitFormatException;
 
-	public JPanel getPropertiesPanel();
+	public JScrollPane getPropertiesPanel();
 }

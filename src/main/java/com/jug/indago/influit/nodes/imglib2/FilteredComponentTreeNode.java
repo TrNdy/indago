@@ -5,12 +5,17 @@ package com.jug.indago.influit.nodes.imglib2;
 
 import ij.ImagePlus;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import com.jug.indago.influit.data.GenericInfluitDatum;
@@ -18,7 +23,6 @@ import com.jug.indago.influit.data.InfluitDatum;
 import com.jug.indago.influit.data.InfluitFormatIdentifyer;
 import com.jug.indago.influit.exception.InfluitFormatException;
 import com.jug.indago.influit.nodes.InfluitNode;
-import com.jug.indago.influit.nodes.InfluitNodePropertiesFactory;
 
 
 /**
@@ -27,10 +31,7 @@ import com.jug.indago.influit.nodes.InfluitNodePropertiesFactory;
 @Plugin( type = FilteredComponentTreeNode.class, label = "Filtered Comp.Tree", menuPath = "Segmentation Hypotheses" )
 public class FilteredComponentTreeNode implements InfluitNode {
 
-	private JPanel propPanel = null;
-
-	@Parameter( label = "Filter param:" )
-	private int dummy;
+	private JScrollPane propPanel = null;
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -91,9 +92,23 @@ public class FilteredComponentTreeNode implements InfluitNode {
 	 * @see com.jug.indago.influit.nodes.InfluitNode#getPropertiesPanel()
 	 */
 	@Override
-	public JPanel getPropertiesPanel() {
-		if ( propPanel == null )
-			propPanel = InfluitNodePropertiesFactory.generatePanelFromAnnotations( this );
+	public JScrollPane getPropertiesPanel() {
+		final JPanel p = new JPanel( new GridBagLayout() );
+		if ( propPanel == null ) propPanel = new JScrollPane( p );
+		p.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 10 ) );
+
+		final GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+//		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 0;
+
+		p.add( new JLabel( "IJ image:" ), c );
+
+		c.gridx++;
+		final JComboBox combo = new JComboBox();
+		p.add( combo, c );
+
 		return propPanel;
 	}
 
