@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.jug.indago.influit.nodes.ij;
+package com.jug.indago.influit.nodes.imglib2;
 
 import ij.ImagePlus;
 
@@ -24,31 +24,20 @@ import com.jug.indago.influit.nodes.InfluitNodePropertiesFactory;
 /**
  * @author jug
  */
-@Plugin( type = ImagePlusNode.class, label = "ImagePlus Source", menuPath = "Data Sources>ImagePlus Source" )
-public class ImagePlusNode implements InfluitNode {
-
-	@Parameter( label = "IJ Image:" )
-	private ImagePlus imp;
+@Plugin( type = FilteredComponentTreeNode.class, label = "Filtered Comp.Tree", menuPath = "Segmentation Hypotheses" )
+public class FilteredComponentTreeNode implements InfluitNode {
 
 	private JPanel propPanel = null;
 
-	public ImagePlusNode( final ImagePlus imp ) {
-		this.imp = imp;
-	}
-
-	public ImagePlusNode() {
-	}
+	@Parameter( label = "Filter param:" )
+	private int dummy;
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		if ( imp == null ) {
-			return "ImgPlus: no file loaded";
-		} else {
-			return "ImgPlus: " + imp.getTitle();
-		}
+		return "FilteredComponentTreeNode";
 	}
 
 	/**
@@ -56,7 +45,9 @@ public class ImagePlusNode implements InfluitNode {
 	 */
 	@Override
 	public List< InfluitFormatIdentifyer > getSupportedInputFormats() {
-		return new ArrayList< InfluitFormatIdentifyer >();
+		final List< InfluitFormatIdentifyer > ret = new ArrayList< InfluitFormatIdentifyer >();
+		ret.add( new GenericInfluitDatum< ImagePlus >( new ImagePlus() ).getFormatIdentifyer() );
+		return ret;
 	}
 
 	/**
@@ -74,7 +65,8 @@ public class ImagePlusNode implements InfluitNode {
 	 */
 	@Override
 	public boolean canEvaluate() {
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	/**
@@ -82,21 +74,17 @@ public class ImagePlusNode implements InfluitNode {
 	 */
 	@Override
 	public void evaluate() {
-		// nothing has to be done to prepare the data to be given away...
+		// TODO Auto-generated method stub
+
 	}
 
 	/**
 	 * @see com.jug.indago.influit.nodes.InfluitNode#getOutput(com.jug.indago.influit.data.InfluitDatum)
 	 */
-	@SuppressWarnings( "unchecked" )
 	@Override
 	public void getOutput( final InfluitDatum data ) throws InfluitFormatException {
-		try {
-			final GenericInfluitDatum< ImagePlus > output = ( GenericInfluitDatum< ImagePlus > ) data;
-			output.setData( imp );
-		} catch ( final ClassCastException e ) {
-			throw new InfluitFormatException( e );
-		}
+		// TODO Auto-generated method stub
+
 	}
 
 	/**
@@ -104,7 +92,8 @@ public class ImagePlusNode implements InfluitNode {
 	 */
 	@Override
 	public JPanel getPropertiesPanel() {
-		if ( propPanel == null ) propPanel  = InfluitNodePropertiesFactory.generatePanelFromAnnotations( this );
+		if ( propPanel == null )
+			propPanel = InfluitNodePropertiesFactory.generatePanelFromAnnotations( this );
 		return propPanel;
 	}
 

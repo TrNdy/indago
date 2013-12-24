@@ -376,5 +376,4 @@ public class Indago {
 //		}
 		return imgPlus;
 	}
-
 }

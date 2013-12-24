@@ -4,11 +4,11 @@
 package com.jug.indago.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -19,6 +19,12 @@ import javax.swing.event.ChangeListener;
 
 import com.jug.indago.Indago;
 import com.jug.indago.influit.InfluitPanel;
+import com.jug.indago.influit.edges.GenericInfluitEdge;
+import com.jug.indago.influit.exception.NoCommonInfluitFormatException;
+import com.jug.indago.influit.gui.TabbedInfluitProperties;
+import com.jug.indago.influit.nodes.ij.ImagePlusNode;
+import com.jug.indago.influit.nodes.imglib2.FilteredComponentTreeNode;
+import com.jug.indago.influit.nodes.imglib2.HyperSlicerLoopNode;
 import com.jug.indago.model.IndagoModel;
 
 
@@ -57,7 +63,7 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 	 * Panel showing the properties of the currently selected and all pinned
 	 * influit elements.
 	 */
-	private JTabbedPane tabsProps;
+	private TabbedInfluitProperties tabsProps;
 
 	/**
 	 * Panel showing the viewer-view of the currently selected and all pinned
@@ -81,10 +87,30 @@ public class IndagoGui extends JPanel implements ChangeListener, ActionListener 
 	private void buildGui() {
 		this.setLayout( new BorderLayout() );
 
-		influitPanel = new InfluitPanel( model ); // TODO eventually the InfluitPanel should be free of Indago-related stuff...
+		influitPanel = new InfluitPanel( new Dimension( 400, 400 ), true );
 		influitPanel.setBorder( BorderFactory.createBevelBorder( BevelBorder.RAISED ) );
-		tabsProps = new JTabbedPane();
-		tabsProps.add( "None", new JButton( "no props" ) );
+
+		// @TODO this must be replaced at some point!
+		final ImagePlusNode imgPlusNode = new ImagePlusNode( model.getImgPlus() );
+		final HyperSlicerLoopNode slicerLoopNode = new HyperSlicerLoopNode();
+		final FilteredComponentTreeNode compTreeNode = new FilteredComponentTreeNode();
+
+		final GenericInfluitEdge< ImagePlusNode, HyperSlicerLoopNode > edge1 = new GenericInfluitEdge< ImagePlusNode, HyperSlicerLoopNode >( imgPlusNode, slicerLoopNode );
+		final GenericInfluitEdge< HyperSlicerLoopNode, FilteredComponentTreeNode > edge2 = new GenericInfluitEdge< HyperSlicerLoopNode, FilteredComponentTreeNode >( slicerLoopNode, compTreeNode );
+
+		influitPanel.addNode( imgPlusNode, 100, 50 );
+		influitPanel.addNode( slicerLoopNode, 150, 150 );
+		influitPanel.addNode( compTreeNode, 200, 250 );
+		try {
+			influitPanel.addEdge( edge1, imgPlusNode, slicerLoopNode );
+			influitPanel.addEdge( edge2, slicerLoopNode, compTreeNode );
+		} catch ( final NoCommonInfluitFormatException e ) {
+			e.printStackTrace();
+		}
+
+		tabsProps = new TabbedInfluitProperties();
+		influitPanel.addInfluitNodeSelectionListener( tabsProps );
+
 		tabsViewer = new JTabbedPane();
 		tabsViewer.add( "Console", model.getConsole() );
 

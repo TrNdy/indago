@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>1.28</version>
+		<version>1.107</version>
 	</parent>
 
 	<groupId>com.jug</groupId>
@@ -18,6 +18,11 @@
 	<description>Latin: indago (verb) - track, spoor, smell out, nose, trace, dog.</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-common</artifactId>
+			<version>2.5.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
@@ -78,6 +83,18 @@
 			<groupId>net.sf.jung</groupId>
 			<artifactId>jung-algorithms</artifactId>
 			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

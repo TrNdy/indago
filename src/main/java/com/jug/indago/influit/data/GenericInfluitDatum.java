@@ -7,7 +7,7 @@ package com.jug.indago.influit.data;
 /**
  * @author jug
  */
-public class GenericInfluitDatum<T> implements InfluitDatum {
+public class GenericInfluitDatum< T > implements InfluitDatum {
 
 	private T instance;
 
@@ -15,11 +15,11 @@ public class GenericInfluitDatum<T> implements InfluitDatum {
 	 * Returns the hashCode of the class of the instance of T given during
 	 * construction.
 	 *
-	 * @see com.jug.indago.influit.data.InfluitDatum#getFormatUID()
+	 * @see com.jug.indago.influit.data.InfluitDatum#getFormatIdentifyer()
 	 */
 	@Override
-	public int getFormatUID() {
-		return instance.getClass().hashCode();
+	public InfluitFormatIdentifyer getFormatIdentifyer() {
+		return new InfluitFormatIdentifyer( "GenericInfluitDatum<" + instance.getClass().getName() + ">" );
 	}
 
 	/**

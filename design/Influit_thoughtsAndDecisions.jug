@@ -1,0 +1,31 @@
+What the Influit-Panel should do for us:
+========================================
+[ ] It displays a graph that describes an interactive CV-pipeline.
+[ ] <i Nodes > are units of computation. Nodes should...
+	(1) ...have incoming <i Edges > that carry data (single datum or data sequence).
+	(2) ...have a set of <i Properties > that...
+		(-) can be displayed in the properties panel and set by user, or
+		(-) be controlled by a <i PropertiesHandler > that can be connected 
+			to the Node.
+	(3) ...have the ability to consist out of an entire Influit-graph themselves 
+		(Hierarchical Influits!!!)
+	(4) ...give a list of input data types.
+	(5) ...give a list of output data types.
+[ ] <i Edges > define exchange datatypes for one datum or a data sequence.
+	[?] How do we handle the edge from a PropertiesHandler to a Node?
+	[ ] Edge checks for a match between output-datatypes of 'from'-node and 
+		input-datatypes of 'to'-node. If multiple options the edge offers the 
+		choice in a suitable way.
+		(-) This also includes the option of slicing a volume in a list of 
+			2D-slices, etc. (Could be realized by a generic edge type that
+			includes some kind of conversion in terms of an embedded Influit-
+			node or Influit-graph.)
+		(-) If a datatype-choice is made locally that changes the output of the
+			from-node the while graph should attempt an cascading update and try 
+			to backwards-fix all edge-datatype choices.
+[ ] General things that I would love to include from the beginning:
+	[ ] Undo for all graph modifications. (Should be easy, or?)
+	[ ] ImageJ2 PlugIns should by default be Influit-nodes!
+	[ ] Influit-graphs should be exportable to be ImageJ2 PlugIns!
+	
+	

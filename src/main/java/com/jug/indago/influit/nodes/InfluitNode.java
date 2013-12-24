@@ -5,24 +5,31 @@ package com.jug.indago.influit.nodes;
 
 import java.util.List;
 
+import javax.swing.JPanel;
+
+import org.scijava.plugin.SciJavaPlugin;
+
 import com.jug.indago.influit.data.InfluitDatum;
+import com.jug.indago.influit.data.InfluitFormatIdentifyer;
 import com.jug.indago.influit.exception.InfluitFormatException;
 
 /**
  * @author jug
  */
-public interface InfluitNode {
+public interface InfluitNode extends SciJavaPlugin {
 
 	@Override
 	public String toString();
 
-	public List< InfluitDatum > getSupportedInputFormats();
+	public List< InfluitFormatIdentifyer > getSupportedInputFormats();
 
-	public List< InfluitDatum > getSupportedOutputFormats();
+	public List< InfluitFormatIdentifyer > getSupportedOutputFormats();
 
 	public boolean canEvaluate();
 
 	public void evaluate();
 
 	public void getOutput( InfluitDatum data ) throws InfluitFormatException;
+
+	public JPanel getPropertiesPanel();
 }
