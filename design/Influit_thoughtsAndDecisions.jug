@@ -27,3 +27,5 @@ What the Influit-Panel should do for us:
 	[ ] Undo for all graph modifications. (Should be easy, or?)
 	[ ] ImageJ2 PlugIns should by default be Influit-nodes!
 	[ ] Influit-graphs should be exportable to be ImageJ2 PlugIns!
+	
+	
