@@ -4,9 +4,12 @@
 package com.jug.indago.influit.nodes.ij;
 
 import ij.ImagePlus;
+import ij.WindowManager;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,11 +32,13 @@ import com.jug.indago.influit.nodes.InfluitNode;
  * @author jug
  */
 @Plugin( type = ImagePlusNode.class, label = "ImagePlus Source", menuPath = "Data Sources>ImagePlus Source" )
-public class ImagePlusNode implements InfluitNode {
+public class ImagePlusNode implements InfluitNode, ActionListener {
 
 	private ImagePlus imp;
 
 	private JScrollPane propPanel = null;
+
+	private JComboBox combo;
 
 	public ImagePlusNode( final ImagePlus imp ) {
 		this.imp = imp;
@@ -103,12 +108,14 @@ public class ImagePlusNode implements InfluitNode {
 	}
 
 	/**
-	 * @see com.jug.indago.influit.nodes.InfluitNode#getPropertiesPanel()
+	 * @see com.jug.indago.influit.nodes.InfluitNode#getPropertiesPane()
 	 */
 	@Override
-	public JScrollPane getPropertiesPanel() {
+	public JScrollPane getPropertiesPane() {
+		if ( propPanel != null ) return propPanel;
+
 		final JPanel p = new JPanel( new GridBagLayout() );
-		if ( propPanel == null ) propPanel = new JScrollPane( p );
+		propPanel = new JScrollPane( p );
 		p.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 10 ) );
 
 		final GridBagConstraints c = new GridBagConstraints();
@@ -120,10 +127,29 @@ public class ImagePlusNode implements InfluitNode {
 		p.add( new JLabel( "IJ image:" ), c );
 
 		c.gridx++;
-		final JComboBox combo = new JComboBox();
+		combo = new JComboBox();
+		final int[] img_ids = WindowManager.getIDList();
+		for ( int idx = 0; idx < img_ids.length; idx++ ) {
+			combo.addItem( WindowManager.getImage( img_ids[ idx ] ).getTitle() );
+		}
+		if (imp != null) {
+			combo.setSelectedItem( imp.getTitle() );
+		}
+		combo.addActionListener( this );
 		p.add( combo, c );
 
 		return propPanel;
+	}
+
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
+	public void actionPerformed( final ActionEvent e ) {
+		final String img_name = combo.getSelectedItem().toString();
+		imp = WindowManager.getImage( img_name );
+//		System.out.println( img_name );
+//		System.out.println( imp.getTitle() );
 	}
 
 }

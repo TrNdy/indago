@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import org.scijava.plugin.Plugin;
 
@@ -36,6 +36,12 @@ public class HyperSlicerLoopNode implements InfluitNode {
 	private int dimension;
 	private int min_index;
 	private int max_index;
+
+	private JTextField txtDimension;
+
+	private JTextField txtFrom;
+
+	private JTextField txtTo;
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -100,12 +106,14 @@ public class HyperSlicerLoopNode implements InfluitNode {
 	}
 
 	/**
-	 * @see com.jug.indago.influit.nodes.InfluitNode#getPropertiesPanel()
+	 * @see com.jug.indago.influit.nodes.InfluitNode#getPropertiesPane()
 	 */
 	@Override
-	public JScrollPane getPropertiesPanel() {
+	public JScrollPane getPropertiesPane() {
+		if ( propPanel != null ) return propPanel;
+
 		final JPanel p = new JPanel( new GridBagLayout() );
-		if ( propPanel == null ) propPanel = new JScrollPane( p );
+		propPanel = new JScrollPane( p );
 		p.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 10 ) );
 
 		final GridBagConstraints c = new GridBagConstraints();
@@ -114,11 +122,27 @@ public class HyperSlicerLoopNode implements InfluitNode {
 		c.gridx = 0;
 		c.gridy = 0;
 
-		p.add( new JLabel( "IJ image:" ), c );
+		p.add( new JLabel( "Dimension:" ), c );
 
 		c.gridx++;
-		final JComboBox combo = new JComboBox();
-		p.add( combo, c );
+		txtDimension = new JTextField( 2 );
+		p.add( txtDimension, c );
+
+		c.gridy++;
+		c.gridx = 0;
+		p.add( new JLabel( "From slice:" ), c );
+
+		c.gridx++;
+		txtFrom = new JTextField( 5 );
+		p.add( txtFrom, c );
+
+		c.gridy++;
+		c.gridx = 0;
+		p.add( new JLabel( "To slice:" ), c );
+
+		c.gridx++;
+		txtTo = new JTextField( 5 );
+		p.add( txtTo, c );
 
 		return propPanel;
 	}

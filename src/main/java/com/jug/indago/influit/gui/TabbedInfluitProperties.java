@@ -28,12 +28,12 @@ public class TabbedInfluitProperties extends JTabbedPane implements ItemListener
 	public void itemStateChanged( final ItemEvent e ) {
 		if ( e.getItem() instanceof InfluitNode ) {
 			if ( e.getStateChange() == e.SELECTED ) {
-				final JScrollPane p = ( ( InfluitNode ) e.getItem() ).getPropertiesPanel();
+				final JScrollPane p = ( ( InfluitNode ) e.getItem() ).getPropertiesPane();
 				if ( p != null ) {
 					this.add( ( ( InfluitNode ) e.getItem() ).toString(), p );
 				}
 			} else {
-				final JScrollPane p = ( ( InfluitNode ) e.getItem() ).getPropertiesPanel();
+				final JScrollPane p = ( ( InfluitNode ) e.getItem() ).getPropertiesPane();
 				if ( p != null ) {
 					this.remove( p );
 				}

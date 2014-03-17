@@ -31,5 +31,5 @@ public interface InfluitNode extends SciJavaPlugin {
 
 	public void getOutput( InfluitDatum data ) throws InfluitFormatException;
 
-	public JScrollPane getPropertiesPanel();
+	public JScrollPane getPropertiesPane();
 }

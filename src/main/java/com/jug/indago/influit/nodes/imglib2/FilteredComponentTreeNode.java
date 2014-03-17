@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -89,12 +87,14 @@ public class FilteredComponentTreeNode implements InfluitNode {
 	}
 
 	/**
-	 * @see com.jug.indago.influit.nodes.InfluitNode#getPropertiesPanel()
+	 * @see com.jug.indago.influit.nodes.InfluitNode#getPropertiesPane()
 	 */
 	@Override
-	public JScrollPane getPropertiesPanel() {
+	public JScrollPane getPropertiesPane() {
+		if ( propPanel != null ) return propPanel;
+
 		final JPanel p = new JPanel( new GridBagLayout() );
-		if ( propPanel == null ) propPanel = new JScrollPane( p );
+		propPanel = new JScrollPane( p );
 		p.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 10 ) );
 
 		final GridBagConstraints c = new GridBagConstraints();
@@ -102,12 +102,6 @@ public class FilteredComponentTreeNode implements InfluitNode {
 //		c.weightx = 0.5;
 		c.gridx = 0;
 		c.gridy = 0;
-
-		p.add( new JLabel( "IJ image:" ), c );
-
-		c.gridx++;
-		final JComboBox combo = new JComboBox();
-		p.add( combo, c );
 
 		return propPanel;
 	}
