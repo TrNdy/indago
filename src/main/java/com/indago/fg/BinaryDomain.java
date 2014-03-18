@@ -30,4 +30,14 @@ public class BinaryDomain< T > implements LabelDomain< T > {
 			throw new IllegalArgumentException();
 	}
 
+	@Override
+	public int getElementIndex( final T element ) {
+		if ( zero.equals( element ) )
+			return 0;
+		else if ( one.equals( element ) )
+			return 1;
+		else
+			throw new IllegalArgumentException();
+	}
+
 }

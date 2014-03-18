@@ -2,19 +2,19 @@ package com.indago.fg;
 
 import java.util.List;
 
-public interface Factor< F extends Function< ? > > {
+public interface Factor< D extends Domain< ? >, V extends Variable< D >, F extends Function< D, ? > > {
 
-	public FunctionDomain getDomain();
+	public FunctionDomain< D > getDomain();
 
 	public void setFunction( F function );
 
 	public F getFunction();
 
-	public void setVariable( int index, Variable< ? > v );
+	public void setVariable( int index, V v );
 
-	public void setVariables( Variable< ? >... variables );
+	public void setVariables( V... variables );
 
-	public Variable< ? > getVariable( int index );
+	public V getVariable( int index );
 
-	public List< ? extends Variable< ? > > getVariables();
+	public List< ? extends V > getVariables();
 }

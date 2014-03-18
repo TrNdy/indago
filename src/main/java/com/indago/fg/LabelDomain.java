@@ -6,4 +6,5 @@ public interface LabelDomain< T > extends Domain< T > {
 
 	public T getElement( int i );
 
+	public int getElementIndex( T element );
 }

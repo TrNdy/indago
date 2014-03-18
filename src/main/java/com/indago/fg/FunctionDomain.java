@@ -2,7 +2,9 @@ package com.indago.fg;
 
 import java.util.List;
 
-public interface FunctionDomain {
+public interface FunctionDomain< D extends Domain< ? > > {
 
-	List< ? extends Domain< ? > > argumentDomains();
+	public List< ? extends D > argumentDomains();
+
+	public int numDimensions();
 }

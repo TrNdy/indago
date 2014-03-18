@@ -2,10 +2,10 @@ package com.indago.fg;
 
 
 
-public interface Function< D extends Domain< ? > > {
+public interface Function< D extends Domain< ? >, V extends Value< ?, D > > {
 
-	public FunctionDomain getDomain();
+	public FunctionDomain< D > getDomain();
 
-	public double evaluate( Value< ?, D >... values );
+	public double evaluate( V... values );
 
 }
