@@ -2,4 +2,5 @@
 /target/
 /.settings/
 .factorypath
+.classpath
 indago.properties
