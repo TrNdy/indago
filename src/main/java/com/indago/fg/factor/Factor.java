@@ -5,9 +5,10 @@ import java.util.List;
 import com.indago.fg.domain.Domain;
 import com.indago.fg.domain.FunctionDomain;
 import com.indago.fg.function.Function;
+import com.indago.fg.gui.FgNode;
 import com.indago.fg.variable.Variable;
 
-public interface Factor< D extends Domain< ? >, V extends Variable< D >, F extends Function< D, ? > > {
+public interface Factor< D extends Domain< ? >, V extends Variable< D >, F extends Function< D, ? > > extends FgNode {
 
 	public FunctionDomain< D > getDomain();
 
