@@ -125,7 +125,7 @@ public class LoadScalar {
 			if ( line == null ) return null;
 			for ( final String s : line.split( "\\s+" ) ) {
 				if ( s.startsWith( "#" ) ) break;
-				parts.add( s );
+				if ( !s.isEmpty() ) parts.add( s );
 			}
 		}
 		return parts;
