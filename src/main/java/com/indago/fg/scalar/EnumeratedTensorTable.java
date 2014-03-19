@@ -8,7 +8,7 @@ public class EnumeratedTensorTable extends TensorTable< EnumeratedDomain, Enumer
 
 	private final int id;
 
-	public EnumeratedTensorTable( final EnumeratedFunctionDomain domain, final double[] entries, final int id  ) {
+	public EnumeratedTensorTable( final EnumeratedFunctionDomain domain, final double[] entries, final int id ) {
 		super( domain, entries );
 		this.id = id;
 	}

@@ -48,10 +48,10 @@ public class EnumeratedFunctionDomain implements FunctionDomain< EnumeratedDomai
 
 	@Override
 	public String toString() {
-		String doms = domains.get( 0 ).toString();
+		String doms = "" + domains.get( 0 ).size();
 		for ( int d = 1; d < domains.size(); ++d )
-			doms += " x " + domains.get( d );
-		return getClass().getSimpleName() + "(" + doms + ")";
+			doms += " x " + domains.get( d ).size();
+		return getClass().getSimpleName() + " (" + doms + ")";
 	}
 
 	protected static final HashMap< EnumeratedFunctionDomain, EnumeratedFunctionDomain > functionDomains = new HashMap< EnumeratedFunctionDomain, EnumeratedFunctionDomain >();
