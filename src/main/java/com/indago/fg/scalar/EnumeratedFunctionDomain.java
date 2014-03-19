@@ -8,8 +8,6 @@ import com.indago.fg.FunctionDomain;
 
 public class EnumeratedFunctionDomain implements FunctionDomain< EnumeratedDomain > {
 
-	public static final int ARBITRARY = -1;
-
 	private final List< EnumeratedDomain > domains;
 
 	public EnumeratedFunctionDomain( final int... sizes ) {
@@ -68,10 +66,9 @@ public class EnumeratedFunctionDomain implements FunctionDomain< EnumeratedDomai
 			return cached;
 	}
 
-	// TODO
 	public static EnumeratedFunctionDomain getArbitrary( final int numDimensions ) {
 		final int[] sizes = new int[ numDimensions ];
-		Arrays.fill( sizes, -1 ); // TODO
+		Arrays.fill( sizes, EnumeratedDomain.ARBITRARY );
 		return getForSizes( sizes );
 	}
 

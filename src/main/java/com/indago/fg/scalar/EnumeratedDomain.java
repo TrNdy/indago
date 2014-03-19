@@ -6,6 +6,8 @@ import com.indago.fg.LabelDomain;
 
 public class EnumeratedDomain implements LabelDomain< Integer > {
 
+	public static final int ARBITRARY = -1;
+
 	protected final int size;
 
 	public EnumeratedDomain( final int size ) {

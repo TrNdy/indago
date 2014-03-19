@@ -35,7 +35,7 @@ public class PottsFunction implements EnumeratedFunction {
 	 */
 	@Override
 	public EnumeratedFunctionDomain getDomain() {
-		return EnumeratedFunctionDomain.getForSizes( EnumeratedFunctionDomain.ARBITRARY, EnumeratedFunctionDomain.ARBITRARY );
+		return EnumeratedFunctionDomain.getArbitrary( 2 );
 	}
 
 }
