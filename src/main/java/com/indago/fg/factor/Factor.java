@@ -1,6 +1,11 @@
-package com.indago.fg;
+package com.indago.fg.factor;
 
 import java.util.List;
+
+import com.indago.fg.domain.Domain;
+import com.indago.fg.domain.FunctionDomain;
+import com.indago.fg.function.Function;
+import com.indago.fg.variable.Variable;
 
 public interface Factor< D extends Domain< ? >, V extends Variable< D >, F extends Function< D, ? > > {
 

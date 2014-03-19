@@ -1,4 +1,8 @@
-package com.indago.fg;
+package com.indago.fg.function;
+
+import com.indago.fg.domain.Domain;
+import com.indago.fg.domain.FunctionDomain;
+import com.indago.fg.value.Value;
 
 
 

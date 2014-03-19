@@ -1,16 +1,14 @@
-package com.indago.fg.scalar;
+package com.indago.fg.domain;
 
 import java.util.HashMap;
 
-import com.indago.fg.LabelDomain;
-
-public class EnumeratedDomain implements LabelDomain< Integer > {
+public class IntLabelDomain implements Domain< Integer > {
 
 	public static final int ARBITRARY = -1;
 
 	protected final int size;
 
-	public EnumeratedDomain( final int size ) {
+	public IntLabelDomain( final int size ) {
 		this.size = size;
 	}
 
@@ -38,9 +36,9 @@ public class EnumeratedDomain implements LabelDomain< Integer > {
 
 	@Override
 	public boolean equals( final Object obj ) {
-		if ( !( obj instanceof EnumeratedDomain ) )
+		if ( !( obj instanceof IntLabelDomain ) )
 			return false;
-		return size == ( ( EnumeratedDomain ) obj ).size;
+		return size == ( ( IntLabelDomain ) obj ).size;
 	}
 
 	@Override
@@ -53,12 +51,12 @@ public class EnumeratedDomain implements LabelDomain< Integer > {
 		return getClass().getSimpleName() + " [" + size +"]";
 	}
 
-	protected static final HashMap< Integer, EnumeratedDomain > domains = new HashMap< Integer, EnumeratedDomain >();
+	protected static final HashMap< Integer, IntLabelDomain > domains = new HashMap< Integer, IntLabelDomain >();
 
-	public static EnumeratedDomain getForSize( final int size ) {
-		EnumeratedDomain d = domains.get( new Integer( size ) );
+	public static IntLabelDomain getForSize( final int size ) {
+		IntLabelDomain d = domains.get( new Integer( size ) );
 		if ( d == null ) {
-			d = new EnumeratedDomain( size );
+			d = new IntLabelDomain( size );
 			domains.put( size, d );
 		}
 		return d;

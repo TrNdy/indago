@@ -1,13 +1,15 @@
-package com.indago.fg.scalar;
+package com.indago.fg.function;
 
-import com.indago.fg.LabelValue;
+import com.indago.fg.domain.IntLabelDomain;
+import com.indago.fg.domain.IntLabelFunctionDomain;
+import com.indago.fg.value.Value;
 
-public class EnumeratedSumConstraint extends SumConstraint< EnumeratedDomain, EnumeratedFunctionDomain, LabelValue< ?, EnumeratedDomain > > implements EnumeratedFunction {
+public class IntLabelSumConstraint extends WeightedIndexSumConstraint< IntLabelDomain, IntLabelFunctionDomain, Value< Integer, IntLabelDomain > > implements IntLabelFunction {
 
 	private final int id;
 
-	public EnumeratedSumConstraint( final int[] coefficients, final com.indago.fg.scalar.SumConstraint.Relation relation, final int value, final int id ) {
-		super( EnumeratedFunctionDomain.getArbitrary( coefficients.length ), coefficients, relation, value );
+	public IntLabelSumConstraint( final int[] coefficients, final com.indago.fg.function.WeightedIndexSumConstraint.Relation relation, final int value, final int id ) {
+		super( IntLabelFunctionDomain.getArbitrary( coefficients.length ), coefficients, relation, value );
 		this.id = id;
 	}
 

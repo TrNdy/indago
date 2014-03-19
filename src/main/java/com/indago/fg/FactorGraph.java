@@ -2,6 +2,10 @@ package com.indago.fg;
 
 import java.util.List;
 
+import com.indago.fg.factor.Factor;
+import com.indago.fg.function.Function;
+import com.indago.fg.variable.Variable;
+
 public class FactorGraph {
 
 	protected final List< Variable< ? > > variables;

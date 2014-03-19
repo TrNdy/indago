@@ -1,6 +1,6 @@
-package com.indago.fg;
+package com.indago.fg.domain;
 
-public class BinaryDomain< T > implements LabelDomain< T > {
+public class BinaryDomain< T > implements Domain< T > {
 
 	private final T zero;
 	private final T one;
