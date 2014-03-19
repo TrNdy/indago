@@ -1,11 +1,13 @@
 package com.indago.fg.io;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.indago.fg.FactorGraph;
 import com.indago.fg.factor.IntLabelFactor;
 import com.indago.fg.function.IntLabelFunction;
 import com.indago.fg.function.IntLabelPottsFunction;
@@ -14,12 +16,22 @@ import com.indago.fg.function.IntLabelTensorTable;
 import com.indago.fg.function.WeightedIndexSumConstraint.Relation;
 import com.indago.fg.variable.IntLabel;
 
-public class LoadScalar {
+public class Scalar {
 
 	public static void main( final String[] args ) throws IOException {
 //		final String fn = "src/main/resources/min-gap.txt";
 		final String fn = "src/main/resources/sopnet-test-minimal.txt";
 
+		load( fn );
+	}
+
+	/**
+	 * @param fn
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static FactorGraph load( final String fn ) throws FileNotFoundException, IOException {
 		final BufferedReader input = new BufferedReader( new FileReader( fn ) );
 
 		ArrayList< String > parts;
@@ -60,6 +72,8 @@ public class LoadScalar {
 		System.out.println( "Factors:" );
 		for ( final IntLabelFactor f : factors )
 			System.out.println( f );
+
+		return new FactorGraph( variables, factors, functions );
 	}
 
 	static int variableId = 0;
