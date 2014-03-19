@@ -1,4 +1,4 @@
-package com.indago.fg.scalar;
+package com.indago.fg.io;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
