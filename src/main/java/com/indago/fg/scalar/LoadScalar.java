@@ -6,10 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.indago.fg.scalar.SumConstraint.Relation;
+
 public class LoadScalar {
 
 	public static void main( final String[] args ) throws IOException {
-		final String fn = "src/main/resources/min-gap.txt";
+//		final String fn = "src/main/resources/min-gap.txt";
+		final String fn = "src/main/resources/sopnet-test-minimal.txt";
 
 		final BufferedReader input = new BufferedReader( new FileReader( fn ) );
 
@@ -105,7 +108,20 @@ public class LoadScalar {
 				return new EnumeratedTensorTable( numStatesForDim, entries, functionId++ );
 			} else if ( "potts".equals( name ) ) {
 				throw new UnsupportedOperationException( "not implemented" );
-			} else if ( "constraint".equals( name ) ) { throw new UnsupportedOperationException( "not implemented" ); }
+			} else if ( "constraint".equals( name ) ) {
+				int i = 1;
+
+				final int numDims = Integer.parseInt( parts.get( i++ ) );
+
+				final int coefficients[] = new int[ numDims ];
+				for ( int d = 0; d < numDims; ++d )
+					coefficients[ d ] = Integer.parseInt( parts.get( i++ ) );
+
+				final Relation relation = Relation.forSymbol( parts.get( i++ ) );
+				final int value = Integer.parseInt( parts.get( i++ ) );
+
+				return new EnumeratedSumConstraint( coefficients, relation, value, functionId++ );
+			}
 		}
 		throw new IllegalArgumentException( "couldn't parse function" );
 	}
