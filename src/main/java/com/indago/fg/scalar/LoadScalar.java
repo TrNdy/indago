@@ -12,7 +12,8 @@ public class LoadScalar {
 
 	public static void main( final String[] args ) throws IOException {
 //		final String fn = "src/main/resources/min-gap.txt";
-		final String fn = "src/main/resources/sopnet-test-minimal.txt";
+//		final String fn = "src/main/resources/sopnet-test-minimal.txt";
+		final String fn = "src/main/resources/chain.txt";
 
 		final BufferedReader input = new BufferedReader( new FileReader( fn ) );
 
