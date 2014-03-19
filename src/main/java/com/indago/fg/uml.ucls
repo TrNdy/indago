@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="com.indago.fg.function.IntLabelSumConstraint" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/function/IntLabelSumConstraint.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1022" y="995"/>    
+    <position height="-1" width="-1" x="1045" y="994"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
