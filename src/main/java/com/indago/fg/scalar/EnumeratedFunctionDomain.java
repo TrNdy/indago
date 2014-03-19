@@ -65,4 +65,12 @@ public class EnumeratedFunctionDomain implements FunctionDomain< EnumeratedDomai
 		} else
 			return cached;
 	}
+
+	// TODO
+	public static EnumeratedFunctionDomain getArbitrary( final int numDimensions ) {
+		final int[] sizes = new int[ numDimensions ];
+		Arrays.fill( sizes, -1 ); // TODO
+		return getForSizes( sizes );
+	}
+
 }
