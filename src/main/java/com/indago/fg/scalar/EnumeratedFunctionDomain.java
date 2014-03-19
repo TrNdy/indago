@@ -8,6 +8,8 @@ import com.indago.fg.FunctionDomain;
 
 public class EnumeratedFunctionDomain implements FunctionDomain< EnumeratedDomain > {
 
+	public static final int ARBITRARY = -1;
+
 	private final List< EnumeratedDomain > domains;
 
 	public EnumeratedFunctionDomain( final int... sizes ) {

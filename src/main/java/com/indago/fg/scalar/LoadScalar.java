@@ -104,7 +104,15 @@ public class LoadScalar {
 
 				return new EnumeratedTensorTable( numStatesForDim, entries, functionId++ );
 			} else if ( "potts".equals( name ) ) {
-				throw new UnsupportedOperationException( "not implemented" );
+				int i = 1;
+
+				final int numDims = Integer.parseInt( parts.get( i++ ) );
+				if ( numDims != 2 ) { throw new IllegalArgumentException( "potts-function must be of dimensionality 2" ); }
+
+				final double cost = Double.parseDouble( parts.get( i++ ) );
+
+				return new PottsFunction( cost );
+
 			} else if ( "constraint".equals( name ) ) { throw new UnsupportedOperationException( "not implemented" ); }
 		}
 		throw new IllegalArgumentException( "couldn't parse function" );
