@@ -1,13 +1,12 @@
-package com.indago.fg.scalar;
+package com.indago.fg.function;
 
 import java.util.List;
 
-import com.indago.fg.FunctionDomain;
-import com.indago.fg.LabelDomain;
-import com.indago.fg.LabelValue;
-import com.indago.fg.Tensor;
+import com.indago.fg.domain.Domain;
+import com.indago.fg.domain.FunctionDomain;
+import com.indago.fg.value.Value;
 
-public class TensorTable< D extends LabelDomain< ? >, FD extends FunctionDomain< D >, V extends LabelValue< ?, D > > implements Tensor< D, V > {
+public class TensorTable< D extends Domain< ? >, FD extends FunctionDomain< D >, V extends Value< ?, D > > implements Function< D, V > {
 
 	protected FD domain;
 

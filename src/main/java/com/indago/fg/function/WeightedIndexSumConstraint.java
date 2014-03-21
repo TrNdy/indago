@@ -1,11 +1,10 @@
-package com.indago.fg.scalar;
+package com.indago.fg.function;
 
-import com.indago.fg.FunctionDomain;
-import com.indago.fg.LabelDomain;
-import com.indago.fg.LabelValue;
-import com.indago.fg.Tensor;
+import com.indago.fg.domain.Domain;
+import com.indago.fg.domain.FunctionDomain;
+import com.indago.fg.value.Value;
 
-public class SumConstraint< D extends LabelDomain< ? >, FD extends FunctionDomain< D >, V extends LabelValue< ?, D > > implements Tensor< D, V > {
+public class WeightedIndexSumConstraint< D extends Domain< ? >, FD extends FunctionDomain< D >, V extends Value< ?, D > > implements Function< D, V > {
 
 	public static enum Relation {
 		EQ( "==" ), GE( ">=" ), LE( "<=" );
@@ -33,7 +32,7 @@ public class SumConstraint< D extends LabelDomain< ? >, FD extends FunctionDomai
 	protected final Relation relation;
 	protected final int value;
 
-	public SumConstraint( final FD domain, final int[] coefficients, final Relation relation, final int value ) {
+	public WeightedIndexSumConstraint( final FD domain, final int[] coefficients, final Relation relation, final int value ) {
 		this.domain = domain;
 		this.coefficients = coefficients;
 		this.relation = relation;
