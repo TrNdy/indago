@@ -20,6 +20,7 @@ import net.imglib2.tree.Forest;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.util.Util;
 
 /**
  * Component tree of an image stored as a tree of {@link FilteredComponent}s.
@@ -51,22 +52,15 @@ public final class FilteredComponentTree< T extends Type< T > > implements Compo
 	 *            minimum allowed size for an accepted component.
 	 * @param maxComponentSize
 	 *            maximum allowed size for an accepted component.
+	 * @param maxGrowthPerStep
 	 * @param darkToBright
 	 *            whether to apply thresholds from dark to bright (true) or
 	 *            bright to dark (false)
 	 * @return component tree of the image.
 	 */
 	public static < T extends RealType< T > > FilteredComponentTree< T > buildComponentTree( final RandomAccessibleInterval< T > input, final T type, final long minComponentSize, final long maxComponentSize, final long maxGrowthPerStep, final boolean darkToBright ) {
-		final int numDimensions = input.numDimensions();
-		long size = 1;
-		for ( int d = 0; d < numDimensions; ++d )
-			size *= input.dimension( d );
-		// TODO: use Util.getArrayOrCellImgFactory
-		if ( size > Integer.MAX_VALUE ) {
-			final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
-			return buildComponentTree( input, type, new CellImgFactory< LongType >( cellSize ), minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright );
-		} else
-			return buildComponentTree( input, type, new ArrayImgFactory< LongType >(), minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright );
+		final ImgFactory< LongType > imgFactory = Util.getArrayOrCellImgFactory( input, new LongType() );
+		return buildComponentTree( input, type, imgFactory, minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright );
 	}
 
 	/**
@@ -83,6 +77,7 @@ public final class FilteredComponentTree< T extends Type< T > > implements Compo
 	 *            minimum allowed size for an accepted component.
 	 * @param maxComponentSize
 	 *            maximum allowed size for an accepted component.
+	 * @param maxGrowthPerStep
 	 * @param darkToBright
 	 *            whether to apply thresholds from dark to bright (true) or
 	 *            bright to dark (false)
