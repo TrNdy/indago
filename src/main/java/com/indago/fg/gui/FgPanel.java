@@ -90,8 +90,8 @@ public class FgPanel extends JPanel {
 
 		guiFrame.getContentPane().setLayout( new BorderLayout() );
 
-		final String fn = "src/main/resources/sopnet-test-minimal.txt";
-//		final String fn = "src/main/resources/min-gap.txt"
+//		final String fn = "src/main/resources/sopnet-test-minimal.txt";
+		final String fn = "src/main/resources/min-gap.txt";
 
 		try {
 			guiFrame.getContentPane().add( new FgPanel( Scalar.load( fn ) ), BorderLayout.CENTER );
