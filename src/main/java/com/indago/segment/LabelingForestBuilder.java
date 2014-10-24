@@ -54,6 +54,16 @@ public class LabelingForestBuilder< T extends TreeNode< T > & Iterable< ? extend
 		return ltn;
 	}
 
+	/**
+	 * Label all pixels belonging to nodes in the forest. Labels start from 0
+	 * and the forest is traversed level-by-level starting from the roots.
+	 *
+	 * @param forest
+	 *            forest whose nodes are {@link Iterable}s of pixel positions.
+	 * @param labeling
+	 *            label image.
+	 * @return map from tree nodes to labels.
+	 */
 	public static < T extends TreeNode< T > & Iterable< ? extends Localizable > >
 			HashMap< T, Integer > labelNodes( final Forest< T > forest, final Labeling< Integer > labeling )
 	{
