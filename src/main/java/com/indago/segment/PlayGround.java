@@ -14,23 +14,21 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.integer.UnsignedIntType;
 
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.visualization.ColorStream;
 import com.indago.segment.visualization.VisualizeForest;
 import com.indago.segment.visualization.VisualizeLabeling;
 
-public class PlayGround
-{
-	public static void main( final String[] args ) throws Exception
-	{
-		doIt( "src/main/resources/components.tif", new UnsignedByteType() );
-//		doIt( "/Users/pietzsch/Downloads/demo_sumImg.tif", new UnsignedIntType() );
+public class PlayGround {
+
+	public static void main( final String[] args ) throws Exception {
+//		doIt( "src/main/resources/components.tif", new UnsignedByteType() );
+		doIt( "/Users/jug/MPI/ProjectMansfeld/Movie01/SumImgs/mRuby-PCNA_800_BGsubtracted_t20.tif", new UnsignedIntType() );
 	}
 
-	public static < T extends RealType< T > & NativeType< T > > void doIt( final String filename, final T type ) throws Exception
-	{
+	public static < T extends RealType< T > & NativeType< T > > void doIt( final String filename, final T type ) throws Exception {
 		final Img< T > img = new ImgOpener().openImg( filename, new ArrayImgFactory< T >(), type );
 		final Dimensions dims = img;
 
@@ -38,8 +36,7 @@ public class PlayGround
 		final int maxComponentSize = 10000;
 		final int maxGrowthPerStep = 1;
 		final boolean darkToBright = false;
-		final FilteredComponentTree< T > tree = FilteredComponentTree.buildComponentTree(
-				img, type, minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright );
+		final FilteredComponentTree< T > tree = FilteredComponentTree.buildComponentTree( img, type, minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright );
 
 		final LabelingForest labelingForest = LabelingForest.fromForest( tree, dims );
 
@@ -63,21 +60,19 @@ public class PlayGround
 		ImageJFunctions.show( segments, "SegmentForest" );
 	}
 
-	static class ShowConflicts
-	{
+	static class ShowConflicts {
+
 		private final HashMap< Segment, Integer > segmentToId = new HashMap< Segment, Integer >();
 
 		private int idGenerator = 0;
 
-		public ShowConflicts( final SegmentForest segmentForest )
-		{
+		public ShowConflicts( final SegmentForest segmentForest ) {
 			for ( final Segment segment : segmentForest.roots() )
 				printSegment( "", segment );
 
 			System.out.println();
 			final Collection< ? extends Collection< Segment > > cliques = segmentForest.getConflictGraphCliques();
-			for ( final Collection< Segment > clique : cliques )
-			{
+			for ( final Collection< Segment > clique : cliques ) {
 				System.out.print( "( " );
 				for ( final Segment segment : clique )
 					System.out.print( segmentToId.get( segment ) + " " );
@@ -85,11 +80,9 @@ public class PlayGround
 			}
 		}
 
-		private void printSegment( final String prefix, final Segment segment )
-		{
+		private void printSegment( final String prefix, final Segment segment ) {
 			Integer id = segmentToId.get( segment );
-			if ( id == null )
-			{
+			if ( id == null ) {
 				id = new Integer( idGenerator++ );
 				segmentToId.put( segment, id );
 			}
