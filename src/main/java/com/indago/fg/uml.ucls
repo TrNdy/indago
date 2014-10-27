@@ -3,7 +3,7 @@
   realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
   <interface id="1" language="java" name="com.indago.fg.variable.Variable" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/variable/Variable.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="219" y="74"/>    
+    <position height="-1" width="-1" x="220" y="114"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </interface>  
   <class id="2" language="java" name="com.indago.fg.variable.IntLabel" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/variable/IntLabel.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="219" y="294"/>    
+    <position height="-1" width="-1" x="220" y="334"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <interface id="3" language="java" name="com.indago.fg.value.Value" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/value/Value.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="478" y="171"/>    
+    <position height="-1" width="-1" x="479" y="211"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </interface>  
   <class id="4" language="java" name="com.indago.fg.function.IntLabelPottsFunction" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/function/IntLabelPottsFunction.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="174" y="972"/>    
+    <position height="-1" width="-1" x="130" y="937"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -39,7 +39,7 @@
   </class>  
   <interface id="5" language="java" name="com.indago.fg.function.Function" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/function/Function.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="392" y="563"/>    
+    <position height="-1" width="-1" x="393" y="603"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -48,7 +48,7 @@
   </interface>  
   <class id="6" language="java" name="com.indago.fg.function.PottsFunction" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/function/PottsFunction.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="175" y="783"/>    
+    <position height="-1" width="-1" x="132" y="788"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -57,7 +57,7 @@
   </class>  
   <class id="7" language="java" name="com.indago.fg.function.IntLabelTensorTable" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/function/IntLabelTensorTable.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="621" y="994"/>    
+    <position height="-1" width="-1" x="578" y="999"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="com.indago.fg.function.IntLabelSumConstraint" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/function/IntLabelSumConstraint.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1045" y="994"/>    
+    <position height="-1" width="-1" x="1002" y="999"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -75,7 +75,7 @@
   </class>  
   <interface id="9" language="java" name="com.indago.fg.function.IntLabelFunction" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/function/IntLabelFunction.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="387" y="1199"/>    
+    <position height="-1" width="-1" x="342" y="1139"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -85,7 +85,7 @@
   <class id="10" language="java" name="com.indago.fg.function.WeightedIndexSumConstraint" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/function/WeightedIndexSumConstraint.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1047" y="782"/>    
+    <position height="-1" width="-1" x="1004" y="787"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -94,7 +94,7 @@
   </class>  
   <class id="11" language="java" name="com.indago.fg.function.TensorTable" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/function/TensorTable.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="620" y="781"/>    
+    <position height="-1" width="-1" x="577" y="786"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -103,7 +103,7 @@
   </class>  
   <class id="12" language="java" name="com.indago.fg.gui.FgPanel" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/gui/FgPanel.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1609" y="141"/>    
+    <position height="-1" width="-1" x="1417" y="34"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -112,7 +112,7 @@
   </class>  
   <interface id="13" language="java" name="com.indago.fg.gui.FgNode" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/gui/FgNode.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1329" y="73"/>    
+    <position height="-1" width="-1" x="1166" y="17"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -121,7 +121,7 @@
   </interface>  
   <class id="14" language="java" name="com.indago.fg.gui.FgEdge" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/gui/FgEdge.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1323" y="172"/>    
+    <position height="-1" width="-1" x="1173" y="96"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -130,7 +130,7 @@
   </class>  
   <interface id="15" language="java" name="com.indago.fg.factor.Factor" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/factor/Factor.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1020" y="202"/>    
+    <position height="-1" width="-1" x="1021" y="242"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -139,83 +139,116 @@
   </interface>  
   <class id="16" language="java" name="com.indago.fg.factor.IntLabelFactor" project="Indago_" 
     file="/Indago_/src/main/java/com/indago/fg/factor/IntLabelFactor.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1012" y="446"/>    
+    <position height="-1" width="-1" x="1013" y="486"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <generalization id="17">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="13"/>  
-  </generalization>  
-  <generalization id="18">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="6"/>  
-  </generalization>  
-  <realization id="19">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="5"/>  
-  </realization>  
-  <generalization id="20">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="13"/>  
-  </generalization>  
-  <realization id="21">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="5"/>  
-  </realization>  
-  <realization id="22">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="1"/>  
-  </realization>  
-  <realization id="23">    
-    <end type="SOURCE" refId="16"/>    
-    <end type="TARGET" refId="15"/>  
-  </realization>  
-  <generalization id="24">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <realization id="25">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="9"/>  
-  </realization>  
-  <realization id="26">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="9"/>  
-  </realization>  
-  <realization id="27">    
-    <end type="SOURCE" refId="11"/>    
-    <end type="TARGET" refId="5"/>  
-  </realization>  
-  <realization id="28">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="9"/>  
-  </realization>  
-  <generalization id="29">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="10"/>  
-  </generalization>  
-  <association id="30">    
+  <class id="17" language="java" name="com.indago.fg.FactorGraph" project="Indago_" 
+    file="/Indago_/src/main/java/com/indago/fg/FactorGraph.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="616" y="-7"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="18">    
     <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="31" name="variables"/>      
-      <multiplicity id="32" minimum="0" maximum="2147483647"/>    
+      <attribute id="19" name="variables"/>      
+      <multiplicity id="20" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="33">    
+  <generalization id="21">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="13"/>  
+  </generalization>  
+  <realization id="22">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <generalization id="23">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <realization id="24">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <generalization id="25">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="26">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <realization id="27">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="9"/>  
+  </realization>  
+  <realization id="28">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <generalization id="29">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="13"/>  
+  </generalization>  
+  <realization id="30">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </realization>  
+  <realization id="31">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="9"/>  
+  </realization>  
+  <association id="32">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="33" name="variables"/>      
+      <multiplicity id="34" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="35">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="15"/>  
+  </realization>  
+  <association id="36">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="37" name="function"/>      
+      <multiplicity id="38" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="39">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="11"/>  
   </generalization>  
-  <association id="34">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="35" name="function"/>      
-      <multiplicity id="36" minimum="0" maximum="1"/>    
+  <realization id="40">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <association id="41">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="42" name="functions"/>      
+      <multiplicity id="43" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="44">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="45" name="factors"/>      
+      <multiplicity id="46" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
