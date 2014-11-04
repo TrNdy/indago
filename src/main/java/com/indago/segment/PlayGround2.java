@@ -1,21 +1,28 @@
 package com.indago.segment;
 
-import ij.ImageJ;
 import io.scif.img.ImgOpener;
 
+import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+
+import javax.swing.JFrame;
 
 import net.imglib2.Dimensions;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 
+import com.indago.fg.FactorGraph;
+import com.indago.fg.gui.FgPanel;
+import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 
 public class PlayGround2 {
@@ -61,10 +68,24 @@ public class PlayGround2 {
 		System.out.println( "\n>>>> Compact Clique Constraints <<<<" );
 		new ShowConflicts( segmentMultiForest, true );
 
-		new ImageJ();
-		for ( final Img< T > img : imgs ) {
-			ImageJFunctions.show( img, "Input" );
-		}
+		// Assign random costs to segments in MultiForest (for testing purposes)
+		final RandomSegmentCosts costs = new RandomSegmentCosts( segmentMultiForest, 815 );
+		final FactorGraph fg = FactorGraphFactory.createFromSegmentMultiForest( segmentMultiForest, costs, false );
+
+		final JFrame guiFrame = new JFrame( "FG from SegmentMultiForest" );
+		// Set window-closing action...
+		guiFrame.addWindowListener( new WindowAdapter() {
+
+			@Override
+			public void windowClosing( final WindowEvent we ) {
+				System.exit( 0 );
+			}
+		} );
+
+		guiFrame.getContentPane().setLayout( new BorderLayout() );
+		guiFrame.getContentPane().add( new FgPanel( fg ), BorderLayout.CENTER );
+		guiFrame.setSize( 800, 600 );
+		guiFrame.setVisible( true );
 	}
 
 	static class ShowConflicts {
@@ -103,5 +124,51 @@ public class PlayGround2 {
 				printSegment( prefix + "  ", c );
 		}
 
+	}
+
+	/**
+	 * Assigns random costs to all segments in a SegmentMultiForest.
+	 * This is useful for testing artificial setups...
+	 * 
+	 * @author jug
+	 */
+	static class RandomSegmentCosts implements SegmentCosts {
+
+		private final Random rand;
+		private final HashMap< Segment, Double > segmentToCost = new HashMap< Segment, Double >();
+
+		public RandomSegmentCosts( final SegmentMultiForest segmentMultiForest, final int randomSeed ) {
+			rand = new Random( randomSeed );
+			for ( final Segment root : segmentMultiForest.roots() ) {
+				recursivleyDrawRandomCosts( root );
+			}
+		}
+
+		/**
+		 * Recursively draws random costs for given segment all all its
+		 * children.
+		 * 
+		 * @param segment
+		 */
+		private void recursivleyDrawRandomCosts( final Segment segment ) {
+
+			segmentToCost.put( segment, rand.nextDouble() );
+
+			for ( final Segment child : segment.getChildren() ) {
+				recursivleyDrawRandomCosts( child );
+			}
+		}
+
+		/**
+		 * @param segment
+		 * @return the cost assigned to the given segment or Double.MAX_VALUE if
+		 *         this segment is unknown.
+		 */
+		@Override
+		public double getCost( final Segment segment ) {
+			final Double muh = segmentToCost.get( segment );
+			if ( muh != null ) { return muh.doubleValue(); }
+			return Double.MAX_VALUE;
+		}
 	}
 }

@@ -254,4 +254,16 @@ public class SegmentMultiForest implements HypothesisMultiForest< Segment > {
 			addAllSegmentsToList( child, listOfSegments );
 		}
 	}
+
+	/**
+	 * @return
+	 */
+	public List< Segment > getAllSegments() {
+		final List< Segment > ret = new ArrayList< Segment >();
+
+		for ( final Segment root : roots() ) {
+			addAllSegmentsToList( root, ret );
+		}
+		return ret;
+	}
 }
