@@ -9,7 +9,7 @@ public interface Value< T, D extends Domain< T > > extends Typed< D > {
 
 	public int getAsIndex();
 
-	public void set();
+	public void set( T value );
 
 	public void setAsIndex( int index );
 }
