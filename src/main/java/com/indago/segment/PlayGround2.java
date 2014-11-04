@@ -24,7 +24,7 @@ public class PlayGround2 {
 		final List< String > filenames = new ArrayList< String >();
 		filenames.add( "src/main/resources/forest1.tif" );
 		filenames.add( "src/main/resources/forest2.tif" );
-//		filenames.add( "src/main/resources/forest3.tif" );
+		filenames.add( "src/main/resources/forest3.tif" );
 		doIt( filenames, new UnsignedIntType() );
 	}
 
@@ -56,7 +56,10 @@ public class PlayGround2 {
 
 		final SegmentMultiForest segmentMultiForest = new SegmentMultiForest( segmentForests );
 
-		new ShowConflicts( segmentMultiForest );
+		System.out.println( "\n>>>> Pairwise Constraints <<<<" );
+		new ShowConflicts( segmentMultiForest, false );
+		System.out.println( "\n>>>> Compact Clique Constraints <<<<" );
+		new ShowConflicts( segmentMultiForest, true );
 
 		new ImageJ();
 		for ( final Img< T > img : imgs ) {
@@ -70,16 +73,21 @@ public class PlayGround2 {
 
 		private int idGenerator = 0;
 
-		public ShowConflicts( final SegmentMultiForest segmentMultiForest ) {
+		public ShowConflicts( final SegmentMultiForest segmentMultiForest, final boolean doCompactConstraints ) {
 			for ( final Segment segment : segmentMultiForest.roots() )
 				printSegment( "", segment );
 
 			System.out.println();
-			final Collection< ? extends Collection< Segment > > cliques = segmentMultiForest.getConflictGraphCliques();
+			final Collection< ? extends Collection< Segment > > cliques;
+			if ( doCompactConstraints ) {
+				cliques = segmentMultiForest.getConflictGraphCliques();
+			} else {
+				cliques = segmentMultiForest.getConflictGraphEdges();
+			}
 			for ( final Collection< Segment > clique : cliques ) {
 				System.out.print( "( " );
 				for ( final Segment segment : clique )
-					System.out.print( segmentToId.get( segment ) + " " );
+					System.out.print( String.format( "%2d ", segmentToId.get( segment ) ) );
 				System.out.println( ")" );
 			}
 		}

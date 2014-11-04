@@ -3,6 +3,7 @@ package com.indago.segment;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -160,6 +161,97 @@ public class SegmentMultiForest implements HypothesisMultiForest< Segment > {
 					edgeAccumulator.add( new ValuePair< Segment, Segment >( segmentA, segmentB ) );
 				}
 			}
+		}
+	}
+
+	/**
+	 * @return all edges in the conflict graph as pairs of Segments.
+	 */
+	public Collection< ? extends Collection< Segment >> getConflictGraphEdges() {
+		final List< Collection< Segment > > edges = new ArrayList< Collection< Segment >>();
+		final List< Segment > segmentQueue = new LinkedList< Segment >();
+
+		// Adding all edges from within all trees
+		for ( final Segment root : roots() ) {
+			segmentQueue.addAll( root.getLeaves() );
+
+			while ( !segmentQueue.isEmpty() ) {
+				final Segment segment = segmentQueue.remove( 0 );
+				final ArrayList< Segment > newEdge = new ArrayList< Segment >();
+				if ( segment.getParent() != null ) {
+					newEdge.add( segment );
+					newEdge.add( segment.getParent() );
+					segmentQueue.add( segment.getParent() );
+					edges.add( newEdge );
+				}
+			}
+		}
+
+		// Adding all conflicting Segment pairs between trees
+		for ( int idxA = 0; idxA < multiRoots.size() - 1; idxA++ ) {
+			for ( int idxB = idxA + 1; idxB < multiRoots.size(); idxB++ ) {
+				final Set< Segment > A = multiRoots.get( idxA );
+				final Set< Segment > B = multiRoots.get( idxB );
+
+				edges.addAll( getInterForestEdges( A, B ) );
+			}
+		}
+
+		return edges;
+	}
+
+	/**
+	 * Checks for all combinations of segments in trees given by sets fo root
+	 * segments in rootsA and rootsB.
+	 * 
+	 * @param rootsA
+	 * @param rootsB
+	 * @return
+	 */
+	private Collection< ? extends Collection< Segment >> getInterForestEdges( final Set< Segment > rootsA, final Set< Segment > rootsB ) {
+		final List< Collection< Segment > > edges = new ArrayList< Collection< Segment >>();
+
+		// traverse all trees in A and accumulate all segments in a long list
+		final List< Segment > allSegmentsInTreesA = new LinkedList< Segment >();
+		for ( final Segment rootA : rootsA ) {
+			addAllSegmentsToList( rootA, allSegmentsInTreesA );
+		}
+
+		for ( final Segment segmentA : allSegmentsInTreesA ) {
+			// for traversing B we use a queue because we want to stop if we know that no 
+			// conflicts will follow at a certain point...
+			final List< Segment > segmentQueue = new LinkedList< Segment >();
+			segmentQueue.addAll( rootsB );
+
+			while ( !segmentQueue.isEmpty() ) {
+				final Segment segmentB = segmentQueue.remove( 0 );
+				if ( segmentA.conflictsWith( segmentB ) ) {
+					// add conflicting edge
+					final List< Segment > newEdge = new ArrayList< Segment >();
+					newEdge.add( segmentA );
+					newEdge.add( segmentB );
+					edges.add( newEdge );
+
+					// add children of segmentB to queue (since they might conflict as well)
+					segmentQueue.addAll( segmentB.getChildren() );
+				}
+			}
+		}
+
+		return edges;
+	}
+
+	/**
+	 * Adds the given segment and (recursively) all children of it to the given
+	 * list of segments.
+	 * 
+	 * @param segment
+	 * @param listOfSegments
+	 */
+	private void addAllSegmentsToList( final Segment segment, final List< Segment > listOfSegments ) {
+		listOfSegments.add( segment );
+		for ( final Segment child : segment.getChildren() ) {
+			addAllSegmentsToList( child, listOfSegments );
 		}
 	}
 }
