@@ -11,7 +11,9 @@ import java.util.Map;
 import com.indago.fg.FactorGraph;
 import com.indago.fg.domain.BooleanFunctionDomain;
 import com.indago.fg.factor.BooleanFactor;
+import com.indago.fg.factor.Factor;
 import com.indago.fg.function.BooleanConflictConstraint;
+import com.indago.fg.function.Function;
 import com.indago.segment.Segment;
 import com.indago.segment.SegmentCosts;
 import com.indago.segment.SegmentMultiForest;
@@ -36,14 +38,11 @@ public class FactorGraphFactory {
 		final Collection< SegmentHypothesisVariable > variablesCollection = segmentVariableDict.values();
 		final List< SegmentHypothesisVariable > variables = new ArrayList< SegmentHypothesisVariable >( variablesCollection );
 
-		// TODO: how could I make a List containing all kinds of factors???
-		// final List< ? extends Function< ?, ? > > functions = new ArrayList< ? extends Function< ?, ? > >();
-		final List< BooleanConflictConstraint > functions = new ArrayList< BooleanConflictConstraint >();
+		final List< Function< ?, ? > > functions = new ArrayList< Function< ?, ? > >();
 		final BooleanConflictConstraint function = new BooleanConflictConstraint();
 		functions.add( function );
 
-		// TODO: Same story as above... how could I make a list that can contain all kinds of Factor entries?
-		final List< BooleanFactor > factors = new ArrayList< BooleanFactor >();
+		final List< Factor< ?, ?, ? > > factors = new ArrayList< Factor< ?, ?, ? > >();
 
 		Collection< ? extends Collection< Segment >> cliques;
 		if ( doCompactConstraints ) {
