@@ -1,27 +1,36 @@
 /**
- * 
+ *
  */
 package com.indago.fg.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Paint;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Ellipse2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.apache.commons.collections15.Transformer;
+
 import com.indago.fg.FactorGraph;
 import com.indago.fg.factor.Factor;
 import com.indago.fg.io.Scalar;
 import com.indago.fg.variable.Variable;
 
+import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.SpringLayout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
+import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 
 /**
@@ -30,7 +39,7 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 public class FgPanel extends JPanel {
 
 	private final Graph< FgNode, FgEdge > g;
-	private SpringLayout< FgNode, FgEdge > jungLayout;
+	private Layout< FgNode, FgEdge > jungLayout;
 	private DefaultVisualizationModel< FgNode, FgEdge > visualizationModel;
 	private VisualizationViewer< FgNode, FgEdge > visualizationViewer;
 
@@ -39,8 +48,8 @@ public class FgPanel extends JPanel {
 
 		g = new UndirectedSparseGraph< FgNode, FgEdge >();
 
+		System.out.println( fg.getVariables().size() + ", " + fg.getFactors().size() );
 		buildJungGraph( fg );
-
 		initJungGraph();
 	}
 
@@ -64,16 +73,39 @@ public class FgPanel extends JPanel {
 	 */
 	private void initJungGraph() {
 		jungLayout = new SpringLayout< FgNode, FgEdge >( this.g );
+//		jungLayout = new StaticLayout< FgNode, FgEdge >( this.g );
 
 		visualizationModel = new DefaultVisualizationModel< FgNode, FgEdge >( jungLayout, new Dimension( 800, 600 ) );
 		visualizationViewer = new VisualizationViewer< FgNode, FgEdge >( visualizationModel, new Dimension( 800, 600 ) );
+
+		final RenderContext< FgNode, FgEdge > c = visualizationViewer.getRenderContext();
+		c.setVertexFillPaintTransformer( new Transformer< FgNode, Paint >()
+		{
+			@Override
+			public Paint transform( final FgNode input )
+			{
+				return Variable.class.isInstance( input ) ? Color.blue : Color.red;
+			}
+		} );
+		c.setVertexShapeTransformer( new Transformer< FgNode, Shape >()
+		{
+			private final Shape variableShape = new Rectangle( -10, -10, 20, 20 );
+
+			private final Shape defaultShape = new Ellipse2D.Double( -10, -10, 20, 20 );
+
+			@Override
+			public Shape transform( final FgNode input )
+			{
+				return Variable.class.isInstance( input ) ? variableShape : defaultShape;
+			}
+		} );
 
 		this.add( visualizationViewer, BorderLayout.CENTER );
 	}
 
 	/**
 	 * To test this panel...
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main( final String[] args ) {
@@ -92,6 +124,7 @@ public class FgPanel extends JPanel {
 
 //		final String fn = "src/main/resources/sopnet-test-minimal.txt";
 		final String fn = "src/main/resources/min-gap.txt";
+//		final String fn = "/Users/pietzsch/Desktop/sopnet-subproblems/factor_graph.txt";
 
 		try {
 			guiFrame.getContentPane().add( new FgPanel( Scalar.load( fn ) ), BorderLayout.CENTER );
