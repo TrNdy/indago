@@ -8,7 +8,7 @@ import com.indago.fg.domain.FunctionDomain;
 import com.indago.fg.value.Value;
 
 /**
- * AtMostOneNotZero returns 0 cost if at most one of the arguments is equal to
+ * AtMostOneNotZero returns 0 cost if at most one of the arguments is unequal to
  * <code>zeroValue</code>. Otherwise it returns the cost it is initialized with.
  * 
  * @author jug
