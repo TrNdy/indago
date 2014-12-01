@@ -25,8 +25,8 @@ import com.indago.fg.factor.Factor;
 import com.indago.fg.io.Scalar;
 import com.indago.fg.variable.Variable;
 
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.algorithms.layout.SpringLayout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
@@ -72,31 +72,30 @@ public class FgPanel extends JPanel {
 	 * @param preferredSize
 	 */
 	private void initJungGraph() {
-		jungLayout = new SpringLayout< FgNode, FgEdge >( this.g );
+		jungLayout = new CircleLayout< FgNode, FgEdge >( this.g );
+//		jungLayout = new SpringLayout< FgNode, FgEdge >( this.g );
 //		jungLayout = new StaticLayout< FgNode, FgEdge >( this.g );
 
 		visualizationModel = new DefaultVisualizationModel< FgNode, FgEdge >( jungLayout, new Dimension( 800, 600 ) );
 		visualizationViewer = new VisualizationViewer< FgNode, FgEdge >( visualizationModel, new Dimension( 800, 600 ) );
 
 		final RenderContext< FgNode, FgEdge > c = visualizationViewer.getRenderContext();
-		c.setVertexFillPaintTransformer( new Transformer< FgNode, Paint >()
-		{
+		c.setVertexFillPaintTransformer( new Transformer< FgNode, Paint >() {
+
 			@Override
-			public Paint transform( final FgNode input )
-			{
+			public Paint transform( final FgNode input ) {
 				return Variable.class.isInstance( input ) ? Color.blue : Color.red;
 			}
 		} );
-		c.setVertexShapeTransformer( new Transformer< FgNode, Shape >()
-		{
-			private final Shape variableShape = new Rectangle( -10, -10, 20, 20 );
+		c.setVertexShapeTransformer( new Transformer< FgNode, Shape >() {
 
-			private final Shape defaultShape = new Ellipse2D.Double( -10, -10, 20, 20 );
+			private final Shape variableShape = new Ellipse2D.Double( -10, -10, 20, 20 );
+
+			private final Shape factorShape = new Rectangle( -10, -10, 20, 20 );
 
 			@Override
-			public Shape transform( final FgNode input )
-			{
-				return Variable.class.isInstance( input ) ? variableShape : defaultShape;
+			public Shape transform( final FgNode input ) {
+				return Variable.class.isInstance( input ) ? variableShape : factorShape;
 			}
 		} );
 
@@ -105,7 +104,7 @@ public class FgPanel extends JPanel {
 
 	/**
 	 * To test this panel...
-	 *
+	 * 
 	 * @param args
 	 */
 	public static void main( final String[] args ) {
