@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 import net.imglib2.Dimensions;
 import net.imglib2.Localizable;
-import net.imglib2.labeling.NativeImgLabeling;
+import net.imglib2.newlabeling.NativeImgLabeling;
 import net.imglib2.tree.Forest;
 import net.imglib2.tree.TreeNode;
 import net.imglib2.type.numeric.integer.IntType;

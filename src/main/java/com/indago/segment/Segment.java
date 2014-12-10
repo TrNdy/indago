@@ -9,8 +9,8 @@ import net.imglib2.Cursor;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.labeling.LabelRegions;
-import net.imglib2.labeling.LabelRegions.LabelStatistics;
+import net.imglib2.newlabeling.LabelRegions;
+import net.imglib2.newlabeling.LabelRegions.LabelStatistics;
 import net.imglib2.newroi.Regions;
 import net.imglib2.type.logic.BoolType;
 

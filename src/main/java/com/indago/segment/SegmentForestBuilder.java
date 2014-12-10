@@ -2,7 +2,7 @@ package com.indago.segment;
 
 import java.util.ArrayList;
 
-import net.imglib2.labeling.LabelRegions;
+import net.imglib2.newlabeling.LabelRegions;
 
 public class SegmentForestBuilder
 {
