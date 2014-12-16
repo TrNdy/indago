@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.indago.fg.value;
 
@@ -16,14 +16,6 @@ public class IntLabelValue implements Value< Integer, IntLabelDomain > {
 	public IntLabelValue( final Integer value, final IntLabelDomain domain ) {
 		this.domain = domain;
 		this.value = value;
-	}
-
-	/**
-	 * @see com.indago.fg.util.Typed#getType()
-	 */
-	@Override
-	public IntLabelDomain getType() {
-		return domain;
 	}
 
 	/**

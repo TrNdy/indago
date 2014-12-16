@@ -21,11 +21,6 @@ public class BooleanVariable implements Variable< BooleanDomain > {
 	}
 
 	@Override
-	public BooleanDomain getType() {
-		return domain;
-	}
-
-	@Override
 	public String toString() {
 		return getClass().getSimpleName();
 	}

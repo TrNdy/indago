@@ -23,11 +23,6 @@ public class IntLabel implements Variable< IntLabelDomain > {
 	}
 
 	@Override
-	public IntLabelDomain getType() {
-		return domain;
-	}
-
-	@Override
 	public String toString() {
 		return getClass().getSimpleName() + "(" + id + ")";
 	}

@@ -11,11 +11,6 @@ public class BinaryDomain< T > implements Domain< T > {
 	}
 
 	@Override
-	public T getType() {
-		return zero;
-	}
-
-	@Override
 	public int size() {
 		return 2;
 	}

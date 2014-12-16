@@ -21,14 +21,6 @@ public class BooleanValue implements Value< Boolean, BooleanDomain > {
 	}
 
 	/**
-	 * @see com.indago.fg.util.Typed#getType()
-	 */
-	@Override
-	public BooleanDomain getType() {
-		return domain;
-	}
-
-	/**
 	 * @see com.indago.fg.value.Value#get()
 	 */
 	@Override

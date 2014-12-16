@@ -1,9 +1,8 @@
 package com.indago.fg.value;
 
 import com.indago.fg.domain.Domain;
-import com.indago.fg.util.Typed;
 
-public interface Value< T, D extends Domain< T > > extends Typed< D > {
+public interface Value< T, D extends Domain< T > > {
 
 	public T get();
 

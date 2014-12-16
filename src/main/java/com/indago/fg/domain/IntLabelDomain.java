@@ -13,11 +13,6 @@ public class IntLabelDomain implements Domain< Integer > {
 	}
 
 	@Override
-	public Integer getType() {
-		return 0;
-	}
-
-	@Override
 	public int size() {
 		return size;
 	}

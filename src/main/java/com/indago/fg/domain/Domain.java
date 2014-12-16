@@ -1,8 +1,7 @@
 package com.indago.fg.domain;
 
-import com.indago.fg.util.Typed;
 
-public interface Domain< T > extends Typed< T > {
+public interface Domain< T > {
 
 	public int size();
 
