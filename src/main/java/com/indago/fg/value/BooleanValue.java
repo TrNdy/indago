@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.indago.fg.value;
 
@@ -9,6 +9,8 @@ import com.indago.fg.domain.BooleanDomain;
  * @author jug
  */
 public class BooleanValue implements Value< Boolean, BooleanDomain > {
+	public static final BooleanValue TRUE = new BooleanValue( Boolean.TRUE );
+	public static final BooleanValue FALSE = new BooleanValue( Boolean.FALSE );
 
 	private final BooleanDomain domain;
 	private Boolean value;
@@ -60,6 +62,11 @@ public class BooleanValue implements Value< Boolean, BooleanDomain > {
 		} else {
 			this.set( Boolean.FALSE );
 		}
+	}
+
+	@Override
+	public String toString() {
+		return value ? "true" : "false";
 	}
 
 }
