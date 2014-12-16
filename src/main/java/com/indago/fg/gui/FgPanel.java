@@ -32,6 +32,7 @@ import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
 /**
  * @author jug
@@ -98,6 +99,8 @@ public class FgPanel extends JPanel {
 				return Variable.class.isInstance( input ) ? variableShape : factorShape;
 			}
 		} );
+
+		visualizationViewer.setVertexToolTipTransformer( new ToStringLabeller< FgNode >() );
 
 		this.add( visualizationViewer, BorderLayout.CENTER );
 	}
