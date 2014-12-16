@@ -152,7 +152,7 @@ public class PlayGround2 {
 		 */
 		private void recursivleyDrawRandomCosts( final Segment segment ) {
 
-			segmentToCost.put( segment, rand.nextDouble() );
+			segmentToCost.put( segment, - rand.nextDouble() );
 
 			for ( final Segment child : segment.getChildren() ) {
 				recursivleyDrawRandomCosts( child );
