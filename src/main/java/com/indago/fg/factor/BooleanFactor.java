@@ -46,6 +46,7 @@ public class BooleanFactor implements Factor< BooleanDomain, BooleanVariable, Bo
 	@Override
 	public void setVariable( final int index, final BooleanVariable v ) {
 		variables[ index ] = v;
+		v.addFactor( this );
 	}
 
 	@Override

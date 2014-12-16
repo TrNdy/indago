@@ -43,6 +43,7 @@ public class IntLabelFactor implements Factor< IntLabelDomain, IntLabel, IntLabe
 	@Override
 	public void setVariable( final int index, final IntLabel v ) {
 		variables[ index ] = v;
+		v.addFactor( this );
 	}
 
 	@Override
