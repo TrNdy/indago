@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.indago.segment.fg;
 
@@ -17,7 +17,6 @@ public class SegmentHypothesisVariable extends BooleanVariable {
 	 * @param value
 	 */
 	public SegmentHypothesisVariable( final Segment segment ) {
-		super( Boolean.FALSE );
 		this.segment = segment;
 	}
 

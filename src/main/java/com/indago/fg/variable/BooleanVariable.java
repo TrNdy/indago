@@ -11,15 +11,13 @@ public class BooleanVariable implements Variable< BooleanDomain > {
 	private final List< Factor< BooleanDomain, ?, ? >> factors = new ArrayList< Factor< BooleanDomain, ?, ? >>();
 
 	private final BooleanDomain domain;
-	private final Boolean value;
 
-	public BooleanVariable( final Boolean value ) {
-		this( new BooleanDomain(), value );
+	public BooleanVariable() {
+		this( new BooleanDomain() );
 	}
 
-	public BooleanVariable( final BooleanDomain domain, final Boolean value ) {
+	public BooleanVariable( final BooleanDomain domain ) {
 		this.domain = domain;
-		this.value = value;
 	}
 
 	@Override
@@ -29,7 +27,7 @@ public class BooleanVariable implements Variable< BooleanDomain > {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "(" + value + ")";
+		return getClass().getSimpleName();
 	}
 
 	/**
