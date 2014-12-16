@@ -13,6 +13,7 @@ import com.indago.fg.domain.BooleanFunctionDomain;
 import com.indago.fg.factor.BooleanFactor;
 import com.indago.fg.factor.Factor;
 import com.indago.fg.function.BooleanConflictConstraint;
+import com.indago.fg.function.BooleanTensorTable;
 import com.indago.fg.function.Function;
 import com.indago.segment.Segment;
 import com.indago.segment.SegmentCosts;
@@ -33,6 +34,7 @@ public class FactorGraphFactory {
 
 	public static FactorGraph createFromSegmentMultiForest( final SegmentMultiForest segmentMultiForest, final SegmentCosts segmentCosts, final boolean doCompactConstraints ) {
 		int factorId = 0;
+		int functionId = 0;
 
 		final Map< Segment, SegmentHypothesisVariable > segmentVariableDict = VariableSetFactory.getSegmentMultiForestVariableDictionary( segmentMultiForest );
 		final Collection< SegmentHypothesisVariable > variablesCollection = segmentVariableDict.values();
@@ -61,6 +63,18 @@ public class FactorGraphFactory {
 				factor.setVariable( i, sv );
 				i++;
 			}
+			factors.add( factor );
+		}
+
+		final BooleanFunctionDomain domain = new BooleanFunctionDomain( 1 );
+		for ( final Segment segment : segmentMultiForest.getAllSegments() ) {
+			final double[] entries = new double[] { 0.0, segmentCosts.getCost( segment ) };
+			final BooleanTensorTable btt = new BooleanTensorTable( domain, entries, functionId++ );
+			final BooleanFactor factor = new BooleanFactor( domain, factorId++ );
+			factor.setFunction( btt );
+			factor.setVariable( 0, segmentVariableDict.get( segment ) );
+
+			functions.add( btt );
 			factors.add( factor );
 		}
 

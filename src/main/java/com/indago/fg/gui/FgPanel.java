@@ -25,8 +25,8 @@ import com.indago.fg.factor.Factor;
 import com.indago.fg.io.Scalar;
 import com.indago.fg.variable.Variable;
 
-import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.algorithms.layout.SpringLayout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
@@ -48,7 +48,7 @@ public class FgPanel extends JPanel {
 
 		g = new UndirectedSparseGraph< FgNode, FgEdge >();
 
-		System.out.println( fg.getVariables().size() + ", " + fg.getFactors().size() );
+//		System.out.println( fg.getVariables().size() + ", " + fg.getFactors().size() );
 		buildJungGraph( fg );
 		initJungGraph();
 	}
@@ -72,8 +72,8 @@ public class FgPanel extends JPanel {
 	 * @param preferredSize
 	 */
 	private void initJungGraph() {
-		jungLayout = new CircleLayout< FgNode, FgEdge >( this.g );
-//		jungLayout = new SpringLayout< FgNode, FgEdge >( this.g );
+//		jungLayout = new CircleLayout< FgNode, FgEdge >( this.g );
+		jungLayout = new SpringLayout< FgNode, FgEdge >( this.g );
 //		jungLayout = new StaticLayout< FgNode, FgEdge >( this.g );
 
 		visualizationModel = new DefaultVisualizationModel< FgNode, FgEdge >( jungLayout, new Dimension( 800, 600 ) );
