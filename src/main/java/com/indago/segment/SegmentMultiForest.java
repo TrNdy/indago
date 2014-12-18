@@ -10,7 +10,7 @@ import java.util.Set;
 import net.imglib2.util.Pair;
 import net.imglib2.util.ValuePair;
 
-public class SegmentMultiForest implements HypothesisMultiForest< Segment > {
+public class SegmentMultiForest implements ConflictGraph< Segment > {
 
 	public static SegmentMultiForest fromLabelingForests( final List< LabelingForest > labelingForests ) {
 		return new SegmentMultiForestBuilder( labelingForests ).getSegmentMultiForest();
@@ -81,7 +81,7 @@ public class SegmentMultiForest implements HypothesisMultiForest< Segment > {
 	 * Adds all 'visible' cliques between all paths from any leave to
 	 * corresponding root node existing between two forests (given by set of
 	 * root nodes).
-	 * 
+	 *
 	 * @param rootsA
 	 *            roots of one forest
 	 * @param rootsB
@@ -137,7 +137,7 @@ public class SegmentMultiForest implements HypothesisMultiForest< Segment > {
 
 	/**
 	 * Adds all 'visible' cliques between given paths.
-	 * 
+	 *
 	 * @param edgeAccumulator
 	 *            data structure holding all 'visible' edges found so far (to
 	 *            avoid adding duplicates)
@@ -203,7 +203,7 @@ public class SegmentMultiForest implements HypothesisMultiForest< Segment > {
 	/**
 	 * Checks for all combinations of segments in trees given by sets fo root
 	 * segments in rootsA and rootsB.
-	 * 
+	 *
 	 * @param rootsA
 	 * @param rootsB
 	 * @return
@@ -218,7 +218,7 @@ public class SegmentMultiForest implements HypothesisMultiForest< Segment > {
 		}
 
 		for ( final Segment segmentA : allSegmentsInTreesA ) {
-			// for traversing B we use a queue because we want to stop if we know that no 
+			// for traversing B we use a queue because we want to stop if we know that no
 			// conflicts will follow at a certain point...
 			final List< Segment > segmentQueue = new LinkedList< Segment >();
 			segmentQueue.addAll( rootsB );
@@ -244,7 +244,7 @@ public class SegmentMultiForest implements HypothesisMultiForest< Segment > {
 	/**
 	 * Adds the given segment and (recursively) all children of it to the given
 	 * list of segments.
-	 * 
+	 *
 	 * @param segment
 	 * @param listOfSegments
 	 */
