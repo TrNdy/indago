@@ -12,11 +12,9 @@ public class BooleanValue implements Value< Boolean, BooleanDomain > {
 	public static final BooleanValue TRUE = new BooleanValue( Boolean.TRUE );
 	public static final BooleanValue FALSE = new BooleanValue( Boolean.FALSE );
 
-	private final BooleanDomain domain;
 	private Boolean value;
 
 	public BooleanValue( final Boolean value ) {
-		this.domain = new BooleanDomain();
 		this.value = value;
 	}
 
