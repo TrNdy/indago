@@ -5,9 +5,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.imglib2.tree.Forest;
 import net.imglib2.tree.Util;
 
-public class SegmentForest implements HypothesisForest< Segment > {
+public class SegmentForest implements Forest< Segment >, ConflictGraph< Segment > {
 
 	public static SegmentForest fromLabelingForest( final LabelingForest labelingForest ) {
 		return new SegmentForestBuilder( labelingForest ).getSegmentForest();
