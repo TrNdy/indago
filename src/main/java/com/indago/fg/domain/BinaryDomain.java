@@ -5,7 +5,7 @@ public class BinaryDomain< T > implements Domain< T > {
 	private final T zero;
 	private final T one;
 
-	public BinaryDomain( final T zero, final T one ) {
+	protected BinaryDomain( final T zero, final T one ) {
 		this.zero = zero;
 		this.one = one;
 	}

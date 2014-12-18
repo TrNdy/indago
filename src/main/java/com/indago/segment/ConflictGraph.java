@@ -7,5 +7,5 @@ import java.util.Collection;
  */
 public interface ConflictGraph< T >
 {
-	public Collection< ? extends Collection < T > > getConflictGraphCliques();
+	public Collection< ? extends Collection < ? extends T > > getConflictGraphCliques();
 }

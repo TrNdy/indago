@@ -8,7 +8,7 @@ public class IntLabelDomain implements Domain< Integer > {
 
 	protected final int size;
 
-	public IntLabelDomain( final int size ) {
+	protected IntLabelDomain( final int size ) {
 		this.size = size;
 	}
 

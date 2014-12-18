@@ -13,7 +13,7 @@ public class BooleanVariable implements Variable< BooleanDomain > {
 	private final BooleanDomain domain;
 
 	public BooleanVariable() {
-		this( new BooleanDomain() );
+		this( BooleanDomain.get() );
 	}
 
 	public BooleanVariable( final BooleanDomain domain ) {
