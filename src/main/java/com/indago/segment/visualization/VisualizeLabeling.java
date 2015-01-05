@@ -9,12 +9,12 @@ import net.imglib2.converter.Converter;
 import net.imglib2.display.projector.RandomAccessibleProjector2D;
 import net.imglib2.newlabeling.LabelingMapping;
 import net.imglib2.newlabeling.LabelingType;
-import net.imglib2.newlabeling.NativeImgLabeling;
+import net.imglib2.newlabeling.ImgLabeling;
 import net.imglib2.type.Type;
 
 public class VisualizeLabeling {
 
-	public static < C extends Type< C >, L > void colorLabels( final NativeImgLabeling< L, ? > labeling, final Iterator< C > colors, final RandomAccessibleInterval< C > regionsImg ) {
+	public static < C extends Type< C >, L > void colorLabels( final ImgLabeling< L, ? > labeling, final Iterator< C > colors, final RandomAccessibleInterval< C > regionsImg ) {
 		final HashMap< Set< ? >, C > colorTable = new HashMap< Set< ? >, C >();
 		final LabelingMapping< ? > mapping = labeling.getMapping();
 		final int numLists = mapping.numSets();
