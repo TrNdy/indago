@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 import net.imglib2.Dimensions;
 import net.imglib2.Localizable;
-import net.imglib2.newlabeling.NativeImgLabeling;
+import net.imglib2.newlabeling.ImgLabeling;
 import net.imglib2.tree.Forest;
 import net.imglib2.tree.TreeNode;
 import net.imglib2.type.numeric.integer.IntType;
@@ -13,22 +13,28 @@ import net.imglib2.type.numeric.integer.IntType;
 public class LabelingForest implements Forest< LabelingTreeNode >
 {
 	public static < T extends TreeNode< T > & Iterable< ? extends Localizable > >
-	LabelingForest fromForest( final Forest< T > forest, final Dimensions dimensions )
+	LabelingForest fromForest( final Forest< T > forest, final ImgLabeling< Integer, IntType > sharedLabeling )
 	{
-		return new LabelingForestBuilder< T >( forest, dimensions ).getLabelingForest();
+		return new LabelingForestBuilder< T >( forest, sharedLabeling, null ).getLabelingForest();
 	}
 
-	private final NativeImgLabeling< Integer, IntType > labeling;
+	public static < T extends TreeNode< T > & Iterable< ? extends Localizable > >
+	LabelingForest fromForest( final Forest< T > forest, final Dimensions dimensions )
+	{
+		return new LabelingForestBuilder< T >( forest, null, dimensions ).getLabelingForest();
+	}
+
+	private final ImgLabeling< Integer, IntType > labeling;
 
 	private final HashSet< LabelingTreeNode > roots;
 
-	public LabelingForest( final NativeImgLabeling< Integer, IntType > labeling, final HashSet< LabelingTreeNode > roots )
+	public LabelingForest( final ImgLabeling< Integer, IntType > labeling, final HashSet< LabelingTreeNode > roots )
 	{
 		this.labeling = labeling;
 		this.roots = roots;
 	}
 
-	public NativeImgLabeling< Integer, IntType > getLabeling()
+	public ImgLabeling< Integer, IntType > getLabeling()
 	{
 		return labeling;
 	}

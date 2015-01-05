@@ -8,9 +8,10 @@ import net.imglib2.Dimensions;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
+import net.imglib2.newlabeling.ImgLabeling;
+import net.imglib2.newlabeling.LabelRegion;
 import net.imglib2.newlabeling.Labeling;
 import net.imglib2.newlabeling.LabelingType;
-import net.imglib2.newlabeling.NativeImgLabeling;
 import net.imglib2.tree.Forest;
 import net.imglib2.tree.TreeNode;
 import net.imglib2.type.numeric.integer.IntType;
@@ -20,11 +21,17 @@ public class LabelingForestBuilder< T extends TreeNode< T > & Iterable< ? extend
 
 	private final LabelingForest labelingForest;
 
+	private final ImgLabeling< Integer, IntType > labeling;
+
 	private final HashMap< T, Integer > nodeToLabel;
 
-	public LabelingForestBuilder( final Forest< T > forest, final Dimensions dimensions ) {
-		final Img< IntType > img = Util.getArrayOrCellImgFactory( dimensions, new IntType() ).create( dimensions, new IntType() );
-		final NativeImgLabeling< Integer, IntType > labeling = new NativeImgLabeling< Integer, IntType >( img );
+	public LabelingForestBuilder( final Forest< T > forest, final ImgLabeling< Integer, IntType > sharedLabeling, final Dimensions dimensions ) {
+		if ( sharedLabeling == null ) {
+			final Img< IntType > img = Util.getArrayOrCellImgFactory( dimensions, new IntType() ).create( dimensions, new IntType() );
+			labeling = new ImgLabeling< Integer, IntType >( img );
+		} else {
+			labeling = sharedLabeling;
+		}
 		nodeToLabel = labelNodes( forest, labeling );
 
 		final HashSet< LabelingTreeNode > roots = new HashSet< LabelingTreeNode >();
@@ -42,7 +49,10 @@ public class LabelingForestBuilder< T extends TreeNode< T > & Iterable< ? extend
 	}
 
 	private LabelingTreeNode buildLabelingTreeNodeFor( final T node ) {
-		final LabelingTreeNode ltn = new LabelingTreeNode( nodeToLabel.get( node ) );
+		final Integer label = nodeToLabel.get( node );
+		final LabelRegion< Integer > labelRegion = labeling.getLabelRegions().getLabelRegion( label );
+		final LabelingSegment< Integer > segment = new LabelingSegment< Integer >( labelRegion );
+		final LabelingTreeNode ltn = new LabelingTreeNode( segment );
 		for ( final T c : node.getChildren() )
 			ltn.addChild( buildLabelingTreeNodeFor( c ) );
 		return ltn;

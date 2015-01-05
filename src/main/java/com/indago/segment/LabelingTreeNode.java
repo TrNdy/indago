@@ -1,50 +1,19 @@
 package com.indago.segment;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
-import net.imglib2.tree.TreeNode;
+import net.imglib2.Localizable;
 
-public class LabelingTreeNode implements TreeNode< LabelingTreeNode >
+
+public class LabelingTreeNode extends HypothesisTreeNode< LabelingTreeNode, LabelingSegment< Integer > > implements Iterable< Localizable >
 {
-	private final Integer label;
-
-	private final ArrayList< LabelingTreeNode > children;
-
-	private LabelingTreeNode parent;
-
-	public LabelingTreeNode( final Integer label )
+	public LabelingTreeNode( final LabelingSegment< Integer > segment )
 	{
-		this.label = label;
-		children = new ArrayList< LabelingTreeNode >();
-	}
-
-	public void addChild( final LabelingTreeNode node )
-	{
-		children.add( node );
-		node.parent = this;
-	}
-
-	public void removeChild( final LabelingTreeNode node )
-	{
-		children.remove( node );
-		node.parent = null;
+		super( segment );
 	}
 
 	@Override
-	public LabelingTreeNode getParent()
-	{
-		return parent;
-	}
-
-	@Override
-	public List< LabelingTreeNode > getChildren()
-	{
-		return children;
-	}
-
-	public Integer getLabel()
-	{
-		return label;
+	public Iterator< Localizable > iterator() {
+		return getSegment().iterator();
 	}
 }

@@ -1,10 +1,14 @@
 package com.indago.segment;
 
-import java.util.Collection;
+public class HypothesisTreeNode< T extends HypothesisTreeNode< T, S >, S > extends AbstractHypothesisTreeNode< T > {
 
-import net.imglib2.tree.TreeNode;
+	private final S segment;
 
-public interface HypothesisTreeNode< T extends HypothesisTreeNode< T > > extends TreeNode< T >
-{
-	public Collection< T > getConflictingHypotheses();
+	public HypothesisTreeNode( final S segment ) {
+		this.segment = segment;
+	}
+
+	public S getSegment() {
+		return segment;
+	}
 }
