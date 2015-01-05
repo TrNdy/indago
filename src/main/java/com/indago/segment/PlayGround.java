@@ -11,10 +11,11 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.tree.Forest;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedIntType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.visualization.ColorStream;
@@ -24,8 +25,8 @@ import com.indago.segment.visualization.VisualizeLabeling;
 public class PlayGround {
 
 	public static void main( final String[] args ) throws Exception {
-//		doIt( "src/main/resources/components.tif", new UnsignedByteType() );
-		doIt( "/Users/jug/MPI/ProjectMansfeld/Movie01/SumImgs/mRuby-PCNA_800_BGsubtracted_t20.tif", new UnsignedIntType() );
+		doIt( "src/main/resources/components.tif", new UnsignedByteType() );
+//		doIt( "/Users/jug/MPI/ProjectMansfeld/Movie01/SumImgs/mRuby-PCNA_800_BGsubtracted_t20.tif", new UnsignedIntType() );
 	}
 
 	public static < T extends RealType< T > & NativeType< T > > void doIt( final String filename, final T type ) throws Exception {
@@ -40,9 +41,11 @@ public class PlayGround {
 
 		final LabelingForest labelingForest = LabelingForest.fromForest( tree, dims );
 
-		final SegmentForest segmentForest = SegmentForest.fromLabelingForest( labelingForest );
-
-		new ShowConflicts( segmentForest );
+		final HypothesisPrinter hp = new HypothesisPrinter();
+		hp.assignIds( labelingForest );
+		hp.printHypothesisForest( labelingForest );
+		System.out.println();
+		hp.printConflictGraphCliques( labelingForest );
 
 		final Img< ARGBType > components = ArrayImgs.argbs( img.dimension( 0 ), img.dimension( 1 ) );
 		VisualizeForest.colorLevels( tree, ColorStream.iterator(), components );
@@ -51,44 +54,68 @@ public class PlayGround {
 		VisualizeLabeling.colorLabels( labelingForest.getLabeling(), ColorStream.iterator(), labels );
 
 		final Img< ARGBType > segments = ArrayImgs.argbs( dims.dimension( 0 ), dims.dimension( 1 ) );
-		VisualizeForest.colorLevels( segmentForest, ColorStream.iterator(), segments );
+		VisualizeForest.colorLevels( labelingForest, ColorStream.iterator(), segments );
 
 		new ImageJ();
 		ImageJFunctions.show( img, "Input" );
 		ImageJFunctions.show( components, "FilteredComponentTree" );
-		ImageJFunctions.show( labels, "LabelingForest" );
-		ImageJFunctions.show( segments, "SegmentForest" );
+		ImageJFunctions.show( labels, "Labeling" );
+		ImageJFunctions.show( segments, "LabelingForest" );
 	}
 
-	static class ShowConflicts {
+	public static class HypothesisPrinter {
 
-		private final HashMap< Segment, Integer > segmentToId = new HashMap< Segment, Integer >();
+		private final HashMap< Integer, Integer > segmentLabelToId;
 
 		private int idGenerator = 0;
 
-		public ShowConflicts( final SegmentForest segmentForest ) {
-			for ( final Segment segment : segmentForest.roots() )
-				printSegment( "", segment );
+		public HypothesisPrinter() {
+			segmentLabelToId = new HashMap<>();
+		}
 
-			System.out.println();
-			final Collection< ? extends Collection< Segment > > cliques = segmentForest.getConflictGraphCliques();
-			for ( final Collection< Segment > clique : cliques ) {
-				System.out.print( "( " );
-				for ( final Segment segment : clique )
-					System.out.print( segmentToId.get( segment ) + " " );
-				System.out.println( ")" );
+		public < T extends HypothesisTreeNode< T, S >, S extends LabelingSegment< Integer > > void assignIds( final Forest< T > forest ) {
+			for ( final T node : forest.roots() )
+				assignIds( node );
+		}
+
+		public < T extends HypothesisTreeNode< T, S >, S extends LabelingSegment< Integer > > void assignIds( final T node ) {
+			assignId( node.getSegment() );
+			for ( final T child : node.getChildren() )
+				assignIds( child );
+		}
+
+		public void assignId( final LabelingSegment< Integer > segment ) {
+			final Integer label = segment.getLabel();
+			Integer id = segmentLabelToId.get( label );
+			if ( id == null ) {
+				id = new Integer( idGenerator++ );
+				segmentLabelToId.put( label, id );
 			}
 		}
 
-		private void printSegment( final String prefix, final Segment segment ) {
-			Integer id = segmentToId.get( segment );
+		public < T extends HypothesisTreeNode< T, S >, S extends LabelingSegment< Integer > > void printHypothesisForest( final Forest< T > forest ) {
+			for ( final T node : forest.roots() )
+				printHypothesisTreeNode( "", node );
+		}
+
+		private < T extends HypothesisTreeNode< T, S >, S extends LabelingSegment< Integer > > void printHypothesisTreeNode( final String prefix, final T node ) {
+			final Integer id = segmentLabelToId.get( node.getSegment().getLabel() );
 			if ( id == null ) {
-				id = new Integer( idGenerator++ );
-				segmentToId.put( segment, id );
+				assignIds( node );
 			}
 			System.out.println( prefix + id );
-			for ( final Segment c : segment.getChildren() )
-				printSegment( prefix + "  ", c );
+			for ( final T child : node.getChildren() )
+				printHypothesisTreeNode( prefix + "  ", child );
+		}
+
+		public void printConflictGraphCliques( final ConflictGraph< ? extends LabelingSegment< Integer > > conflictGraph ) {
+			final Collection< ? extends Collection< ? extends LabelingSegment< Integer > > > cliques = conflictGraph.getConflictGraphCliques();
+			for ( final Collection< ? extends LabelingSegment< Integer > > clique : cliques ) {
+				System.out.print( "( " );
+				for ( final LabelingSegment< Integer > segment : clique )
+					System.out.print( segmentLabelToId.get( segment.getLabel() ) + " " );
+				System.out.println( ")" );
+			}
 		}
 
 	}
