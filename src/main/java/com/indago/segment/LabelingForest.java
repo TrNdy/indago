@@ -4,39 +4,30 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.imglib2.Dimensions;
-import net.imglib2.Localizable;
 import net.imglib2.newlabeling.ImgLabeling;
+import net.imglib2.newlabeling.LabelRegions;
 import net.imglib2.tree.Forest;
-import net.imglib2.tree.TreeNode;
 import net.imglib2.tree.Util;
 import net.imglib2.type.numeric.integer.IntType;
 
-public class LabelingForest implements Forest< LabelingTreeNode >, ConflictGraph< LabelingSegment< Integer > > {
+public class LabelingForest< T > implements Forest< LabelingTreeNode< T > >, ConflictGraph< LabelingSegment > {
 
-	public static < T extends TreeNode< T > & Iterable< ? extends Localizable > > LabelingForest fromForest( final Forest< T > forest, final ImgLabeling< Integer, IntType > sharedLabeling ) {
-		return new LabelingForestBuilder< T >( forest, sharedLabeling, null ).getLabelingForest();
-	}
+	private final HashSet< LabelingTreeNode< T > > roots;
 
-	public static < T extends TreeNode< T > & Iterable< ? extends Localizable > > LabelingForest fromForest( final Forest< T > forest, final Dimensions dimensions ) {
-		return new LabelingForestBuilder< T >( forest, null, dimensions ).getLabelingForest();
-	}
+	private final LabelingBuilder builder;
 
-	private final ImgLabeling< Integer, IntType > labeling;
-
-	private final HashSet< LabelingTreeNode > roots;
-
-	public LabelingForest( final ImgLabeling< Integer, IntType > labeling, final HashSet< LabelingTreeNode > roots ) {
-		this.labeling = labeling;
+	public LabelingForest( final ImgLabeling< Integer, IntType > labeling, final LabelRegions< Integer > labelRegions, final HashSet< LabelingTreeNode< T > > roots ) {
+		this.builder = null;
 		this.roots = roots;
 	}
 
-	public ImgLabeling< Integer, IntType > getLabeling() {
-		return labeling;
+	public LabelingForest( final LabelingBuilder builder, final HashSet< LabelingTreeNode< T > > roots ) {
+		this.builder = builder;
+		this.roots = roots;
 	}
 
 	@Override
-	public HashSet< LabelingTreeNode > roots() {
+	public HashSet< LabelingTreeNode< T > > roots() {
 		return roots;
 	}
 
@@ -47,13 +38,13 @@ public class LabelingForest implements Forest< LabelingTreeNode >, ConflictGraph
 	 * be very efficient!
 	 */
 	@Override
-	public Collection< ? extends Collection< LabelingSegment< Integer > > > getConflictGraphCliques() {
-		final ArrayList< ArrayList< LabelingSegment< Integer > > > cliques = new ArrayList<>();
-		final ArrayList< LabelingTreeNode > leafs = Util.getLeafs( this );
-		for ( final LabelingTreeNode leaf : leafs ) {
-			final ArrayList< LabelingSegment< Integer > > clique = new ArrayList<>();
+	public Collection< ? extends Collection< LabelingSegment > > getConflictGraphCliques() {
+		final ArrayList< ArrayList< LabelingSegment > > cliques = new ArrayList<>();
+		final ArrayList< LabelingTreeNode< T > > leafs = Util.getLeafs( this );
+		for ( final LabelingTreeNode< T > leaf : leafs ) {
+			final ArrayList< LabelingSegment > clique = new ArrayList<>();
 			clique.add( leaf.getSegment() );
-			for ( final LabelingTreeNode node : leaf.getConflictingHypotheses() ) {
+			for ( final LabelingTreeNode< T > node : leaf.getConflictingHypotheses() ) {
 				clique.add( node.getSegment() );
 			}
 			if ( clique.size() > 1 ) cliques.add( clique );

@@ -39,7 +39,8 @@ public class PlayGround {
 		final boolean darkToBright = false;
 		final FilteredComponentTree< T > tree = FilteredComponentTree.buildComponentTree( img, type, minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright );
 
-		final LabelingForest labelingForest = LabelingForest.fromForest( tree, dims );
+		final LabelingBuilder builder = new LabelingBuilder( img );
+		final LabelingForest< ? > labelingForest = builder.buildLabelingForest( tree );
 
 		final HypothesisPrinter hp = new HypothesisPrinter();
 		hp.assignIds( labelingForest );
@@ -51,7 +52,7 @@ public class PlayGround {
 		VisualizeForest.colorLevels( tree, ColorStream.iterator(), components );
 
 		final Img< ARGBType > labels = ArrayImgs.argbs( dims.dimension( 0 ), dims.dimension( 1 ) );
-		VisualizeLabeling.colorLabels( labelingForest.getLabeling(), ColorStream.iterator(), labels );
+		VisualizeLabeling.colorLabels( builder.getLabeling(), ColorStream.iterator(), labels );
 
 		final Img< ARGBType > segments = ArrayImgs.argbs( dims.dimension( 0 ), dims.dimension( 1 ) );
 		VisualizeForest.colorLevels( labelingForest, ColorStream.iterator(), segments );
@@ -65,41 +66,40 @@ public class PlayGround {
 
 	public static class HypothesisPrinter {
 
-		private final HashMap< Integer, Integer > segmentLabelToId;
+		private final HashMap< Object, Integer > segmentToId;
 
 		private int idGenerator = 0;
 
 		public HypothesisPrinter() {
-			segmentLabelToId = new HashMap<>();
+			segmentToId = new HashMap<>();
 		}
 
-		public < T extends HypothesisTreeNode< T, S >, S extends LabelingSegment< Integer > > void assignIds( final Forest< T > forest ) {
+		public < T extends HypothesisTreeNode< T, ? > > void assignIds( final Forest< T > forest ) {
 			for ( final T node : forest.roots() )
 				assignIds( node );
 		}
 
-		public < T extends HypothesisTreeNode< T, S >, S extends LabelingSegment< Integer > > void assignIds( final T node ) {
+		public < T extends HypothesisTreeNode< T, ? > > void assignIds( final T node ) {
 			assignId( node.getSegment() );
 			for ( final T child : node.getChildren() )
 				assignIds( child );
 		}
 
-		public void assignId( final LabelingSegment< Integer > segment ) {
-			final Integer label = segment.getLabel();
-			Integer id = segmentLabelToId.get( label );
+		public void assignId( final Object segment ) {
+			Integer id = segmentToId.get( segment );
 			if ( id == null ) {
 				id = new Integer( idGenerator++ );
-				segmentLabelToId.put( label, id );
+				segmentToId.put( segment, id );
 			}
 		}
 
-		public < T extends HypothesisTreeNode< T, S >, S extends LabelingSegment< Integer > > void printHypothesisForest( final Forest< T > forest ) {
+		public < T extends HypothesisTreeNode< T, ? > > void printHypothesisForest( final Forest< T > forest ) {
 			for ( final T node : forest.roots() )
 				printHypothesisTreeNode( "", node );
 		}
 
-		private < T extends HypothesisTreeNode< T, S >, S extends LabelingSegment< Integer > > void printHypothesisTreeNode( final String prefix, final T node ) {
-			final Integer id = segmentLabelToId.get( node.getSegment().getLabel() );
+		private < T extends HypothesisTreeNode< T, ? > > void printHypothesisTreeNode( final String prefix, final T node ) {
+			final Integer id = segmentToId.get( node.getSegment() );
 			if ( id == null ) {
 				assignIds( node );
 			}
@@ -108,12 +108,12 @@ public class PlayGround {
 				printHypothesisTreeNode( prefix + "  ", child );
 		}
 
-		public void printConflictGraphCliques( final ConflictGraph< ? extends LabelingSegment< Integer > > conflictGraph ) {
-			final Collection< ? extends Collection< ? extends LabelingSegment< Integer > > > cliques = conflictGraph.getConflictGraphCliques();
-			for ( final Collection< ? extends LabelingSegment< Integer > > clique : cliques ) {
+		public void printConflictGraphCliques( final ConflictGraph< ? extends Segment > conflictGraph ) {
+			final Collection< ? extends Collection< ? extends Segment > > cliques = conflictGraph.getConflictGraphCliques();
+			for ( final Collection< ? extends Segment > clique : cliques ) {
 				System.out.print( "( " );
-				for ( final LabelingSegment< Integer > segment : clique )
-					System.out.print( segmentLabelToId.get( segment.getLabel() ) + " " );
+				for ( final Segment segment : clique )
+					System.out.print( segmentToId.get( segment ) + " " );
 				System.out.println( ")" );
 			}
 		}

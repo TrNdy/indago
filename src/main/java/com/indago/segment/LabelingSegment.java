@@ -9,22 +9,20 @@ import net.imglib2.newlabeling.LabelRegion;
 import net.imglib2.type.logic.BoolType;
 import net.imglib2.util.Intervals;
 
-public class LabelingSegment< T > implements Iterable< Localizable > {
+public class LabelingSegment implements Segment {
 
-	private final LabelRegion< T > region;
+	private final LabelRegion< ? > region;
 
-	protected LabelingSegment( final LabelRegion< T > region ) {
+	protected LabelingSegment( final LabelRegion< ? > region ) {
 		this.region = region;
 	}
 
-	public T getLabel() {
-		return region.getLabel();
-	}
-
+	@Override
 	public long getArea() {
 		return region.getArea();
 	}
 
+	@Override
 	public Localizable getCenterOfMass() {
 		return region.getCenterOfMass();
 	}
@@ -56,9 +54,11 @@ public class LabelingSegment< T > implements Iterable< Localizable > {
 	 * @param segment
 	 * @return
 	 */
-	public boolean conflictsWith( final LabelingSegment< T > segment ) {
-		if ( Intervals.isEmpty( Intervals.intersect( this.region, segment.region ) ) )
-			return false;
+	@Override
+	public boolean conflictsWith( final Segment segment ) {
+		if ( segment instanceof LabelingSegment )
+			if ( Intervals.isEmpty( Intervals.intersect( this.region, ( ( LabelingSegment ) segment ).region ) ) )
+				return false;
 
 		final RandomAccess< BoolType > raMask = region.randomAccess();
 		for ( final Localizable localizable : segment ) {
@@ -68,4 +68,8 @@ public class LabelingSegment< T > implements Iterable< Localizable > {
 		return false;
 	}
 
+	@Override
+	public int numDimensions() {
+		return region.numDimensions();
+	}
 }

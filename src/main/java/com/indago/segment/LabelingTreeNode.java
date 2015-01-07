@@ -5,11 +5,18 @@ import java.util.Iterator;
 import net.imglib2.Localizable;
 
 
-public class LabelingTreeNode extends HypothesisTreeNode< LabelingTreeNode, LabelingSegment< Integer > > implements Iterable< Localizable >
+public class LabelingTreeNode< T > extends HypothesisTreeNode< LabelingTreeNode< T >, LabelingSegment > implements Iterable< Localizable >
 {
-	public LabelingTreeNode( final LabelingSegment< Integer > segment )
+	private final T label;
+
+	public LabelingTreeNode( final LabelingSegment segment, final T label )
 	{
 		super( segment );
+		this.label = label;
+	}
+
+	public T getLabel() {
+		return label;
 	}
 
 	@Override

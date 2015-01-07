@@ -13,7 +13,6 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.BenchmarkHelper;
 
-import com.indago.segment.filteredcomponents.FilteredComponent;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.visualization.ColorStream;
 import com.indago.segment.visualization.VisualizeForest;
@@ -31,8 +30,8 @@ public class PlayGround3 {
 
 			@Override
 			public void run() {
-				final LabelingForestBuilder< FilteredComponent< T > > builder = new LabelingForestBuilder< FilteredComponent< T > >( tree, dims );
-				builder.getLabelingForest();
+				final LabelingBuilder builder = new LabelingBuilder( dims );
+				builder.buildLabelingForest( tree );
 			}
 		} );
 	}
@@ -50,13 +49,14 @@ public class PlayGround3 {
 		System.out.println( "go" );
 		benchmark( dims, tree );
 
-		final LabelingForest labelingForest = LabelingForest.fromForest( tree, dims );
+		final LabelingBuilder builder = new LabelingBuilder( dims );
+		final LabelingForest< ? > labelingForest = builder.buildLabelingForest( tree );
 
 		final Img< ARGBType > components = ArrayImgs.argbs( img.dimension( 0 ), img.dimension( 1 ) );
 		VisualizeForest.colorLevels( tree, ColorStream.iterator(), components );
 
 		final Img< ARGBType > labels = ArrayImgs.argbs( dims.dimension( 0 ), dims.dimension( 1 ) );
-		VisualizeLabeling.colorLabels( labelingForest.getLabeling(), ColorStream.iterator(), labels );
+		VisualizeLabeling.colorLabels( builder.getLabeling(), ColorStream.iterator(), labels );
 
 		ImageJFunctions.show( img, "Input" );
 		ImageJFunctions.show( components, "FilteredComponentTree" );
