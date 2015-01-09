@@ -5,6 +5,16 @@ import java.util.Collection;
 
 import net.imglib2.tree.TreeNode;
 
+/**
+ * Node in a segmentation hypothesis tree. Provides methods to get ancestors,
+ * descendants, and descendant leafs of a node. Use
+ * {@link #getConflictingHypotheses()} to get conflicting hypothesis of a node
+ * within the same tree (all ancestors and descendants of the node).
+ *
+ * @param <T>
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
 public abstract class AbstractHypothesisTreeNode< T extends AbstractHypothesisTreeNode< T > > implements TreeNode< T > {
 
 	/**

@@ -9,6 +9,12 @@ import net.imglib2.newlabeling.LabelRegion;
 import net.imglib2.type.logic.BoolType;
 import net.imglib2.util.Intervals;
 
+/**
+ * A {@link Segment} that is backed by a {@link LabelRegion} providing the
+ * segment pixels.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
 public class LabelingSegment implements Segment {
 
 	private final LabelRegion< ? > region;

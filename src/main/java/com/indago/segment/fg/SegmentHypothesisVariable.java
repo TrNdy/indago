@@ -9,18 +9,18 @@ import com.indago.segment.Segment;
 /**
  * @author jug
  */
-public class SegmentHypothesisVariable extends BooleanVariable {
+public class SegmentHypothesisVariable< T extends Segment > extends BooleanVariable {
 
-	private final Segment segment;
+	private final T segment;
 
 	/**
 	 * @param value
 	 */
-	public SegmentHypothesisVariable( final Segment segment ) {
+	public SegmentHypothesisVariable( final T segment ) {
 		this.segment = segment;
 	}
 
-	public Segment getSegment() {
+	public T getSegment() {
 		return this.segment;
 	}
 }

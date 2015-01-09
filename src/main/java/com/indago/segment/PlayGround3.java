@@ -50,7 +50,7 @@ public class PlayGround3 {
 		benchmark( dims, tree );
 
 		final LabelingBuilder builder = new LabelingBuilder( dims );
-		final LabelingForest< ? > labelingForest = builder.buildLabelingForest( tree );
+		final LabelingForest labelingForest = builder.buildLabelingForest( tree );
 
 		final Img< ARGBType > components = ArrayImgs.argbs( img.dimension( 0 ), img.dimension( 1 ) );
 		VisualizeForest.colorLevels( tree, ColorStream.iterator(), components );
