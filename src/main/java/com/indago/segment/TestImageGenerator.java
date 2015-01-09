@@ -29,7 +29,7 @@ import com.indago.fg.gui.FgPanel;
 import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 
-public class PlayGround3 {
+public class TestImageGenerator {
 
 	public static void main( final String[] args ) throws Exception {
 //		final List< String > filenames = new ArrayList< String >();
