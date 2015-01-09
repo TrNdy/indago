@@ -40,4 +40,20 @@ public class BooleanVariable implements Variable< BooleanDomain > {
 	public void addFactor( final Factor< BooleanDomain, ?, ? > factor ) {
 		factors.add( factor );
 	}
+
+	/**
+	 * @see com.indago.fg.variable.Variable#getFactors()
+	 */
+	@Override
+	public List< ? extends Factor< BooleanDomain, ?, ? >> getFactors() {
+		return factors;
+	}
+
+	/**
+	 * @see com.indago.fg.variable.Variable#addFactor(com.indago.fg.factor.Factor)
+	 */
+	@Override
+	public void addFactor( final Factor< BooleanDomain, ?, ? > factor ) {
+		factors.add( factor );
+	}
 }
