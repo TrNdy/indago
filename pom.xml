@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>net.imagej</groupId>
 		<artifactId>pom-imagej</artifactId>
-		<version>5.2.0</version>
+		<version>5.3.0</version>
 	</parent>
 
 	<groupId>com.jug</groupId>
@@ -19,6 +19,7 @@
 
 	<properties>
 		<jung2.version>2.0.1</jung2.version>
+		<scijava.jvm.version>1.7</scijava.jvm.version>
 	</properties>
 
 	<dependencies>
@@ -72,6 +73,19 @@
 			<organizationUrl>http://www.mpi-cbg.de/</organizationUrl>
 			<roles>
 				<role>postdoc</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>tpietzsch</id>
+			<name>Tobias Pietzsch</name>
+			<email>pietzsch@mpi-cbg.de</email>
+			<url />
+			<organization>MPI-CBG</organization>
+			<organizationUrl>http://www.mpi-cbg.de/</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
 			</roles>
 			<timezone>+1</timezone>
 		</developer>
