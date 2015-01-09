@@ -42,20 +42,4 @@ public class IntLabel implements Variable< IntLabelDomain > {
 	public List< ? extends Factor< IntLabelDomain, ?, ? >> getFactors() {
 		return factors;
 	}
-
-	/**
-	 * @see com.indago.fg.variable.Variable#addFactor(com.indago.fg.factor.Factor)
-	 */
-	@Override
-	public void addFactor( final Factor< IntLabelDomain, ?, ? > factor ) {
-		factors.add( factor );
-	}
-
-	/**
-	 * @see com.indago.fg.variable.Variable#getFactors()
-	 */
-	@Override
-	public List< ? extends Factor< IntLabelDomain, ?, ? >> getFactors() {
-		return factors;
-	}
 }
