@@ -7,13 +7,16 @@ import gurobi.GRBException;
 import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
+import ij.IJ;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import net.imglib2.Dimensions;
 import net.imglib2.img.Img;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
@@ -35,41 +38,109 @@ import com.indago.segment.filteredcomponents.FilteredComponentTree;
 
 public class Benchmarks {
 
-	public static void main( final String[] args ) throws Exception {
-		System.out.print( "Generating random synthetic data... " );
-		final ArrayList< Img< UnsignedIntType >> imgs = generateRandomSyntheticImgs( 25, 4711 );
-		System.out.println( "done!" );
+	private static int baseSeed = 4711;
+	private static int numImgsPerParameterSet = 10;
+	private static int numInnerLoopsPerSet = 100;
 
-		System.out.println( "Starting benchmarks now!" );
-		runBenchmarkOnImgs( imgs, new UnsignedIntType() );
+	private static int minComponentSize = 10;
+	private static int maxComponentSize = 10000 - 1;
+	private static int maxGrowthPerStep = 200;
+	private static boolean darkToBright = false;
+
+	private static boolean exportImgSets = true;
+	private static String exportPath = "/Users/jug/MPI/temp";
+
+	public static class Parameters {
+
+		int width;
+		int height;
+		int numSeedPixels;
+		double maxRadius;
+		double minDeltaR;
+		double maxDeltaR;
+		double meanDeltaR;
+		double sdDeltaR;
+		int minIntensity;
+		int maxIntensity;
+
+		public Parameters( final int width, final int height, final int numSeedPixels, final double maxRadius, final double minDeltaR, final double maxDeltaR, final double meanDeltaR, final double sdDeltaR, final int minIntensity, final int maxIntensity ) {
+			this.width = width;
+			this.height = height;
+			this.numSeedPixels = numSeedPixels;
+			this.maxRadius = maxRadius;
+			this.minDeltaR = minDeltaR;
+			this.maxDeltaR = maxDeltaR;
+			this.meanDeltaR = meanDeltaR;
+			this.sdDeltaR = sdDeltaR;
+			this.minIntensity = minIntensity;
+			this.maxIntensity = maxIntensity;
+		}
+
+		@Override
+		public String toString() {
+			return String.format( "(w,h,numS,maxR,minD,maxD,meanD,sdD,minI,maxI) = (%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d)", width, height, numSeedPixels, maxRadius, minDeltaR, maxDeltaR, meanDeltaR, sdDeltaR, minIntensity, maxIntensity );
+		}
 	}
 
-	public static ArrayList< Img< UnsignedIntType >> generateRandomSyntheticImgs( final int numImgs, final int seed ) {
-		final int width = 512;
-		final int height = 512;
-		final int numSeedPixels = 10;
-		final double maxRadius = 50.;
-		final double minDeltaR = .5;
-		final double maxDeltaR = 6.;
-		final double meanDeltaR = .5;
-		final double sdDeltaR = 0;// 1.5;
-		final int minIntensity = 0;
-		final int maxIntensity = 100;
+	public static void main( final String[] args ) throws Exception {
+
+		final ArrayList< Parameters > parameterSets = new ArrayList< Parameters >();
+		parameterSets.add( new Parameters( 256, 256, 10, 20.0, 0.5, 6.0, 1.0, 0.0, 0, 25 ) ); // first one we used
+		parameterSets.add( new Parameters( 256, 256, 25, 20.0, 0.5, 6.0, 1.0, 0.0, 0, 25 ) ); // denser one
+
+		System.out.println( "Starting benchmarks now!" );
+
+		String summaryCollection = "\n\n\nSUMMARY:\n";
+		summaryCollection += "========\n\n";
+		summaryCollection += String.format( "baseSeed:              \t%d\n", baseSeed );
+		summaryCollection += String.format( "numImgsPerParameterSet:\t%d\n", numImgsPerParameterSet );
+		summaryCollection += String.format( "numInnerLoopsPerSet:   \t%d\n", numInnerLoopsPerSet );
+		summaryCollection += "\n";
+		summaryCollection += String.format( "minComponentSize:      \t%d\n", minComponentSize );
+		summaryCollection += String.format( "maxComponentSize:      \t%d\n", maxComponentSize );
+		summaryCollection += String.format( "maxGrowthPerStep:      \t%d\n", maxGrowthPerStep );
+		summaryCollection += String.format( "maxGrowthPerStep:      \t%s\n", ( darkToBright ) ? "true" : "false" );
+
+		for ( int i = 0; i < parameterSets.size(); i++ ) {
+			System.out.print( String.format( "\n\n\n\nGenerating random synthetic dataset %d of %d... ", i + 1, parameterSets.size() ) );
+			final ArrayList< Img< UnsignedIntType >> imgs = generateRandomSyntheticImgs( numImgsPerParameterSet, baseSeed + i, parameterSets.get( i ) );
+			System.out.println( "done!" );
+
+			if ( exportImgSets ) {
+				final File path = new File( exportPath );
+				if ( path.isDirectory() && path.canWrite() ) {
+					int j = 0;
+					for ( final Img< UnsignedIntType > img : imgs ) {
+						final String name = String.format( "ImageSet_%02d_%03d", i, j );
+						IJ.save( ImageJFunctions.wrap( img, name ), path + "/" + name + ".tif" );
+						j++;
+					}
+
+				} else {
+					System.out.println( "ERROR -- Cannot write to export path '" + exportPath + "'" );
+				}
+			}
+
+			summaryCollection += String.format( "\nParameter-set %3d:\n", i );
+			summaryCollection += String.format( "------------------\n", i );
+			summaryCollection += parameterSets.get( i ).toString() + "\n\n";
+			summaryCollection += runBenchmarkOnImgs( imgs, new UnsignedIntType() );
+		}
+
+		System.out.println( summaryCollection );
+	}
+
+	public static ArrayList< Img< UnsignedIntType >> generateRandomSyntheticImgs( final int numImgs, final int seed, final Parameters p ) {
 
 		final ArrayList< Img< UnsignedIntType >> imgs = new ArrayList< Img< UnsignedIntType >>();
 		for ( int f = 0; f < numImgs; f++ ) {
-			imgs.add( RandomForestFactory.getForestImg( width, height, numSeedPixels, maxRadius, minDeltaR, maxDeltaR, meanDeltaR, sdDeltaR, minIntensity, maxIntensity, seed + f ) );
+			imgs.add( RandomForestFactory.getForestImg( p.width, p.height, p.numSeedPixels, p.maxRadius, p.minDeltaR, p.maxDeltaR, p.meanDeltaR, p.sdDeltaR, p.minIntensity, p.maxIntensity, seed + f ) );
 		}
 
 		return imgs;
 	}
 
-	public static < T extends RealType< T > & NativeType< T > > void runBenchmarkOnImgs( final List< Img< T > > imgs, final T type ) throws Exception {
-		final int minComponentSize = 10;
-		final int maxComponentSize = 10000 - 1;
-		final int maxGrowthPerStep = 200;
-		final boolean darkToBright = false;
-
+	public static < T extends RealType< T > & NativeType< T > > String runBenchmarkOnImgs( final List< Img< T > > imgs, final T type ) throws Exception {
 		final Dimensions dims = imgs.get( 0 );
 
 		final List< FilteredComponentTree< T > > fctrees = new ArrayList<>();
@@ -147,7 +218,7 @@ public class Benchmarks {
 		final int[] fgSolveIterGurobi = new int[ 3 ];
 		final double[] fgSolveTimeGurobi = new double[ 3 ];
 
-		for ( int ci = 0; ci < 100; ci++ ) {
+		for ( int ci = 0; ci < numInnerLoopsPerSet; ci++ ) {
 			System.out.print( "Setting random segment costs... " );
 			final RandomSegmentCosts costs = new RandomSegmentCosts( segments, 815 + ci );
 			System.out.println( "done!" );
@@ -207,13 +278,10 @@ public class Benchmarks {
 			fgSolveTimeGurobi[ 2 ] += gurobiStats.getB();
 		}
 
-		System.out.println( "\nSummary:" );
-		System.out.println( "========" );
-		System.out.println( summaryCollection );
-		System.out.println( String.format( "Cumulated FG build time:       \t%6.2f\t%6.2f\t%6.2f", fgBuildTimeTotal[ 0 ], fgBuildTimeTotal[ 1 ], fgBuildTimeTotal[ 2 ] ) );
-		System.out.println( String.format( "Cumulated gurobi solving iter: \t%6d\t%6d\t%6d", fgSolveIterGurobi[ 0 ], fgSolveIterGurobi[ 1 ], fgSolveIterGurobi[ 2 ] ) );
-		System.out.println( String.format( "Cumulated gurobi solving time: \t%6.2f\t%6.2f\t%6.2f", fgSolveTimeGurobi[ 0 ], fgSolveTimeGurobi[ 1 ], fgSolveTimeGurobi[ 2 ] ) );
-		System.out.println( String.format( "Cumulated total solving time:  \t%6.2f\t%6.2f\t%6.2f", fgSolveTimeTotal[ 0 ], fgSolveTimeTotal[ 1 ], fgSolveTimeTotal[ 2 ] ) );
+		summaryCollection += String.format( "Cumulated FG build time:       \t%6.2f\t%6.2f\t%6.2f\n", fgBuildTimeTotal[ 0 ], fgBuildTimeTotal[ 1 ], fgBuildTimeTotal[ 2 ] );
+		summaryCollection += String.format( "Cumulated gurobi solving iter: \t%6d\t%6d\t%6d\n", fgSolveIterGurobi[ 0 ], fgSolveIterGurobi[ 1 ], fgSolveIterGurobi[ 2 ] );
+		summaryCollection += String.format( "Cumulated gurobi solving time: \t%6.2f\t%6.2f\t%6.2f\n", fgSolveTimeGurobi[ 0 ], fgSolveTimeGurobi[ 1 ], fgSolveTimeGurobi[ 2 ] );
+		summaryCollection += String.format( "Cumulated total solving time:  \t%6.2f\t%6.2f\t%6.2f\n", fgSolveTimeTotal[ 0 ], fgSolveTimeTotal[ 1 ], fgSolveTimeTotal[ 2 ] );
 
 //		*** *** *** *** *** *** *** ***  FACTOR GRAPH OUTPUT  *** *** *** *** *** *** *** *** *** *** *** *** 
 //		final JFrame guiFrame = new JFrame( "FG from SegmentMultiForest" );
@@ -230,6 +298,8 @@ public class Benchmarks {
 //		guiFrame.getContentPane().add( new FgPanel( fg1 ), BorderLayout.CENTER );
 //		guiFrame.setSize( 800, 600 );
 //		guiFrame.setVisible( true );
+
+		return summaryCollection;
 	}
 
 	private static Pair< Integer, Double > buildAndRunILP( final FactorGraph fg ) throws GRBException {
