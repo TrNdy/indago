@@ -17,6 +17,8 @@ import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
+import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 
 import com.indago.fg.Assignment;
 import com.indago.fg.FactorGraph;
@@ -35,7 +37,7 @@ public class Benchmarks {
 
 	public static void main( final String[] args ) throws Exception {
 		System.out.print( "Generating random synthetic data... " );
-		final ArrayList< Img< UnsignedIntType >> imgs = generateRandomSyntheticImgs( 100, 4711 );
+		final ArrayList< Img< UnsignedIntType >> imgs = generateRandomSyntheticImgs( 25, 4711 );
 		System.out.println( "done!" );
 
 		System.out.println( "Starting benchmarks now!" );
@@ -81,6 +83,8 @@ public class Benchmarks {
 		System.out.print( "Building labeling forest... " );
 		long t0 = System.currentTimeMillis();
 
+		String summaryCollection = "";
+
 //		int i = 1;
 		final List< LabelingForest > labelingForests = new ArrayList<>();
 		for ( final FilteredComponentTree< T > fctree : fctrees ) {
@@ -93,6 +97,7 @@ public class Benchmarks {
 
 		long t1 = System.currentTimeMillis();
 		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+		summaryCollection += String.format( "LabelingForest:           \t%6.2f\n", ( t1 - t0 ) / 1000. );
 
 //		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 //		*** *** *** *** *** *** *** *** CONFLICT GRAPH SECTION  *** *** *** *** *** *** *** *** *** *** *** *** 
@@ -100,30 +105,27 @@ public class Benchmarks {
 
 		System.out.print( "Constructing PairwiseConflictGraph... " );
 		t0 = System.currentTimeMillis();
-
 		final PairwiseConflictGraph conflictGraph1 = new PairwiseConflictGraph( labelingBuilder );
 		conflictGraph1.getConflictGraphCliques();
-
 		t1 = System.currentTimeMillis();
 		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+		summaryCollection += String.format( "PairwiseConflictGraph:      \t%6.2f\n", ( t1 - t0 ) / 1000. );
 
 		System.out.print( "Constructing MultiForestConflictGraph... " );
 		t0 = System.currentTimeMillis();
-
 		final MultiForestConflictGraph conflictGraph2 = new MultiForestConflictGraph( labelingForests );
 		conflictGraph2.getConflictGraphCliques();
-
 		t1 = System.currentTimeMillis();
 		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+		summaryCollection += String.format( "MultiForestConflictGraph:   \t%6.2f\n", ( t1 - t0 ) / 1000. );
 
 		System.out.print( "Constructing MinimalOverlapConflictGraph... " );
 		t0 = System.currentTimeMillis();
-
 		final MinimalOverlapConflictGraph conflictGraph3 = new MinimalOverlapConflictGraph( labelingBuilder );
 		conflictGraph3.getConflictGraphCliques();
-
 		t1 = System.currentTimeMillis();
 		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+		summaryCollection += String.format( "MinimalOverlapConflictGraph:\t%6.2f\n", ( t1 - t0 ) / 1000. );
 
 //		*** *** *** *** *** *** *** ***  CONFLICT GRAPH OUTPUT  *** *** *** *** *** *** *** *** *** *** *** *** 
 //		final HypothesisPrinter hp = new HypothesisPrinter();
@@ -136,63 +138,82 @@ public class Benchmarks {
 //		hp.printConflictGraphCliques( conflictGraph1 );
 
 //		*** *** *** *** *** *** *** *** SETTING RANDOM COSTS *** *** *** *** *** *** *** *** *** *** *** *** ** 
-		System.out.print( "Setting random segment costs... " );
 		final ArrayList< LabelingSegment > segments = labelingBuilder.getSegments();
 		// assign random costs for testing purposes
-		final RandomSegmentCosts costs = new RandomSegmentCosts( segments, 815 );
-		System.out.println( "done!" );
 
-//		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
-//		*** *** *** *** *** *** *** *** ***  FG and ILP SECTION *** *** *** *** *** *** *** *** *** *** *** *** 
-//		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***		
+		Pair< Integer, Double > gurobiStats;
+		final double[] fgBuildTimeTotal = new double[ 3 ];
+		final double[] fgSolveTimeTotal = new double[ 3 ];
+		final int[] fgSolveIterGurobi = new int[ 3 ];
+		final double[] fgSolveTimeGurobi = new double[ 3 ];
 
-		System.out.print( "Constructing FG1 from PairwiseConflictGraph... " );
-		t0 = System.currentTimeMillis();
+		for ( int ci = 0; ci < 100; ci++ ) {
+			System.out.print( "Setting random segment costs... " );
+			final RandomSegmentCosts costs = new RandomSegmentCosts( segments, 815 + ci );
+			System.out.println( "done!" );
 
-		final FactorGraph fg1 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph1, costs );
+			//		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+			//		*** *** *** *** *** *** *** *** ***  FG and ILP SECTION *** *** *** *** *** *** *** *** *** *** *** *** 
+			//		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***		
 
-		t1 = System.currentTimeMillis();
-		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+			System.out.print( ">>\t Constructing FG1 from PairwiseConflictGraph... " );
+			t0 = System.currentTimeMillis();
+			final FactorGraph fg1 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph1, costs );
+			t1 = System.currentTimeMillis();
+			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+			fgBuildTimeTotal[ 0 ] += ( t1 - t0 ) / 1000.;
 
-		System.out.print( "Constructing FG2 from MultiForestConflictGraph... " );
-		t0 = System.currentTimeMillis();
+			System.out.print( ">>\t Constructing FG2 from MultiForestConflictGraph... " );
+			t0 = System.currentTimeMillis();
+			final FactorGraph fg2 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph2, costs );
+			t1 = System.currentTimeMillis();
+			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+			fgBuildTimeTotal[ 1 ] += ( t1 - t0 ) / 1000.;
 
-		final FactorGraph fg2 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph2, costs );
+			System.out.print( ">>\t Constructing FG3 from MinimalOverlapConflictGraph... " );
+			t0 = System.currentTimeMillis();
+			final FactorGraph fg3 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph3, costs );
+			t1 = System.currentTimeMillis();
+			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+			fgBuildTimeTotal[ 2 ] += ( t1 - t0 ) / 1000.;
 
-		t1 = System.currentTimeMillis();
-		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-		System.out.print( "Constructing FG3 from MinimalOverlapConflictGraph... " );
-		t0 = System.currentTimeMillis();
+			System.out.print( ">>\t Solving FG1... " );
+			t0 = System.currentTimeMillis();
+			gurobiStats = buildAndRunILP( fg1 );
+			t1 = System.currentTimeMillis();
+			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+			fgSolveTimeTotal[ 0 ] += ( t1 - t0 ) / 1000.;
+			fgSolveIterGurobi[ 0 ] += gurobiStats.getA();
+			fgSolveTimeGurobi[ 0 ] += gurobiStats.getB();
 
-		final FactorGraph fg3 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph3, costs );
+			System.out.print( ">>\t Solving FG2... " );
+			t0 = System.currentTimeMillis();
+			gurobiStats = buildAndRunILP( fg2 );
+			t1 = System.currentTimeMillis();
+			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+			fgSolveTimeTotal[ 1 ] += ( t1 - t0 ) / 1000.;
+			fgSolveIterGurobi[ 1 ] += gurobiStats.getA();
+			fgSolveTimeGurobi[ 1 ] += gurobiStats.getB();
 
-		t1 = System.currentTimeMillis();
-		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+			System.out.print( ">>\t Solving FG3... " );
+			t0 = System.currentTimeMillis();
+			gurobiStats = buildAndRunILP( fg3 );
+			t1 = System.currentTimeMillis();
+			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+			fgSolveTimeTotal[ 2 ] += ( t1 - t0 ) / 1000.;
+			fgSolveIterGurobi[ 2 ] += gurobiStats.getA();
+			fgSolveTimeGurobi[ 2 ] += gurobiStats.getB();
+		}
 
-		System.out.print( "Solving FG1... " );
-		t0 = System.currentTimeMillis();
-
-		buildILP( fg1 );
-
-		t1 = System.currentTimeMillis();
-		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
-
-		System.out.print( "Solving FG2... " );
-		t0 = System.currentTimeMillis();
-
-		buildILP( fg2 );
-
-		t1 = System.currentTimeMillis();
-		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
-
-		System.out.print( "Solving FG3... " );
-		t0 = System.currentTimeMillis();
-
-		buildILP( fg3 );
-
-		t1 = System.currentTimeMillis();
-		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
+		System.out.println( "\nSummary:" );
+		System.out.println( "========" );
+		System.out.println( summaryCollection );
+		System.out.println( String.format( "Cumulated FG build time:       \t%6.2f\t%6.2f\t%6.2f", fgBuildTimeTotal[ 0 ], fgBuildTimeTotal[ 1 ], fgBuildTimeTotal[ 2 ] ) );
+		System.out.println( String.format( "Cumulated gurobi solving iter: \t%6d\t%6d\t%6d", fgSolveIterGurobi[ 0 ], fgSolveIterGurobi[ 1 ], fgSolveIterGurobi[ 2 ] ) );
+		System.out.println( String.format( "Cumulated gurobi solving time: \t%6.2f\t%6.2f\t%6.2f", fgSolveTimeGurobi[ 0 ], fgSolveTimeGurobi[ 1 ], fgSolveTimeGurobi[ 2 ] ) );
+		System.out.println( String.format( "Cumulated total solving time:  \t%6.2f\t%6.2f\t%6.2f", fgSolveTimeTotal[ 0 ], fgSolveTimeTotal[ 1 ], fgSolveTimeTotal[ 2 ] ) );
 
 //		*** *** *** *** *** *** *** ***  FACTOR GRAPH OUTPUT  *** *** *** *** *** *** *** *** *** *** *** *** 
 //		final JFrame guiFrame = new JFrame( "FG from SegmentMultiForest" );
@@ -211,7 +232,7 @@ public class Benchmarks {
 //		guiFrame.setVisible( true );
 	}
 
-	private static void buildILP( final FactorGraph fg ) throws GRBException {
+	private static Pair< Integer, Double > buildAndRunILP( final FactorGraph fg ) throws GRBException {
 		for ( final Variable< ? > variable : fg.getVariables() ) {
 			if ( !( variable instanceof BooleanVariable ) )
 				throw new IllegalArgumentException();
@@ -271,6 +292,8 @@ public class Benchmarks {
 
 		// Optimize model
 		model.optimize();
+		final int iterCount = ( int ) Math.round( model.get( GRB.DoubleAttr.IterCount ) );
+		final double solvingTime = model.get( GRB.DoubleAttr.Runtime );
 //		System.out.println( "Obj: " + model.get( GRB.DoubleAttr.ObjVal ) );
 
 		// Build assignment
@@ -286,5 +309,7 @@ public class Benchmarks {
 		// Dispose of model and environment
 		model.dispose();
 		env.dispose();
+
+		return new ValuePair< Integer, Double >( iterCount, solvingTime );
 	}
 }
