@@ -20,8 +20,6 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
-import net.imglib2.util.Pair;
-import net.imglib2.util.ValuePair;
 
 import com.indago.fg.Assignment;
 import com.indago.fg.FactorGraph;
@@ -49,6 +47,19 @@ public class Benchmarks {
 
 	private static boolean exportImgSets = true;
 	private static String exportPath = "/Users/jug/MPI/temp";
+
+	public static class GurobiReadouts {
+
+		public int numIterations;
+		public double runtime;
+		public double objval;
+
+		public GurobiReadouts( final int numIterations, final double runtime, final double objval ) {
+			this.numIterations = numIterations;
+			this.runtime = runtime;
+			this.objval = objval;
+		}
+	}
 
 	public static class Parameters {
 
@@ -212,13 +223,17 @@ public class Benchmarks {
 		final ArrayList< LabelingSegment > segments = labelingBuilder.getSegments();
 		// assign random costs for testing purposes
 
-		Pair< Integer, Double > gurobiStats;
+		GurobiReadouts gurobiStats;
 		final double[] fgBuildTimeTotal = new double[ 3 ];
 		final double[] fgSolveTimeTotal = new double[ 3 ];
 		final int[] fgSolveIterGurobi = new int[ 3 ];
 		final double[] fgSolveTimeGurobi = new double[ 3 ];
+		final double[] fgDeltaSolution = new double[ 3 ];
 
 		for ( int ci = 0; ci < numInnerLoopsPerSet; ci++ ) {
+
+			final double[] fgFoundSolution = new double[ 3 ];
+
 			System.out.print( "Setting random segment costs... " );
 			final RandomSegmentCosts costs = new RandomSegmentCosts( segments, 815 + ci );
 			System.out.println( "done!" );
@@ -256,8 +271,9 @@ public class Benchmarks {
 			t1 = System.currentTimeMillis();
 			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 			fgSolveTimeTotal[ 0 ] += ( t1 - t0 ) / 1000.;
-			fgSolveIterGurobi[ 0 ] += gurobiStats.getA();
-			fgSolveTimeGurobi[ 0 ] += gurobiStats.getB();
+			fgSolveIterGurobi[ 0 ] += gurobiStats.numIterations;
+			fgSolveTimeGurobi[ 0 ] += gurobiStats.runtime;
+			fgFoundSolution[ 0 ] += gurobiStats.objval;
 
 			System.out.print( ">>\t Solving FG2... " );
 			t0 = System.currentTimeMillis();
@@ -265,8 +281,9 @@ public class Benchmarks {
 			t1 = System.currentTimeMillis();
 			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 			fgSolveTimeTotal[ 1 ] += ( t1 - t0 ) / 1000.;
-			fgSolveIterGurobi[ 1 ] += gurobiStats.getA();
-			fgSolveTimeGurobi[ 1 ] += gurobiStats.getB();
+			fgSolveIterGurobi[ 1 ] += gurobiStats.numIterations;
+			fgSolveTimeGurobi[ 1 ] += gurobiStats.runtime;
+			fgFoundSolution[ 1 ] += gurobiStats.objval;
 
 			System.out.print( ">>\t Solving FG3... " );
 			t0 = System.currentTimeMillis();
@@ -274,14 +291,22 @@ public class Benchmarks {
 			t1 = System.currentTimeMillis();
 			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 			fgSolveTimeTotal[ 2 ] += ( t1 - t0 ) / 1000.;
-			fgSolveIterGurobi[ 2 ] += gurobiStats.getA();
-			fgSolveTimeGurobi[ 2 ] += gurobiStats.getB();
+			fgSolveIterGurobi[ 2 ] += gurobiStats.numIterations;
+			fgSolveTimeGurobi[ 2 ] += gurobiStats.runtime;
+			fgFoundSolution[ 2 ] += gurobiStats.objval;
+
+			// We do only want to accumulate the difference to the best solution found...
+			final double minimalSolution = Math.min( Math.min( fgFoundSolution[ 0 ], fgFoundSolution[ 1 ] ), fgFoundSolution[ 2 ] );
+			fgDeltaSolution[ 0 ] += fgFoundSolution[ 0 ] - minimalSolution;
+			fgDeltaSolution[ 1 ] += fgFoundSolution[ 1 ] - minimalSolution;
+			fgDeltaSolution[ 2 ] += fgFoundSolution[ 2 ] - minimalSolution;
 		}
 
-		summaryCollection += String.format( "Cumulated FG build time:       \t%6.2f\t%6.2f\t%6.2f\n", fgBuildTimeTotal[ 0 ], fgBuildTimeTotal[ 1 ], fgBuildTimeTotal[ 2 ] );
-		summaryCollection += String.format( "Cumulated gurobi solving iter: \t%6d\t%6d\t%6d\n", fgSolveIterGurobi[ 0 ], fgSolveIterGurobi[ 1 ], fgSolveIterGurobi[ 2 ] );
-		summaryCollection += String.format( "Cumulated gurobi solving time: \t%6.2f\t%6.2f\t%6.2f\n", fgSolveTimeGurobi[ 0 ], fgSolveTimeGurobi[ 1 ], fgSolveTimeGurobi[ 2 ] );
-		summaryCollection += String.format( "Cumulated total solving time:  \t%6.2f\t%6.2f\t%6.2f\n", fgSolveTimeTotal[ 0 ], fgSolveTimeTotal[ 1 ], fgSolveTimeTotal[ 2 ] );
+		summaryCollection += String.format( "Cumulated FG build time:       \t%7.2f\t%7.2f\t%7.2f\n", fgBuildTimeTotal[ 0 ], fgBuildTimeTotal[ 1 ], fgBuildTimeTotal[ 2 ] );
+		summaryCollection += String.format( "Cumulated delta_optimum:       \t%7.2f\t%7.2f\t%7.2f\n", fgDeltaSolution[ 0 ], fgDeltaSolution[ 1 ], fgDeltaSolution[ 2 ] );
+		summaryCollection += String.format( "Cumulated gurobi solving iter: \t%7d\t%7d\t%7d\n", fgSolveIterGurobi[ 0 ], fgSolveIterGurobi[ 1 ], fgSolveIterGurobi[ 2 ] );
+		summaryCollection += String.format( "Cumulated gurobi solving time: \t%7.2f\t%7.2f\t%7.2f\n", fgSolveTimeGurobi[ 0 ], fgSolveTimeGurobi[ 1 ], fgSolveTimeGurobi[ 2 ] );
+		summaryCollection += String.format( "Cumulated total solving time:  \t%7.2f\t%7.2f\t%7.2f\n", fgSolveTimeTotal[ 0 ], fgSolveTimeTotal[ 1 ], fgSolveTimeTotal[ 2 ] );
 
 //		*** *** *** *** *** *** *** ***  FACTOR GRAPH OUTPUT  *** *** *** *** *** *** *** *** *** *** *** *** 
 //		final JFrame guiFrame = new JFrame( "FG from SegmentMultiForest" );
@@ -302,7 +327,7 @@ public class Benchmarks {
 		return summaryCollection;
 	}
 
-	private static Pair< Integer, Double > buildAndRunILP( final FactorGraph fg ) throws GRBException {
+	private static GurobiReadouts buildAndRunILP( final FactorGraph fg ) throws GRBException {
 		for ( final Variable< ? > variable : fg.getVariables() ) {
 			if ( !( variable instanceof BooleanVariable ) )
 				throw new IllegalArgumentException();
@@ -364,6 +389,7 @@ public class Benchmarks {
 		model.optimize();
 		final int iterCount = ( int ) Math.round( model.get( GRB.DoubleAttr.IterCount ) );
 		final double solvingTime = model.get( GRB.DoubleAttr.Runtime );
+		final double objval = model.get( GRB.DoubleAttr.ObjVal );
 //		System.out.println( "Obj: " + model.get( GRB.DoubleAttr.ObjVal ) );
 
 		// Build assignment
@@ -380,6 +406,6 @@ public class Benchmarks {
 		model.dispose();
 		env.dispose();
 
-		return new ValuePair< Integer, Double >( iterCount, solvingTime );
+		return new GurobiReadouts( iterCount, solvingTime, objval );
 	}
 }
