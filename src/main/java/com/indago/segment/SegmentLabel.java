@@ -2,7 +2,7 @@ package com.indago.segment;
 
 import java.util.ArrayList;
 
-import net.imglib2.newlabeling.Labeling;
+import net.imglib2.roi.labeling.Labeling;
 
 /**
  * Represents a particular {@link LabelingSegment} in a {@link Labeling}. It may

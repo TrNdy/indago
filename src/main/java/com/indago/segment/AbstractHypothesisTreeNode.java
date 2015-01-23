@@ -117,9 +117,12 @@ public abstract class AbstractHypothesisTreeNode< T extends AbstractHypothesisTr
 		return ancestors;
 	}
 
+	@SuppressWarnings( "unchecked" )
 	protected ArrayList< T > getLeaves() {
 		if ( leaves == null ) {
 			leaves = new ArrayList< T >();
+			if ( getChildren().size() == 0 )
+				leaves.add( ( T ) this );
 			for ( final T t : getDescendants() )
 				if ( t.getChildren().size() == 0 ) leaves.add( t );
 		}

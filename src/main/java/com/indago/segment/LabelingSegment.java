@@ -5,7 +5,7 @@ import java.util.Iterator;
 import net.imglib2.Cursor;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.newlabeling.LabelRegion;
+import net.imglib2.roi.labeling.LabelRegion;
 import net.imglib2.type.logic.BoolType;
 import net.imglib2.util.Intervals;
 

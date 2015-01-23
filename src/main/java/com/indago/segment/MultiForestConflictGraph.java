@@ -81,13 +81,21 @@ public class MultiForestConflictGraph implements ConflictGraph< LabelingSegment 
 			for ( final LabelingTreeNode currLeaveA : currLeavesA ) {
 				final ArrayList< LabelingTreeNode > currPathA = new ArrayList< LabelingTreeNode >();
 				currPathA.add( currLeaveA );
-				currPathA.addAll( currLeaveA.getAncestors() );
+				LabelingTreeNode p = currLeaveA.getParent();
+				while ( p != null ) {
+					currPathA.add( p );
+					p = p.getParent();
+				}
 
 				for ( final Collection< LabelingTreeNode > currLeavesB : leavesPerRootInB ) {
 					for ( final LabelingTreeNode currLeaveB : currLeavesB ) {
 						final ArrayList< LabelingTreeNode > currPathB = new ArrayList< LabelingTreeNode >();
 						currPathB.add( currLeaveB );
-						currPathB.addAll( currLeaveB.getAncestors() );
+						p = currLeaveB.getParent();
+						while ( p != null ) {
+							currPathB.add( p );
+							p = p.getParent();
+						}
 
 						accumulateVisibleInterPathEdges( accumulatedSegmentPairs, currPathA, currPathB );
 					}

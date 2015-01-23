@@ -7,9 +7,9 @@ import java.util.Set;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.projector.RandomAccessibleProjector2D;
-import net.imglib2.newlabeling.LabelingMapping;
-import net.imglib2.newlabeling.LabelingType;
-import net.imglib2.newlabeling.ImgLabeling;
+import net.imglib2.roi.labeling.LabelingMapping;
+import net.imglib2.roi.labeling.LabelingType;
+import net.imglib2.roi.labeling.ImgLabeling;
 import net.imglib2.type.Type;
 
 public class VisualizeLabeling {

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.imglib2.newlabeling.ImgLabeling;
-import net.imglib2.newlabeling.LabelRegions;
+import net.imglib2.roi.labeling.ImgLabeling;
+import net.imglib2.roi.labeling.LabelRegions;
 import net.imglib2.tree.Forest;
-import net.imglib2.tree.Util;
+import net.imglib2.tree.TreeUtils;
 import net.imglib2.type.numeric.integer.IntType;
 
 public class LabelingForest implements Forest< LabelingTreeNode >, ConflictGraph< LabelingSegment > {
@@ -40,7 +40,7 @@ public class LabelingForest implements Forest< LabelingTreeNode >, ConflictGraph
 	@Override
 	public Collection< ? extends Collection< LabelingSegment > > getConflictGraphCliques() {
 		final ArrayList< ArrayList< LabelingSegment > > cliques = new ArrayList<>();
-		final ArrayList< LabelingTreeNode > leafs = Util.getLeafs( this );
+		final ArrayList< LabelingTreeNode > leafs = TreeUtils.getLeafs( this );
 		for ( final LabelingTreeNode leaf : leafs ) {
 			final ArrayList< LabelingSegment > clique = new ArrayList<>();
 			clique.add( leaf.getSegment() );
