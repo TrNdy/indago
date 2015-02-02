@@ -2,10 +2,8 @@ package com.indago.segment;
 
 import java.util.ArrayList;
 
-import net.imglib2.roi.labeling.Labeling;
-
 /**
- * Represents a particular {@link LabelingSegment} in a {@link Labeling}. It may
+ * Represents a particular {@link LabelingSegment} in a Labeling. It may
  * be associated with a {@link LabelingTreeNode node} in a
  * {@link LabelingForest hypothesis forest}. It may have an ordered list of
  * indices of the {@link LabelingFragment}s making up the segment.
