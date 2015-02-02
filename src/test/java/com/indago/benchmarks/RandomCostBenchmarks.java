@@ -71,16 +71,16 @@ public class RandomCostBenchmarks {
 
 	public static class Parameters {
 
-		int width;
-		int height;
-		int numSeedPixels;
-		double maxRadius;
-		double minDeltaR;
-		double maxDeltaR;
-		double meanDeltaR;
-		double sdDeltaR;
-		int minIntensity;
-		int maxIntensity;
+		public int width;
+		public int height;
+		public int numSeedPixels;
+		public double maxRadius;
+		public double minDeltaR;
+		public double maxDeltaR;
+		public double meanDeltaR;
+		public double sdDeltaR;
+		public int minIntensity;
+		public int maxIntensity;
 
 		public Parameters( final int width, final int height, final int numSeedPixels, final double maxRadius, final double minDeltaR, final double maxDeltaR, final double meanDeltaR, final double sdDeltaR, final int minIntensity, final int maxIntensity ) {
 			this.width = width;
@@ -190,8 +190,8 @@ public class RandomCostBenchmarks {
 		summaryCollection += String.format( "LabelingForest:           \t%6.2f\n", ( t1 - t0 ) / 1000. );
 
 //		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
-//		*** *** *** *** *** *** *** *** CONFLICT GRAPH SECTION  *** *** *** *** *** *** *** *** *** *** *** *** 
-//		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***		
+//		*** *** *** *** *** *** *** *** CONFLICT GRAPH SECTION  *** *** *** *** *** *** *** *** *** *** *** ***
+//		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 
 		System.out.print( "Constructing PairwiseConflictGraph... " );
 		t0 = System.currentTimeMillis();
@@ -217,7 +217,7 @@ public class RandomCostBenchmarks {
 		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 		summaryCollection += String.format( "MinimalOverlapConflictGraph:\t%6.2f\n", ( t1 - t0 ) / 1000. );
 
-//		*** *** *** *** *** *** *** ***  CONFLICT GRAPH OUTPUT  *** *** *** *** *** *** *** *** *** *** *** *** 
+//		*** *** *** *** *** *** *** ***  CONFLICT GRAPH OUTPUT  *** *** *** *** *** *** *** *** *** *** *** ***
 //		final HypothesisPrinter hp = new HypothesisPrinter();
 //		for ( final LabelingForest labelingForest : labelingForests )
 //		{
@@ -227,7 +227,7 @@ public class RandomCostBenchmarks {
 //		System.out.println();
 //		hp.printConflictGraphCliques( conflictGraph1 );
 
-//		*** *** *** *** *** *** *** *** SETTING RANDOM COSTS *** *** *** *** *** *** *** *** *** *** *** *** ** 
+//		*** *** *** *** *** *** *** *** SETTING RANDOM COSTS *** *** *** *** *** *** *** *** *** *** *** *** **
 		final ArrayList< LabelingSegment > segments = labelingBuilder.getSegments();
 		// assign random costs for testing purposes
 
@@ -247,8 +247,8 @@ public class RandomCostBenchmarks {
 			System.out.println( "done!" );
 
 			//		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
-			//		*** *** *** *** *** *** *** *** ***  FG and ILP SECTION *** *** *** *** *** *** *** *** *** *** *** *** 
-			//		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***		
+			//		*** *** *** *** *** *** *** *** ***  FG and ILP SECTION *** *** *** *** *** *** *** *** *** *** *** ***
+			//		*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 
 			System.out.print( ">>\t Constructing FG1 from PairwiseConflictGraph... " );
 			t0 = System.currentTimeMillis();
@@ -316,7 +316,7 @@ public class RandomCostBenchmarks {
 		summaryCollection += String.format( "Cumulated gurobi solving time: \t%7.2f\t%7.2f\t%7.2f\n", fgSolveTimeGurobi[ 0 ], fgSolveTimeGurobi[ 1 ], fgSolveTimeGurobi[ 2 ] );
 		summaryCollection += String.format( "Cumulated total solving time:  \t%7.2f\t%7.2f\t%7.2f\n", fgSolveTimeTotal[ 0 ], fgSolveTimeTotal[ 1 ], fgSolveTimeTotal[ 2 ] );
 
-//		*** *** *** *** *** *** *** ***  FACTOR GRAPH OUTPUT  *** *** *** *** *** *** *** *** *** *** *** *** 
+//		*** *** *** *** *** *** *** ***  FACTOR GRAPH OUTPUT  *** *** *** *** *** *** *** *** *** *** *** ***
 //		final JFrame guiFrame = new JFrame( "FG from SegmentMultiForest" );
 //		// Set window-closing action...
 //		guiFrame.addWindowListener( new WindowAdapter() {
