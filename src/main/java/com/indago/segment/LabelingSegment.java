@@ -5,6 +5,7 @@ import java.util.Iterator;
 import net.imglib2.Cursor;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
+import net.imglib2.RealLocalizable;
 import net.imglib2.roi.labeling.LabelRegion;
 import net.imglib2.type.logic.BoolType;
 import net.imglib2.util.Intervals;
@@ -25,11 +26,11 @@ public class LabelingSegment implements Segment {
 
 	@Override
 	public long getArea() {
-		return region.getArea();
+		return region.size();
 	}
 
 	@Override
-	public Localizable getCenterOfMass() {
+	public RealLocalizable getCenterOfMass() {
 		return region.getCenterOfMass();
 	}
 
