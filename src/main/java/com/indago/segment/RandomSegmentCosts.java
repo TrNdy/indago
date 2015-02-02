@@ -10,7 +10,7 @@ import java.util.Random;
  *
  * @author jug
  */
-class RandomSegmentCosts implements SegmentCosts {
+public class RandomSegmentCosts implements SegmentCosts {
 
 	private final HashMap< Segment, Double > segmentToCost = new HashMap< Segment, Double >();
 

@@ -1,4 +1,4 @@
-package com.indago.segment;
+package com.indago.playground;
 
 import gurobi.GRB;
 import gurobi.GRB.DoubleAttr;
@@ -37,6 +37,12 @@ import com.indago.fg.gui.FgPanel;
 import com.indago.fg.value.BooleanValue;
 import com.indago.fg.variable.BooleanVariable;
 import com.indago.fg.variable.Variable;
+import com.indago.segment.HypothesisPrinter;
+import com.indago.segment.LabelingBuilder;
+import com.indago.segment.LabelingForest;
+import com.indago.segment.LabelingSegment;
+import com.indago.segment.MinimalOverlapConflictGraph;
+import com.indago.segment.RandomSegmentCosts;
 import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 

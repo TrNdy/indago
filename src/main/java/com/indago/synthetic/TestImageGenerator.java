@@ -1,4 +1,4 @@
-package com.indago.segment;
+package com.indago.synthetic;
 
 import ij.IJ;
 
@@ -12,6 +12,10 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+
+import com.indago.segment.DataMover;
+import com.indago.segment.RandomForestFactory;
+import com.indago.segment.RealDoubleNormalizeConverter;
 
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
