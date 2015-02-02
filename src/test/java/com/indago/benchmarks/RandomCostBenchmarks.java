@@ -1,4 +1,4 @@
-package com.indago.segment;
+package com.indago.benchmarks;
 
 import gurobi.GRB;
 import gurobi.GRB.DoubleAttr;
@@ -31,10 +31,18 @@ import com.indago.fg.function.BooleanTensorTable;
 import com.indago.fg.value.BooleanValue;
 import com.indago.fg.variable.BooleanVariable;
 import com.indago.fg.variable.Variable;
+import com.indago.segment.LabelingBuilder;
+import com.indago.segment.LabelingForest;
+import com.indago.segment.LabelingSegment;
+import com.indago.segment.MinimalOverlapConflictGraph;
+import com.indago.segment.MultiForestConflictGraph;
+import com.indago.segment.PairwiseConflictGraph;
+import com.indago.segment.RandomForestFactory;
+import com.indago.segment.RandomSegmentCosts;
 import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 
-public class Benchmarks {
+public class RandomCostBenchmarks {
 
 	private static int baseSeed = 4711;
 	private static int numImgsPerParameterSet = 10;
