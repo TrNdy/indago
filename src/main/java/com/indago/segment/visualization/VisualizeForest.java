@@ -6,8 +6,8 @@ import java.util.Iterator;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.tree.Forest;
-import net.imglib2.tree.TreeNode;
+import net.imglib2.algorithm.tree.Forest;
+import net.imglib2.algorithm.tree.TreeNode;
 import net.imglib2.type.Type;
 
 public class VisualizeForest

@@ -13,8 +13,8 @@ import net.imglib2.roi.labeling.LabelRegion;
 import net.imglib2.roi.labeling.LabelRegions;
 import net.imglib2.roi.labeling.LabelingMapping;
 import net.imglib2.roi.labeling.LabelingType;
-import net.imglib2.tree.Forest;
-import net.imglib2.tree.TreeNode;
+import net.imglib2.algorithm.tree.Forest;
+import net.imglib2.algorithm.tree.TreeNode;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.Util;
 

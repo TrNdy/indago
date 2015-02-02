@@ -3,7 +3,7 @@ package com.indago.segment;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.imglib2.tree.TreeNode;
+import net.imglib2.algorithm.tree.TreeNode;
 
 /**
  * Node in a segmentation hypothesis tree. Provides methods to get ancestors,

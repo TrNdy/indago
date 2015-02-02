@@ -3,7 +3,7 @@ package com.indago.segment;
 import java.util.Collection;
 import java.util.HashMap;
 
-import net.imglib2.tree.Forest;
+import net.imglib2.algorithm.tree.Forest;
 
 /**
  * Utility to print hypothesis forests and conlfict sets.

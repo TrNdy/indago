@@ -6,8 +6,8 @@ import java.util.HashSet;
 
 import net.imglib2.roi.labeling.ImgLabeling;
 import net.imglib2.roi.labeling.LabelRegions;
-import net.imglib2.tree.Forest;
-import net.imglib2.tree.TreeUtils;
+import net.imglib2.algorithm.tree.Forest;
+import net.imglib2.algorithm.tree.TreeUtils;
 import net.imglib2.type.numeric.integer.IntType;
 
 public class LabelingForest implements Forest< LabelingTreeNode >, ConflictGraph< LabelingSegment > {
