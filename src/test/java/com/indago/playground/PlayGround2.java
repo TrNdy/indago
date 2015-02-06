@@ -45,6 +45,8 @@ import com.indago.segment.MinimalOverlapConflictGraph;
 import com.indago.segment.RandomSegmentCosts;
 import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
 
 public class PlayGround2 {
 
@@ -60,7 +62,7 @@ public class PlayGround2 {
 	public static < T extends RealType< T > & NativeType< T > > void doIt( final List< String > filenames, final T type ) throws Exception {
 		final int minComponentSize = 10;
 		final int maxComponentSize = 10000 - 1;
-		final int maxGrowthPerStep = 1;
+		final Filter maxGrowthPerStep = new MaxGrowthPerStep( 1 );
 		final boolean darkToBright = false;
 
 		final List< Img< T > > imgs = new ArrayList<>();

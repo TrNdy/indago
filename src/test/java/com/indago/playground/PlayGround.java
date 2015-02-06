@@ -16,6 +16,8 @@ import com.indago.segment.HypothesisPrinter;
 import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingForest;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
 import com.indago.segment.visualization.ColorStream;
 import com.indago.segment.visualization.VisualizeForest;
 import com.indago.segment.visualization.VisualizeLabeling;
@@ -33,7 +35,7 @@ public class PlayGround {
 
 		final int minComponentSize = 10;
 		final int maxComponentSize = 10000;
-		final int maxGrowthPerStep = 1;
+		final Filter maxGrowthPerStep = new MaxGrowthPerStep( 1 );
 		final boolean darkToBright = false;
 		final FilteredComponentTree< T > tree = FilteredComponentTree.buildComponentTree( img, type, minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright );
 

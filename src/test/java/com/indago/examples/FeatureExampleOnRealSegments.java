@@ -32,6 +32,8 @@ import com.indago.segment.LabelingBuilder;
 import com.indago.segment.RandomForestFactory;
 import com.indago.segment.SegmentLabel;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
 
 /**
  * @author jug
@@ -85,7 +87,7 @@ public class FeatureExampleOnRealSegments {
 
 			final int minComponentSize = 10;
 			final int maxComponentSize = 10000;
-			final int maxGrowthPerStep = 1;
+			final Filter maxGrowthPerStep = new MaxGrowthPerStep( 1 );
 			final boolean darkToBright = false;
 			final FilteredComponentTree< L > tree = FilteredComponentTree.buildComponentTree( labels, labeltype, minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright );
 			final LabelingBuilder builder = new LabelingBuilder( labels );

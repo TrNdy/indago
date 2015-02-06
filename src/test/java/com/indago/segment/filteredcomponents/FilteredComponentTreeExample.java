@@ -11,6 +11,9 @@ import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 
 import com.indago.segment.RandomForestFactory;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStepRatio;
 import com.indago.segment.visualization.ColorStream;
 import com.indago.segment.visualization.VisualizeForest;
 
@@ -39,9 +42,10 @@ public class FilteredComponentTreeExample {
 	public static < S extends IntegerType< S > & NativeType< S > > void testFiltering( final RandomAccessibleInterval< S > sumimg, final S sumtype ) {
 		final int minComponentSize = 10;
 		final int maxComponentSize = 10000;
-		final int maxGrowthPerStep = 1000;
+		final Filter maxGrowthPerStep = new MaxGrowthPerStep( 1000 );
+		final Filter maxGrowthPerStepRatio = new MaxGrowthPerStepRatio( 0.5 );
 		final boolean darkToBright = false;
-		final FilteredComponentTree< S > tree = FilteredComponentTree.buildComponentTree( sumimg, sumtype, minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright );
+		final FilteredComponentTree< S > tree = FilteredComponentTree.buildComponentTree( sumimg, sumtype, minComponentSize, maxComponentSize, maxGrowthPerStepRatio, darkToBright );
 
 
 		final Img< ARGBType > levels = ArrayImgs.argbs( sumimg.dimension( 0 ), sumimg.dimension( 1 ) );
