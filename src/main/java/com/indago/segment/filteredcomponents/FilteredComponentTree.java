@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import net.imglib2.Localizable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.componenttree.BuildComponentTree;
 import net.imglib2.algorithm.componenttree.Component;
@@ -111,17 +110,6 @@ public final class FilteredComponentTree< T extends Type< T > > implements Compo
 		this.maxComponentSize = maxComponentSize;
 		this.maxGrowthPerStep = maxGrowthPerStep;
 		this.linkedList = linkedList;
-	}
-
-	static boolean isSameLocation( final Localizable l1, final Localizable l2 )
-	{
-		final int n = l1.numDimensions();
-		if ( l2.numDimensions() != n )
-			return false;
-		for ( int d = 0; d < n; ++d )
-			if ( l1.getLongPosition( d ) != l2.getLongPosition( d ) )
-				return false;
-		return true;
 	}
 
 	@Override
