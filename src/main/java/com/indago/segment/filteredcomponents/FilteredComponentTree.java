@@ -130,7 +130,7 @@ public final class FilteredComponentTree< T extends Type< T > > implements Compo
 						if ( c.emittedComponent != null )
 							component = c.emittedComponent;
 
-				if ( intermediate.pixelList.size() - component.size() < maxGrowthPerStep ) {
+				if ( intermediate.pixelList.size() - component.minSize() < maxGrowthPerStep ) {
 					// update previously emitted node
 					component.update( intermediate );
 					createNewComponent = false;
