@@ -47,7 +47,6 @@ public class FilteredComponentTreeExample {
 		final boolean darkToBright = false;
 		final FilteredComponentTree< S > tree = FilteredComponentTree.buildComponentTree( sumimg, sumtype, minComponentSize, maxComponentSize, maxGrowthPerStepRatio, darkToBright );
 
-
 		final Img< ARGBType > levels = ArrayImgs.argbs( sumimg.dimension( 0 ), sumimg.dimension( 1 ) );
 		final Img< ARGBType > nodes = ArrayImgs.argbs( sumimg.dimension( 0 ), sumimg.dimension( 1 ) );
 		VisualizeForest.colorLevels( tree, ColorStream.iterator(), levels );
