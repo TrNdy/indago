@@ -49,10 +49,23 @@ public class FilteredComponentTreeExample {
 		VisualizeForest.colorLevels( tree, ColorStream.iterator(), levels );
 		VisualizeForest.colorNodes( tree, ColorStream.iterator(), nodes );
 
+		printFilteredComponentForest( tree );
+
 		new ImageJ();
 		ImageJFunctions.show( sumimg, "suming" );
 		ImageJFunctions.show( levels, "levels" );
 		ImageJFunctions.show( nodes, "nodes" );
+	}
+
+	public static void printFilteredComponentForest( final FilteredComponentTree< ? > forest ) {
+		for ( final FilteredComponent< ? > node : forest.roots() )
+			printFilteredComponentTreeNode( "", node );
+	}
+
+	private static void printFilteredComponentTreeNode( final String prefix, final FilteredComponent< ? > node ) {
+		System.out.println( prefix + "(size:" + node.minSize() + " - " + node.maxSize() + ", value:" + node.minValue() + " - " + node.maxValue() + ")" );
+		for ( final FilteredComponent< ? > child : node.getChildren() )
+			printFilteredComponentTreeNode( prefix + "  ", child );
 	}
 
 }
