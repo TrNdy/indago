@@ -63,7 +63,7 @@ public class FeatureExampleSimple {
 				FirstOrderStatFeatureSet.class, rndImgA);
 
 		// access via list
-		for (final Pair<String, DoubleType> feature : set.getFeatures(rndImgA)) {
+		for ( final Pair< String, DoubleType > feature : set.getFeatureList( rndImgA ) ) {
 			System.out.println("Feature: [" + feature.getA() + "] Value: ["
 					+ feature.getB().get() + "]");
 		}
@@ -84,10 +84,9 @@ public class FeatureExampleSimple {
 
 		// get via ref. OpRef is required as you may want to add the same Op
 		// several times, but with different parameters (e.g. percentile)
-		final MeanFeature<DoubleType> op = (MeanFeature<DoubleType>) ownSet
-				.compute(rndImgA).get(ref);
+		final DoubleType dt = ownSet.compute(rndImgA).get(ref);
 
 		System.out
-				.println("My very own feature set got resolved " + op.getOutput());
+				.println("My very own feature set got resolved " + dt.get());
 	}
 }

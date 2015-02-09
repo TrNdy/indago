@@ -39,7 +39,7 @@ import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerS
 public class FeatureExampleOnRealSegments {
 
 	public static void main(final String[] args) {
-		// load a read dataset
+		// load a real dataset
 		final List< Img< DoubleType >> imgs = null;
 
 		// load a labeling for the same dataset
@@ -93,10 +93,8 @@ public class FeatureExampleOnRealSegments {
 			final ArrayList< LabelingSegment > segments = builder.getSegments();
 			for ( final LabelingSegment segment : segments ) {
 				final IterableInterval< T > pixels = Regions.sample( segment.getRegion(), img );
-				final Map< OpRef< ? extends Op >, Op > features = featureSet.compute( pixels );
-				final SumFeature< DoubleType > opSum = ( SumFeature< DoubleType > ) features.get( oprefSum );
-				final MeanFeature< DoubleType > opMean = ( MeanFeature< DoubleType > ) features.get( oprefMean );
-				System.out.println( String.format( "\tSum:\t%10.2f  \tMean:\t%10.2f  \tSize:\t%d", opSum.getOutput().get(), opMean.getOutput().get(), segment.getRegion().size() ) );
+				final Map< OpRef< ? extends Op >, DoubleType > features = featureSet.compute( pixels );
+				System.out.println( String.format( "\tSum:\t%10.2f  \tMean:\t%10.2f  \tSize:\t%d", features.get( oprefSum ).get(), features.get( oprefMean ).get(), segment.getRegion().size() ) );
 			}
 		}
 	}
