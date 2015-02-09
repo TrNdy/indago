@@ -41,6 +41,8 @@ import com.indago.segment.RandomForestFactory;
 import com.indago.segment.RandomSegmentCosts;
 import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
 
 public class RandomCostBenchmarks {
 
@@ -50,7 +52,7 @@ public class RandomCostBenchmarks {
 
 	private static int minComponentSize = 10;
 	private static int maxComponentSize = 10000 - 1;
-	private static int maxGrowthPerStep = 200;
+	private static Filter maxGrowthPerStep = new MaxGrowthPerStep( 200 );
 	private static boolean darkToBright = false;
 
 	private static boolean exportImgSets = true;

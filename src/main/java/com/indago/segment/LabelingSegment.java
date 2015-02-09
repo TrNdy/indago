@@ -1,11 +1,9 @@
 package com.indago.segment;
 
-import java.util.Iterator;
-
 import net.imglib2.Cursor;
-import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealLocalizable;
+import net.imglib2.roi.IterableRegion;
 import net.imglib2.roi.labeling.LabelRegion;
 import net.imglib2.type.logic.BoolType;
 import net.imglib2.util.Intervals;
@@ -35,26 +33,9 @@ public class LabelingSegment implements Segment {
 	}
 
 	@Override
-	public Iterator< Localizable > iterator() {
-		final Cursor< BoolType > c = region.cursor();
-		return new Iterator< Localizable >() {
-
-			@Override
-			public boolean hasNext() {
-				return c.hasNext();
-			}
-
-			@Override
-			public Localizable next() {
-				c.fwd();
-				return c;
-			}
-
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-		};
+	public IterableRegion< ? > getRegion()
+	{
+		return region;
 	}
 
 	/**
@@ -63,13 +44,16 @@ public class LabelingSegment implements Segment {
 	 */
 	@Override
 	public boolean conflictsWith( final Segment segment ) {
+		final IterableRegion< ? > segmentRegion = ( ( LabelingSegment ) segment ).getRegion();
 		if ( segment instanceof LabelingSegment )
-			if ( Intervals.isEmpty( Intervals.intersect( this.region, ( ( LabelingSegment ) segment ).region ) ) )
+			if ( Intervals.isEmpty( Intervals.intersect( this.region, segmentRegion ) ) )
 				return false;
 
 		final RandomAccess< BoolType > raMask = region.randomAccess();
-		for ( final Localizable localizable : segment ) {
-			raMask.setPosition( localizable );
+		final Cursor< ? > cSegment = segmentRegion.cursor();
+		while ( cSegment.hasNext() ) {
+			cSegment.fwd();
+			raMask.setPosition( cSegment );
 			if ( raMask.get().get() ) { return true; }
 		}
 		return false;

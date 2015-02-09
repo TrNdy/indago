@@ -17,8 +17,6 @@ import net.imagej.ops.features.firstorder.FirstOrderFeatures.SumFeature;
 import net.imglib2.IterableInterval;
 import net.imglib2.img.Img;
 import net.imglib2.roi.Regions;
-import net.imglib2.roi.labeling.LabelRegion;
-import net.imglib2.roi.labeling.LabelRegions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
@@ -29,9 +27,11 @@ import org.scijava.Context;
 
 import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
 import com.indago.segment.LabelingBuilder;
+import com.indago.segment.LabelingSegment;
 import com.indago.segment.RandomForestFactory;
-import com.indago.segment.SegmentLabel;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
 
 /**
  * @author jug
@@ -85,18 +85,18 @@ public class FeatureExampleOnRealSegments {
 
 			final int minComponentSize = 10;
 			final int maxComponentSize = 10000;
-			final int maxGrowthPerStep = 1;
+			final Filter maxGrowthPerStep = new MaxGrowthPerStep( 1 );
 			final boolean darkToBright = false;
 			final FilteredComponentTree< L > tree = FilteredComponentTree.buildComponentTree( labels, labeltype, minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright );
 			final LabelingBuilder builder = new LabelingBuilder( labels );
 			builder.buildLabelingForest( tree );
-			final LabelRegions< SegmentLabel > regions = new LabelRegions< SegmentLabel >( builder.getLabeling() );
-			for ( final LabelRegion< SegmentLabel > region : regions ) {
-				final IterableInterval< T > segment = Regions.sample( region, img );
-				final Map< OpRef< ? extends Op >, Op > features = featureSet.compute( segment );
+			final ArrayList< LabelingSegment > segments = builder.getSegments();
+			for ( final LabelingSegment segment : segments ) {
+				final IterableInterval< T > pixels = Regions.sample( segment.getRegion(), img );
+				final Map< OpRef< ? extends Op >, Op > features = featureSet.compute( pixels );
 				final SumFeature< DoubleType > opSum = ( SumFeature< DoubleType > ) features.get( oprefSum );
 				final MeanFeature< DoubleType > opMean = ( MeanFeature< DoubleType > ) features.get( oprefMean );
-				System.out.println( String.format( "\tSum:\t%10.2f  \tMean:\t%10.2f  \tSize:\t%d", opSum.getOutput().get(), opMean.getOutput().get(), region.size() ) );
+				System.out.println( String.format( "\tSum:\t%10.2f  \tMean:\t%10.2f  \tSize:\t%d", opSum.getOutput().get(), opMean.getOutput().get(), segment.getRegion().size() ) );
 			}
 		}
 	}
