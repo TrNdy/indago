@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Ellipse2D;
@@ -52,6 +54,13 @@ public class FgPanel extends JPanel {
 //		System.out.println( fg.getVariables().size() + ", " + fg.getFactors().size() );
 		buildJungGraph( fg );
 		initJungGraph();
+
+		this.addComponentListener( new ComponentAdapter() {
+			@Override
+			public void componentResized( final ComponentEvent e ) {
+				jungLayout.setSize( getSize() );
+			}
+		} );
 	}
 
 	/**
