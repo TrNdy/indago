@@ -6,7 +6,7 @@ package com.indago.wekatest;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-import weka.classifiers.trees.J48;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
@@ -16,7 +16,7 @@ import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 /**
  * @author jug
  */
-public class SimpleDecisionTreeExample {
+public class SimpleDecisionForestExample {
 
 	public static FileOutputStream Output;
 	public static PrintStream file;
@@ -24,11 +24,11 @@ public class SimpleDecisionTreeExample {
 	public static void main( final String[] args ) throws Exception {
 		// load training data
 		final weka.core.Instances training_data = new weka.core.Instances(
- new java.io.FileReader( "/Users/jug/Desktop/Weka/training.arff" ) );
+						new java.io.FileReader( "src/main/resources/synthetic/0001_z63/FeatureExampleOnRealSegments_traindata.arff" ) );
 
 		//load test data
 		final weka.core.Instances test_data = new weka.core.Instances(
- new java.io.FileReader( "/Users/jug/Desktop/Weka/unknown.arff" ) );
+						new java.io.FileReader( "src/main/resources/synthetic/0001_z63/FeatureExampleOnRealSegments_testdata.arff" ) );
 
 		//Clean up training data
 		final ReplaceMissingValues replace = new ReplaceMissingValues();
@@ -44,11 +44,11 @@ public class SimpleDecisionTreeExample {
 		processed_training_data.setClassIndex( processed_training_data.numAttributes() - 1 );
 
 		//output to file
-		Output = new FileOutputStream( "/Users/jug/Desktop/CLASSIFICATION/test.txt" );
+		Output = new FileOutputStream( "src/main/resources/synthetic/0001_z63/test.txt" );
 		file = new PrintStream( Output );
 
 		//build classifier
-		final J48 tree = new J48();
+		final RandomForest tree = new RandomForest();
 		tree.buildClassifier( processed_training_data );
 
 		//Clean up test data
