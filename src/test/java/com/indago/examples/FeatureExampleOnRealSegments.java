@@ -39,6 +39,7 @@ import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
 import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingSegment;
 import com.indago.segment.RandomForestFactory;
+import com.indago.segment.RandomForestSegmentCosts;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
@@ -154,7 +155,7 @@ public class FeatureExampleOnRealSegments {
 			final Img< L > gtImg = gt.get( i );
 			final Img< L > lblImg = labelings.get( i );
 
-			System.out.println( String.format(
+			System.out.print( String.format(
 					"Working on given image/labeling pair #%3d...",
 					i + 1 ) );
 
@@ -190,7 +191,9 @@ public class FeatureExampleOnRealSegments {
 		}
 		System.out.println( "...done!" );
 
-		System.out.println( "Training random forest classifier..." );
+		// -----------------------------------------------------------------------------------------------
+
+		System.out.print( "Training random forest classifier..." );
 		final RandomForest tree = new RandomForest();
 		try {
 			tree.buildClassifier( arffTrain.getData() );
@@ -200,30 +203,24 @@ public class FeatureExampleOnRealSegments {
 		}
 		System.out.println( "...done!" );
 
-		System.out.println( "Applying trained random forest classifier to testdata..." );
-		int num_ones = 0;
-		for ( int i = 0; i < arffTest.getData().numInstances(); i++ ) {
-			final weka.core.Instance currentInst = arffTest.getData().instance( i );
-			try {
-				final int predictedClass = ( int ) tree.classifyInstance( currentInst );
-				final double[] dist = tree.distributionForInstance( currentInst );
-				System.out.println( String.format(
-						">> distribution is (%.2f,%.2f)",
-						dist[ 0 ],
-						dist[ 1 ] ) );
+		// -----------------------------------------------------------------------------------------------
 
-				if ( predictedClass == 1 ) {
-					num_ones++;
-					System.out.println( String.format( "%d\t%d", predictedClass, num_ones ) );
-				}
-			} catch ( final Exception e ) {
-				e.printStackTrace();
-			}
+		System.out.println( "Applying trained random forest classifier to each test-image..." );
+		for ( int i = 0; i < imgs.size(); i++ ) {
+			final Img< T > img = imgs.get( i );
+			final Img< L > lblImg = labelings.get( i );
+
+			final RandomForestSegmentCosts< L, T > costs =
+					new RandomForestSegmentCosts< L, T >( lblImg, img, tree, featureSet, labeltype );
+
+			System.out.print( "\tImage " + i + ": Finding optimum..." );
+
+			System.out.println( "\t...done!" );
 		}
 		System.out.println( "...done!" );
 
-		System.out.println( "Setting segment costs and finding optimum..." );
-		System.out.println( "...done!" );
+		// -----------------------------------------------------------------------------------------------
+
 	}
 
 	/**

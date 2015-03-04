@@ -105,6 +105,15 @@ public class ArffBuilder {
 	}
 
 	/**
+	 * Useful to retrieve the latest instance added by <code>addData</code>.
+	 * 
+	 * @return all added data instances.
+	 */
+	public Instance getLatestAddedInstance() {
+		return data.lastInstance();
+	}
+
+	/**
 	 * @param filename
 	 *            the name of the file to write the ARFF to.
 	 *            If the given filename does not end in ".arff", this extension
