@@ -70,9 +70,19 @@ public class SimpleDecisionForestExample {
 		for ( int i = 0; i < test_data.numInstances(); i++ ) {
 			final weka.core.Instance currentInst = test_data.instance( i );
 			final int predictedClass = ( int ) tree.classifyInstance( currentInst );
-			if ( predictedClass == 1 ) num_ones++;
-			System.out.println( String.format( "%d\t%d", predictedClass, num_ones ) );
-			file.println( String.format( "%d\t%d", predictedClass, num_ones ) );
+
+			final double[] dist = tree.distributionForInstance( currentInst );
+			System.out.println( String.format(
+					">> distribution is (%.2f,%.2f)",
+					dist[ 0 ],
+					dist[ 1 ] ) );
+
+			if ( predictedClass == 1 ) {
+				num_ones++;
+				System.out.println( String.format( "%d\t%d", predictedClass, num_ones ) );
+				file.println( String.format( "%d\t%d", predictedClass, num_ones ) );
+			}
+
 		}
 	}
 }
