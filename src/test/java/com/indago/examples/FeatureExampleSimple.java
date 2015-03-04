@@ -5,7 +5,7 @@ package com.indago.examples;
 
 import net.imagej.ops.OpRef;
 import net.imagej.ops.OpService;
-import net.imagej.ops.features.AutoResolvingFeatureSet;
+import net.imagej.ops.features.DefaultAutoResolvingFeatureSet;
 import net.imagej.ops.features.OpResolverService;
 import net.imagej.ops.features.ResolvedOp;
 import net.imagej.ops.features.firstorder.FirstOrderFeatures.MeanFeature;
@@ -71,7 +71,8 @@ public class FeatureExampleSimple {
 		/*
 		 * Create your own auto-resolving feature-set
 		 */
-		final AutoResolvingFeatureSet<Img<FloatType>, DoubleType> ownSet = new AutoResolvingFeatureSet<Img<FloatType>, DoubleType>();
+		final DefaultAutoResolvingFeatureSet< Img< FloatType >, DoubleType > ownSet =
+				new DefaultAutoResolvingFeatureSet< Img< FloatType >, DoubleType >();
 		c.inject(ownSet);
 
 		// add any annotated op

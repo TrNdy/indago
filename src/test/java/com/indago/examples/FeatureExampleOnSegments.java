@@ -9,7 +9,7 @@ import java.util.Map;
 import net.imagej.ops.Op;
 import net.imagej.ops.OpRef;
 import net.imagej.ops.OpService;
-import net.imagej.ops.features.AutoResolvingFeatureSet;
+import net.imagej.ops.features.DefaultAutoResolvingFeatureSet;
 import net.imagej.ops.features.OpResolverService;
 import net.imagej.ops.features.firstorder.FirstOrderFeatures.MeanFeature;
 import net.imagej.ops.features.firstorder.FirstOrderFeatures.SumFeature;
@@ -61,7 +61,8 @@ public class FeatureExampleOnSegments {
 		// create our own feature set
 		// ------------------------
 
-		final AutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet = new AutoResolvingFeatureSet< IterableInterval< T >, DoubleType >();
+		final DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet =
+				new DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType >();
 		c.inject( featureSet );
 
 		@SuppressWarnings( "rawtypes" )
