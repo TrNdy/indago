@@ -1,7 +1,6 @@
 package com.indago.segment;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,10 +34,14 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 		SegmentCosts {
 
 	private final HashMap< Segment, Double > segmentToCost = new HashMap< Segment, Double >();
+
+	private ArrayList< LabelingSegment > segments;
+	private MinimalOverlapConflictGraph conflictGraph;
+
 	private RandomForest forest;
 	private final ArffBuilder arff;
 
-	private static < L extends IntegerType< L > & NativeType< L >> ArrayList< LabelingSegment >
+	private static < L extends IntegerType< L > & NativeType< L >> LabelingBuilder
 			getSegmentsFromSumImg(
 					final RandomAccessibleInterval< L > sumImg, final L labeltype ) {
 		final int minComponentSize = 10;
@@ -57,7 +60,7 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 		final LabelingBuilder builder = new LabelingBuilder( sumImg );
 		builder.buildLabelingForest( tree );
 
-		return builder.getSegments();
+		return builder;
 	}
 
 	public RandomForestSegmentCosts(
@@ -71,14 +74,17 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 	}
 
 	public RandomForestSegmentCosts(
-			final Collection< ? extends Segment > segments,
+			final LabelingBuilder labelingBuilder,
 			final RandomAccessibleInterval< T > img,
 			final RandomForest trainedForest,
 			final DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet,
 			final L labeltype ) {
 
+		this.segments = labelingBuilder.getSegments();
 		arff = ArffWriterFactory.getArffBuilderFor( featureSet );
 		forest = trainedForest;
+
+		conflictGraph = new MinimalOverlapConflictGraph( labelingBuilder );
 
 		for ( final Segment segment : segments ) {
 
@@ -108,5 +114,22 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 		final Double muh = segmentToCost.get( segment );
 		if ( muh != null ) { return muh.doubleValue(); }
 		return Double.MAX_VALUE;
+	}
+
+	/**
+	 * @return The segments given or created during construction of this
+	 *         <code>RandomForestSegmentationCosts</code> instance.
+	 */
+	public ArrayList< LabelingSegment > getSegments() {
+		return segments;
+	}
+
+	/**
+	 * @return the <code>MinimalOverlapConflictGraph</code> built during
+	 *         construction of this <code>RandomForestSegmentationCosts</code>
+	 *         instance.
+	 */
+	public MinimalOverlapConflictGraph getConflictGraph() {
+		return conflictGraph;
 	}
 }

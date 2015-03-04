@@ -3,6 +3,7 @@
  */
 package com.indago.examples;
 
+import gurobi.GRBException;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
 
@@ -36,10 +37,14 @@ import org.scijava.Context;
 import weka.classifiers.trees.RandomForest;
 
 import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
+import com.indago.fg.Assignment;
+import com.indago.fg.FactorGraph;
+import com.indago.ilp.SolveBooleanFGGurobi;
 import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingSegment;
 import com.indago.segment.RandomForestFactory;
 import com.indago.segment.RandomForestSegmentCosts;
+import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
@@ -213,8 +218,21 @@ public class FeatureExampleOnRealSegments {
 			final RandomForestSegmentCosts< L, T > costs =
 					new RandomForestSegmentCosts< L, T >( lblImg, img, tree, featureSet, labeltype );
 
-			System.out.print( "\tImage " + i + ": Finding optimum..." );
+			System.out.print( "\tOptimum search for Image " + i + ": Finding optimum..." );
+			final FactorGraph fg =
+					FactorGraphFactory.createFromConflictGraph(
+							costs.getSegments(),
+							costs.getConflictGraph(),
+							costs );
 
+			Assignment assignment = null;
+			try {
+				final SolveBooleanFGGurobi solver = new SolveBooleanFGGurobi();
+				assignment = solver.solve( fg );
+			} catch ( final GRBException e ) {
+				System.err.println( "Gurobi trouble... Boolen FactorGraph could not be solved!" );
+				e.printStackTrace();
+			}
 			System.out.println( "\t...done!" );
 		}
 		System.out.println( "...done!" );
