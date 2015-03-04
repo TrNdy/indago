@@ -33,6 +33,8 @@ import net.imglib2.view.Views;
 
 import org.scijava.Context;
 
+import weka.classifiers.trees.RandomForest;
+
 import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
 import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingSegment;
@@ -186,7 +188,41 @@ public class FeatureExampleOnRealSegments {
 		} catch ( final FileNotFoundException e ) {
 			e.printStackTrace();
 		}
+		System.out.println( "...done!" );
 
+		System.out.println( "Training random forest classifier..." );
+		final RandomForest tree = new RandomForest();
+		try {
+			tree.buildClassifier( arffTrain.getData() );
+		} catch ( final Exception e ) {
+			e.printStackTrace();
+			System.exit( 1 );
+		}
+		System.out.println( "...done!" );
+
+		System.out.println( "Applying trained random forest classifier to testdata..." );
+		int num_ones = 0;
+		for ( int i = 0; i < arffTest.getData().numInstances(); i++ ) {
+			final weka.core.Instance currentInst = arffTest.getData().instance( i );
+			try {
+				final int predictedClass = ( int ) tree.classifyInstance( currentInst );
+				final double[] dist = tree.distributionForInstance( currentInst );
+				System.out.println( String.format(
+						">> distribution is (%.2f,%.2f)",
+						dist[ 0 ],
+						dist[ 1 ] ) );
+
+				if ( predictedClass == 1 ) {
+					num_ones++;
+					System.out.println( String.format( "%d\t%d", predictedClass, num_ones ) );
+				}
+			} catch ( final Exception e ) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println( "...done!" );
+
+		System.out.println( "Setting segment costs and finding optimum..." );
 		System.out.println( "...done!" );
 	}
 

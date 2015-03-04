@@ -38,6 +38,7 @@ public class ArffBuilder {
 	public ArffBuilder( final String name, final ArrayList< Attribute > fvAttributes ) {
 		this.fvAttributes = fvAttributes;
 		data = new Instances( name, fvAttributes, 100 );
+		data.setClassIndex( 0 );
 	}
 
 	/**
@@ -94,6 +95,13 @@ public class ArffBuilder {
 		data.add(newrow);
 
 		return fieldCount;
+	}
+
+	/**
+	 * @return all added data instances.
+	 */
+	public Instances getData() {
+		return data;
 	}
 
 	/**
