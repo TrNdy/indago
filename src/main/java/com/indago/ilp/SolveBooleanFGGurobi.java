@@ -1,12 +1,12 @@
 package com.indago.ilp;
 
 import gurobi.GRB;
+import gurobi.GRB.DoubleAttr;
 import gurobi.GRBEnv;
 import gurobi.GRBException;
 import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
-import gurobi.GRB.DoubleAttr;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -118,8 +118,7 @@ public class SolveBooleanFGGurobi {
 			final BooleanVariable variable = variables.get( i );
 			final BooleanValue value = vars[ i ].get( DoubleAttr.X ) > 0.5 ? BooleanValue.TRUE : BooleanValue.FALSE;
 			assignment.assign( variable, value );
-
-			env.message( variable + " = " + assignment.getAssignment( variable ) );
+//			env.message( variable + " = " + assignment.getAssignment( variable ) );
 		}
 
 		// Dispose of model

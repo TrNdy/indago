@@ -24,7 +24,10 @@ import com.indago.segment.SegmentCosts;
  */
 public class FactorGraphFactory {
 
-	public static < T extends Segment > FactorGraph createFromConflictGraph( final Collection< ? extends T > segments, final ConflictGraph< T > conflicts, final SegmentCosts segmentCosts ) {
+	public static < T extends Segment > FactorGraph createFromConflictGraph(
+			final Collection< ? extends T > segments,
+			final ConflictGraph< T > conflicts,
+			final SegmentCosts segmentCosts ) {
 		final Collection< ? extends Collection< T > > cliques = conflicts.getConflictGraphCliques();
 
 		int factorId = 0;
@@ -58,7 +61,7 @@ public class FactorGraphFactory {
 		}
 
 		final BooleanFunctionDomain domain = new BooleanFunctionDomain( 1 );
-		for ( final T segment : segments ) {
+		for ( final Segment segment : segments ) {
 			final double[] entries = new double[] { 0.0, segmentCosts.getCost( segment ) };
 			final BooleanTensorTable btt = new BooleanTensorTable( domain, entries, functionId++ );
 			final BooleanFactor factor = new BooleanFactor( domain, factorId++ );
