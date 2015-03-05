@@ -24,7 +24,7 @@ import com.indago.segment.SegmentCosts;
  */
 public class FactorGraphFactory {
 
-	public static < T extends Segment > FactorGraph createFromConflictGraph(
+	public static < T extends Segment > FactorGraphPlus< T > createFromConflictGraph(
 			final Collection< ? extends T > segments,
 			final ConflictGraph< T > conflicts,
 			final SegmentCosts segmentCosts ) {
@@ -72,6 +72,6 @@ public class FactorGraphFactory {
 			factors.add( factor );
 		}
 
-		return new FactorGraph( variables, factors, functions );
+		return new FactorGraphPlus< T >( new  FactorGraph( variables, factors, functions ), segmentVariableDict );
 	}
 }

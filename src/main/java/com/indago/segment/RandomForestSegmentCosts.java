@@ -10,9 +10,11 @@ import net.imagej.ops.features.DefaultAutoResolvingFeatureSet;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.roi.Regions;
+import net.imglib2.roi.labeling.ImgLabeling;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.DoubleType;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
@@ -37,6 +39,7 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 
 	private ArrayList< LabelingSegment > segments;
 	private MinimalOverlapConflictGraph conflictGraph;
+	private ImgLabeling< SegmentLabel, IntType > labeling;
 
 	private RandomForest forest;
 	private final ArffBuilder arff;
@@ -80,6 +83,7 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 			final DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet,
 			final L labeltype ) {
 
+		this.labeling = labelingBuilder.getLabeling();
 		this.segments = labelingBuilder.getSegments();
 		arff = ArffWriterFactory.getArffBuilderFor( featureSet );
 		forest = trainedForest;
@@ -131,5 +135,9 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 	 */
 	public MinimalOverlapConflictGraph getConflictGraph() {
 		return conflictGraph;
+	}
+
+	public ImgLabeling< SegmentLabel, IntType > getLabeling() {
+		return labeling;
 	}
 }

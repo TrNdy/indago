@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import net.imagej.ops.Op;
 import net.imagej.ops.OpRef;
@@ -22,15 +23,26 @@ import net.imagej.ops.features.firstorder.FirstOrderFeatures.SumFeature;
 import net.imagej.ops.features.firstorder.FirstOrderFeatures.VarianceFeature;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.converter.Converters;
+import net.imglib2.converter.TypeIdentity;
+import net.imglib2.display.RealARGBColorConverter;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.roi.Regions;
+import net.imglib2.roi.labeling.ImgLabeling;
+import net.imglib2.roi.labeling.LabelingType;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.ui.viewer.InteractiveViewer2D;
 import net.imglib2.view.Views;
+import net.imglib2.view.composite.NumericComposite;
+import net.imglib2.views.Views2;
 
 import org.scijava.Context;
 
@@ -44,10 +56,17 @@ import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingSegment;
 import com.indago.segment.RandomForestFactory;
 import com.indago.segment.RandomForestSegmentCosts;
+import com.indago.segment.SegmentLabel;
 import com.indago.segment.fg.FactorGraphFactory;
+import com.indago.segment.fg.FactorGraphPlus;
+import com.indago.segment.fg.SegmentHypothesisVariable;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.segment.ui.ARGBCompositeAlphaBlender;
+import com.indago.segment.ui.AlphaMixedSegmentLabelSetColor;
+import com.indago.segment.ui.SegmentLabelColor;
+import com.indago.segment.ui.SegmentLabelSetARGBConverter;
 import com.indago.weka.ArffBuilder;
 import com.indago.weka.ArffWriterFactory;
 
@@ -219,20 +238,38 @@ public class FeatureExampleOnRealSegments {
 					new RandomForestSegmentCosts< L, T >( lblImg, img, tree, featureSet, labeltype );
 
 			System.out.print( "\tOptimum search for Image " + i + ": Finding optimum..." );
-			final FactorGraph fg =
-					FactorGraphFactory.createFromConflictGraph(
-							costs.getSegments(),
-							costs.getConflictGraph(),
-							costs );
+			final FactorGraphPlus< LabelingSegment > fgplus = FactorGraphFactory.createFromConflictGraph(
+					costs.getSegments(),
+					costs.getConflictGraph(),
+					costs );
+			final FactorGraph fg = fgplus.getFactorGraph();
 
 			Assignment assignment = null;
 			try {
 				final SolveBooleanFGGurobi solver = new SolveBooleanFGGurobi();
 				assignment = solver.solve( fg );
 			} catch ( final GRBException e ) {
-				System.err.println( "Gurobi trouble... Boolen FactorGraph could not be solved!" );
+				System.err.println( "Gurobi trouble... Boolean FactorGraph could not be solved!" );
 				e.printStackTrace();
 			}
+
+			final ImgLabeling< SegmentLabel, IntType > labeling = costs.getLabeling();
+			final AssignmentLabelColor labelColor = new AssignmentLabelColor( assignment, fgplus.getSegmentVariableDictionary() );
+			final AlphaMixedSegmentLabelSetColor labelSetColor = new AlphaMixedSegmentLabelSetColor( labelColor );
+			final RealARGBColorConverter< T > imageConverter = new RealARGBColorConverter.Imp0< T >( 0, 255 );
+			imageConverter.setColor( new ARGBType( 0xffffffff ) );
+			final SegmentLabelSetARGBConverter labelingConverter = new SegmentLabelSetARGBConverter( labelSetColor, costs.getLabeling().getMapping() );
+
+			final RandomAccessibleInterval< ARGBType > argbImage = Converters.convert( ( RandomAccessibleInterval< T > ) img, imageConverter, new ARGBType() );
+			final RandomAccessibleInterval< ARGBType > argbLabeling = Converters.convert( ( RandomAccessibleInterval< LabelingType< SegmentLabel > > ) labeling, labelingConverter, new ARGBType() );
+
+			final RandomAccessibleInterval< ARGBType > stack = Views2.stack( argbImage, argbLabeling );
+			final RandomAccessibleInterval< NumericComposite< ARGBType > > composite = Views.collapseNumeric( stack );
+
+			final RandomAccessibleInterval< ARGBType > blended = Converters.convert( composite, new ARGBCompositeAlphaBlender(), new ARGBType() );
+			ImageJFunctions.show( blended );
+			new InteractiveViewer2D< ARGBType >( 800, 600, Views.extendZero( blended ), new TypeIdentity< ARGBType >() );
+
 			System.out.println( "\t...done!" );
 		}
 		System.out.println( "...done!" );
@@ -240,6 +277,33 @@ public class FeatureExampleOnRealSegments {
 		// -----------------------------------------------------------------------------------------------
 
 	}
+
+	public static class AssignmentLabelColor implements SegmentLabelColor
+	{
+		private final Assignment assignment;
+
+		private final Map< LabelingSegment, SegmentHypothesisVariable< LabelingSegment > > segmentVariableDict;
+
+		Random rand = new Random();
+
+		public AssignmentLabelColor( final Assignment assignment, final Map< LabelingSegment, SegmentHypothesisVariable< LabelingSegment > > segmentVariableDict )
+		{
+			this.assignment = assignment;
+			this.segmentVariableDict = segmentVariableDict;
+		}
+
+		@Override
+		public int getSegmentLabelColor( final SegmentLabel label ) {
+			final SegmentHypothesisVariable< LabelingSegment > v = segmentVariableDict.get( label.getSegment() );
+			final boolean isSelected = assignment.getAssignment( v ).get().booleanValue();
+//			final int randColor = 0x44000000 | ( rand.nextInt( 0x00ff ) << 16 ) | rand.nextInt( 0xffff );
+			return isSelected ? 0x88ff00ff : 0;
+		}
+	}
+
+
+
+
 
 	/**
 	 * @param img
