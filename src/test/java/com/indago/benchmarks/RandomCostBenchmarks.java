@@ -254,21 +254,21 @@ public class RandomCostBenchmarks {
 
 			System.out.print( ">>\t Constructing FG1 from PairwiseConflictGraph... " );
 			t0 = System.currentTimeMillis();
-			final FactorGraph fg1 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph1, costs );
+			final FactorGraph fg1 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph1, costs ).getFactorGraph();
 			t1 = System.currentTimeMillis();
 			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 			fgBuildTimeTotal[ 0 ] += ( t1 - t0 ) / 1000.;
 
 			System.out.print( ">>\t Constructing FG2 from MultiForestConflictGraph... " );
 			t0 = System.currentTimeMillis();
-			final FactorGraph fg2 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph2, costs );
+			final FactorGraph fg2 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph2, costs ).getFactorGraph();
 			t1 = System.currentTimeMillis();
 			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 			fgBuildTimeTotal[ 1 ] += ( t1 - t0 ) / 1000.;
 
 			System.out.print( ">>\t Constructing FG3 from MinimalOverlapConflictGraph... " );
 			t0 = System.currentTimeMillis();
-			final FactorGraph fg3 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph3, costs );
+			final FactorGraph fg3 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph3, costs ).getFactorGraph();
 			t1 = System.currentTimeMillis();
 			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 			fgBuildTimeTotal[ 2 ] += ( t1 - t0 ) / 1000.;

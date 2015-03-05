@@ -94,7 +94,7 @@ public class PlayGround2 {
 
 		final ArrayList< LabelingSegment > segments = labelingBuilder.getSegments();
 		final RandomSegmentCosts costs = new RandomSegmentCosts( segments, 815 ); // assign random costs to segments in MultiForest (for testing purposes)
-		final FactorGraph fg = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph, costs );
+		final FactorGraph fg = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph, costs ).getFactorGraph();
 
 		final SolveBooleanFGGurobi solver = new SolveBooleanFGGurobi();
 		final Assignment assignment = solver.solve( fg );
