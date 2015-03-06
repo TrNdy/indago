@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import net.imagej.ops.Op;
 import net.imagej.ops.OpRef;
-import net.imagej.ops.features.DefaultAutoResolvingFeatureSet;
+import net.imagej.ops.features.AbstractAutoResolvingFeatureSet;
 import net.imglib2.IterableInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -20,7 +20,7 @@ import weka.core.Attribute;
 public class ArffWriterFactory {
 
 	public static < T extends RealType< T > & NativeType< T > > ArffBuilder getArffBuilderFor(
-			final DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet ) {
+			final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet ) {
 
 		// Declare the feature vector
 		final ArrayList< Attribute > fvWekaAttributes = new ArrayList< Attribute >();

@@ -7,7 +7,6 @@ import gurobi.GRBException;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +15,8 @@ import java.util.Random;
 import net.imagej.ops.Op;
 import net.imagej.ops.OpRef;
 import net.imagej.ops.OpService;
-import net.imagej.ops.features.DefaultAutoResolvingFeatureSet;
+import net.imagej.ops.features.AbstractAutoResolvingFeatureSet;
 import net.imagej.ops.features.OpResolverService;
-import net.imagej.ops.features.firstorder.FirstOrderFeatures.MeanFeature;
-import net.imagej.ops.features.firstorder.FirstOrderFeatures.SumFeature;
-import net.imagej.ops.features.firstorder.FirstOrderFeatures.VarianceFeature;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
@@ -49,6 +45,8 @@ import org.scijava.Context;
 import weka.classifiers.trees.RandomForest;
 
 import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
+import com.indago.examples.serialization.WekaDataInstanceAccumulator;
+import com.indago.examples.serialization.featuresets.DemoFeatureSet;
 import com.indago.fg.Assignment;
 import com.indago.fg.FactorGraph;
 import com.indago.ilp.SolveBooleanFGGurobi;
@@ -68,7 +66,6 @@ import com.indago.segment.ui.AlphaMixedSegmentLabelSetColor;
 import com.indago.segment.ui.SegmentLabelColor;
 import com.indago.segment.ui.SegmentLabelSetARGBConverter;
 import com.indago.weka.ArffBuilder;
-import com.indago.weka.ArffWriterFactory;
 
 /**
  * @author jug
@@ -140,79 +137,51 @@ public class FeatureExampleOnRealSegments {
 
 		// create service & context
 		// ------------------------
-
 		final Context c = new Context();
 		final OpResolverService ors = c.service(OpResolverService.class);
 		final OpService ops = c.service(OpService.class);
 
 		// create our own feature set
 		// ------------------------
-
-		final DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet =
-				new DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType >();
-		c.inject( featureSet );
-
-		@SuppressWarnings( "rawtypes" )
-		final OpRef< MeanFeature > oprefMean =
-				new OpRef< MeanFeature >( "mean", MeanFeature.class );
-
-		@SuppressWarnings( "rawtypes" )
-		final OpRef< SumFeature > oprefSum =
-				new OpRef< SumFeature >( "sum", SumFeature.class );
-
-		@SuppressWarnings( "rawtypes" )
-		final OpRef< VarianceFeature > oprefVar =
-				new OpRef< VarianceFeature >( "variance", VarianceFeature.class );
-
-		featureSet.addOutputOp( oprefMean );
-		featureSet.addOutputOp( oprefSum );
-		featureSet.addOutputOp( oprefVar );
+		final DemoFeatureSet< T > ourFeatureSet = new DemoFeatureSet< T >();
+		c.inject( ourFeatureSet );
 
 		// create training- and testset
-		final ArffBuilder arffTrain = ArffWriterFactory.getArffBuilderFor( featureSet );
-		final ArffBuilder arffTest = ArffWriterFactory.getArffBuilderFor( featureSet );
+		final WekaDataInstanceAccumulator< T, L > trainingData =
+				new WekaDataInstanceAccumulator< T, L >( ourFeatureSet );
+		final WekaDataInstanceAccumulator< T, L > testData =
+				new WekaDataInstanceAccumulator< T, L >( ourFeatureSet );
 
 		// loop over loaded data (images)
 		// ------------------------------
 		for ( int i = 0; i < imgs.size(); i++ ) {
-			final Img< T > img = imgs.get( i );
-			final Img< L > gtImg = gt.get( i );
-			final Img< L > lblImg = labelings.get( i );
-
 			System.out.print( String.format(
 					"Working on given image/labeling pair #%3d...",
 					i + 1 ) );
 
-			computeFeaturesOnAllSegments(
-					img,
-					gtImg,
+			trainingData.addData(
+					imgs.get( i ),
+					gt.get( i ),
 					labeltype,
-					featureSet,
-					arffTrain,
 					ArffBuilder.POSITIVE_INSTANCE );
-			computeFeaturesOnAllSegments(
-					img,
-					Views.interval( Views.translate( Views.extendZero( gtImg ), 10, 10 ), gtImg ),
+			trainingData.addData(
+					imgs.get( i ),
+					Views.interval(
+							Views.translate( Views.extendZero( gt.get( i ) ), 10, 10 ),
+							gt.get( i ) ),
 					labeltype,
-					featureSet,
-					arffTrain,
-					ArffBuilder.NEGATIVE_INSTANCE );
+					ArffBuilder.POSITIVE_INSTANCE );
 
-			computeFeaturesOnAllSegments(
-					img,
-					lblImg,
+			testData.addData(
+					imgs.get( i ),
+					labelings.get( i ),
 					labeltype,
-					featureSet,
-					arffTest,
 					ArffBuilder.UNKNOWN_INSTANCE );
 		}
 
-		try {
-			arffTrain.write( pathprefix + "/FeatureExampleOnRealSegments_traindata.arff" );
-			arffTest.write( pathprefix + "/FeatureExampleOnRealSegments_testdata.arff" );
-		} catch ( final FileNotFoundException e ) {
-			e.printStackTrace();
-		}
+		trainingData.saveArff( pathprefix + "/FeatureExampleOnRealSegments_traindata.arff" );
+		testData.saveArff( pathprefix + "/FeatureExampleOnRealSegments_testdata.arff" );
+
 		System.out.println( "...done!" );
 
 		// -----------------------------------------------------------------------------------------------
@@ -220,7 +189,7 @@ public class FeatureExampleOnRealSegments {
 		System.out.print( "Training random forest classifier..." );
 		final RandomForest tree = new RandomForest();
 		try {
-			tree.buildClassifier( arffTrain.getData() );
+			tree.buildClassifier( trainingData.getDataInstances() );
 		} catch ( final Exception e ) {
 			e.printStackTrace();
 			System.exit( 1 );
@@ -235,7 +204,7 @@ public class FeatureExampleOnRealSegments {
 			final Img< L > lblImg = labelings.get( i );
 
 			final RandomForestSegmentCosts< L, T > costs =
-					new RandomForestSegmentCosts< L, T >( lblImg, img, tree, featureSet, labeltype );
+					new RandomForestSegmentCosts< L, T >( lblImg, img, tree, ourFeatureSet, labeltype );
 
 			System.out.print( "\tOptimum search for Image " + i + ": Finding optimum..." );
 			final FactorGraphPlus< LabelingSegment > fgplus = FactorGraphFactory.createFromConflictGraph(
@@ -320,7 +289,7 @@ public class FeatureExampleOnRealSegments {
 					final RandomAccessibleInterval< T > img,
 					final RandomAccessibleInterval< L > sumImg,
 					final L labeltype,
-					final DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet,
+					final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet,
 					final ArffBuilder arffBuilder,
 					final String classIdentifier ) {
 

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import net.imagej.ops.Op;
 import net.imagej.ops.OpRef;
-import net.imagej.ops.features.DefaultAutoResolvingFeatureSet;
+import net.imagej.ops.features.AbstractAutoResolvingFeatureSet;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.roi.Regions;
@@ -70,22 +70,23 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 			final RandomAccessibleInterval< L > sumImg,
 			final RandomAccessibleInterval< T > img,
 			final RandomForest trainedForest,
-			final DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet,
+			final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > ourFeatureSet,
 			final L labeltype ) {
 
-		this( getSegmentsFromSumImg( sumImg, labeltype ), img, trainedForest, featureSet, labeltype );
+		this( getSegmentsFromSumImg( sumImg, labeltype ), img, trainedForest, ourFeatureSet,
+				labeltype );
 	}
 
 	public RandomForestSegmentCosts(
 			final LabelingBuilder labelingBuilder,
 			final RandomAccessibleInterval< T > img,
 			final RandomForest trainedForest,
-			final DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet,
+			final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > ourFeatureSet,
 			final L labeltype ) {
 
 		this.labeling = labelingBuilder.getLabeling();
 		this.segments = labelingBuilder.getSegments();
-		arff = ArffWriterFactory.getArffBuilderFor( featureSet );
+		arff = ArffWriterFactory.getArffBuilderFor( ourFeatureSet );
 		forest = trainedForest;
 
 		conflictGraph = new MinimalOverlapConflictGraph( labelingBuilder );
@@ -93,7 +94,8 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 		for ( final Segment segment : segments ) {
 
 			final IterableInterval< T > pixels = Regions.sample( segment.getRegion(), img );
-			final Map< OpRef< ? extends Op >, DoubleType > features = featureSet.compute( pixels );
+			final Map< OpRef< ? extends Op >, DoubleType > features =
+					ourFeatureSet.compute( pixels );
 
 			arff.addData( features, ArffBuilder.UNKNOWN_INSTANCE );
 			final Instance latestInstance = arff.getLatestAddedInstance();
