@@ -70,8 +70,8 @@ public class LabelingBuilder {
 	public synchronized ArrayList< LabelingSegment > getSegments() {
 		if ( segments == null ) {
 			segments = new ArrayList<>();
-			for ( final SegmentLabel labels : getLabeling().getMapping().getLabels() )
-				segments.add( labels.getSegment() );
+			for ( final SegmentLabel label : getLabeling().getMapping().getLabels() )
+				segments.add( label.getSegment() );
 		}
 		return segments;
 	}
