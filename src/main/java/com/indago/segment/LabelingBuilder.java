@@ -34,6 +34,12 @@ public class LabelingBuilder {
 		labelRegions = new LabelRegions< SegmentLabel >( labeling );
 	}
 
+	public LabelingBuilder( final Img< IntType > indexImg ) {
+		this.indexImg = indexImg;
+		labeling = new ImgLabeling<>( indexImg );
+		labelRegions = new LabelRegions< SegmentLabel >( labeling );
+	}
+
 	public ImgLabeling< SegmentLabel, IntType > getLabeling() {
 		return labeling;
 	}
