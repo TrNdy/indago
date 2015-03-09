@@ -223,6 +223,7 @@ public class FeatureExampleOnRealSegments {
 			}
 
 			final ImgLabeling< SegmentLabel, IntType > labeling = costs.getLabeling();
+
 			final AssignmentLabelColor labelColor = new AssignmentLabelColor( assignment, fgplus.getSegmentVariableDictionary() );
 			final AlphaMixedSegmentLabelSetColor labelSetColor = new AlphaMixedSegmentLabelSetColor( labelColor );
 			final RealARGBColorConverter< T > imageConverter = new RealARGBColorConverter.Imp0< T >( 0, 255 );

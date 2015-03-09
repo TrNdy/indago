@@ -24,6 +24,12 @@ import com.indago.fg.value.BooleanValue;
 import com.indago.fg.variable.BooleanVariable;
 import com.indago.fg.variable.Variable;
 
+/**
+ * A solver for boolean factor graphs that uses Gurobi for the optimization
+ * step.
+ * 
+ * @author pietzsch, jug
+ */
 @SuppressWarnings( "restriction" )
 public class SolveBooleanFGGurobi {
 

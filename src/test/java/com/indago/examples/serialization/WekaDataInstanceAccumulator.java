@@ -30,22 +30,22 @@ import com.indago.weka.ArffWriterFactory;
 
 /**
  * Module to collect all the feature data later used to train or feed into a
- * classifier other (most likely) weka thing.
- *
+ * classifier (most likely) weka thing.
+ * 
  * Input:
  * ------
  * (i) image data
  * (ii) labeling of true instances
  * (iii) labeling of false instances
  * (iv) specification of a feature-set to be used
- *
+ * 
  * Output:
  * -------
  * (i) ARFF data collection (can be stored in file) fit for further processing
  * in weka algorithms.
- *
+ * 
  * Part of: IIa
- *
+ * 
  * @author jug
  */
 public class WekaDataInstanceAccumulator< T extends RealType< T > & NativeType< T >, L extends IntegerType< L > & NativeType< L > > {

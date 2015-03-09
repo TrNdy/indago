@@ -26,8 +26,9 @@ import com.indago.weka.ArffBuilder;
 import com.indago.weka.ArffWriterFactory;
 
 /**
- * Assigns random costs to all segments in a SegmentMultiForest.
- * This is useful for testing artificial setups...
+ * Assigns costs by evaluating a random forest and assigning
+ * <code>-classProb(0)</code>, where <code>classProb(0)</code> is the
+ * probability of a segment to be a true segment.
  *
  * @author jug
  */
@@ -139,6 +140,10 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 		return conflictGraph;
 	}
 
+	/**
+	 * @return the <code>ImgLabeling</code> held by this
+	 *         <code>RandomForestSegmentCosts</code> instance.
+	 */
 	public ImgLabeling< SegmentLabel, IntType > getLabeling() {
 		return labeling;
 	}

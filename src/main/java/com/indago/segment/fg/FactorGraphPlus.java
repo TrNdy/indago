@@ -5,6 +5,13 @@ import java.util.Map;
 import com.indago.fg.FactorGraph;
 import com.indago.segment.Segment;
 
+/**
+ * A <code>FactorGraph</code> enriched by a dictionary that maps instances of
+ * type <code>T extends Segment</code> to the representing variable in the
+ * factor graph.
+ * 
+ * @author pietzsch, jug
+ */
 public class FactorGraphPlus< T extends Segment > {
 	private final FactorGraph factorGraph;
 
