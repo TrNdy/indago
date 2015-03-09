@@ -28,6 +28,8 @@ import com.indago.segment.LabelingForest;
 import com.indago.segment.LabelingSegment;
 import com.indago.segment.MinimalOverlapConflictGraph;
 import com.indago.segment.RandomSegmentCosts;
+import com.indago.segment.XmlIoLabelingBuilder;
+import com.indago.segment.XmlIoLabelingBuilder.LabelingData;
 import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
@@ -77,7 +79,17 @@ public class PlayGround2 {
 //			++i;
 		}
 
-		final MinimalOverlapConflictGraph conflictGraph = new MinimalOverlapConflictGraph( labelingBuilder );
+		final String labelingDataFilename = "/Users/pietzsch/Desktop/labeling.xml";
+		new XmlIoLabelingBuilder().save( new LabelingData( labelingBuilder, labelingForests ), labelingDataFilename );
+
+		// = = = syncpoint = = =
+
+		final LabelingData labelingDataLoaded = new XmlIoLabelingBuilder().load( labelingDataFilename );
+
+		final LabelingBuilder labelingBuilderLoaded = labelingDataLoaded.getLabelingBuilder();
+		final List< LabelingForest > labelingForestsLoaded = labelingDataLoaded.getLabelingForests();
+
+		final MinimalOverlapConflictGraph conflictGraph = new MinimalOverlapConflictGraph( labelingBuilderLoaded );
 //		final MultiForestConflictGraph conflictGraph = new MultiForestConflictGraph( labelingForests );
 //		final PairwiseConflictGraph conflictGraph = new PairwiseConflictGraph( labelingBuilder );
 		conflictGraph.getConflictGraphCliques();
@@ -85,14 +97,14 @@ public class PlayGround2 {
 		System.out.println( ( t1 - t0 ) + " ms" );
 
 		final HypothesisPrinter hp = new HypothesisPrinter();
-		for ( final LabelingForest labelingForest : labelingForests ) {
+		for ( final LabelingForest labelingForest : labelingForestsLoaded ) {
 			hp.assignIds( labelingForest );
 			hp.printHypothesisForest( labelingForest );
 		}
 		System.out.println();
 		hp.printConflictGraphCliques( conflictGraph );
 
-		final ArrayList< LabelingSegment > segments = labelingBuilder.getSegments();
+		final ArrayList< LabelingSegment > segments = labelingBuilderLoaded.getSegments();
 		final RandomSegmentCosts costs = new RandomSegmentCosts( segments, 815 ); // assign random costs to segments in MultiForest (for testing purposes)
 		final FactorGraph fg = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph, costs ).getFactorGraph();
 
