@@ -117,13 +117,19 @@ public class LabelingBuilder {
 		return new LabelingForest( roots );
 	}
 
-	private < T extends TreeNode< T > & Iterable< ? extends Localizable > > LabelingTreeNode buildLabelingTreeNodeFor( final T node, final HashMap< T, SegmentLabel > nodeToLabel ) {
-		final SegmentLabel label = nodeToLabel.get( node );
+	void createSegmentAndTreeNode( final SegmentLabel label )
+	{
 		final LabelRegion< SegmentLabel > labelRegion = labelRegions.getLabelRegion( label );
 		final LabelingSegment segment = new LabelingSegment( labelRegion );
 		label.setSegment( segment );
 		final LabelingTreeNode ltn = new LabelingTreeNode( segment, label );
 		label.setLabelingTreeNode( ltn );
+	}
+
+	private < T extends TreeNode< T > > LabelingTreeNode buildLabelingTreeNodeFor( final T node, final HashMap< T, SegmentLabel > nodeToLabel ) {
+		final SegmentLabel label = nodeToLabel.get( node );
+		createSegmentAndTreeNode( label );
+		final LabelingTreeNode ltn = label.getLabelingTreeNode();
 		for ( final T c : node.getChildren() )
 			ltn.addChild( buildLabelingTreeNodeFor( c, nodeToLabel ) );
 		return ltn;
