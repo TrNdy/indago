@@ -114,7 +114,7 @@ public class LabelingBuilder {
 		final HashSet< LabelingTreeNode > roots = new HashSet<>();
 		for ( final T node : forest.roots() )
 			roots.add( buildLabelingTreeNodeFor( node, nodeToLabel ) );
-		return new LabelingForest( this, roots );
+		return new LabelingForest( roots );
 	}
 
 	private < T extends TreeNode< T > & Iterable< ? extends Localizable > > LabelingTreeNode buildLabelingTreeNodeFor( final T node, final HashMap< T, SegmentLabel > nodeToLabel ) {

@@ -4,25 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.imglib2.roi.labeling.ImgLabeling;
-import net.imglib2.roi.labeling.LabelRegions;
 import net.imglib2.algorithm.tree.Forest;
 import net.imglib2.algorithm.tree.TreeUtils;
-import net.imglib2.type.numeric.integer.IntType;
 
 public class LabelingForest implements Forest< LabelingTreeNode >, ConflictGraph< LabelingSegment > {
 
 	private final HashSet< LabelingTreeNode > roots;
 
-	private final LabelingBuilder builder;
-
-	public LabelingForest( final ImgLabeling< Integer, IntType > labeling, final LabelRegions< Integer > labelRegions, final HashSet< LabelingTreeNode > roots ) {
-		this.builder = null;
-		this.roots = roots;
-	}
-
-	public LabelingForest( final LabelingBuilder builder, final HashSet< LabelingTreeNode > roots ) {
-		this.builder = builder;
+	public LabelingForest( final HashSet< LabelingTreeNode > roots ) {
 		this.roots = roots;
 	}
 
