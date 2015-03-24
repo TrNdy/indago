@@ -17,6 +17,7 @@ import net.imglib2.type.numeric.integer.UnsignedIntType;
 
 import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingForest;
+import com.indago.segment.LabelingPlus;
 import com.indago.segment.XmlIoLabelingPlus;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
@@ -69,9 +70,13 @@ public class SerializeLabelingSegmentsPlayground {
 
 		new XmlIoLabelingPlus().save( labelingBuilder, "/Users/pietzsch/Desktop/labelingbuilder.xml" );
 
-		final LabelingBuilder labelingBuilderLoaded = new XmlIoLabelingPlus().load( "/Users/pietzsch/Desktop/labelingbuilder.xml" ).getLabelingBuilder();
+		final LabelingPlus labelingPlusLoaded =
+				new XmlIoLabelingPlus().load( "/Users/pietzsch/Desktop/labelingbuilder.xml" );
 		final Img< ARGBType > labelsLoaded = ArrayImgs.argbs( dims.dimension( 0 ), dims.dimension( 1 ) );
-		VisualizeLabeling.colorLabels( labelingBuilderLoaded.getLabeling(), ColorStream.iterator(), labelsLoaded );
+		VisualizeLabeling.colorLabels(
+				labelingPlusLoaded.getLabeling(),
+				ColorStream.iterator(),
+				labelsLoaded );
 		ImageJFunctions.show( labelsLoaded, "Labels loaded" );
 
 		System.out.println( "done" );
