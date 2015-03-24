@@ -7,79 +7,27 @@ import java.util.HashSet;
 import net.imglib2.Dimensions;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
-import net.imglib2.roi.labeling.ImgLabeling;
-import net.imglib2.roi.labeling.LabelRegion;
-import net.imglib2.roi.labeling.LabelRegions;
-import net.imglib2.roi.labeling.LabelingMapping;
-import net.imglib2.roi.labeling.LabelingType;
 import net.imglib2.algorithm.tree.Forest;
 import net.imglib2.algorithm.tree.TreeNode;
+import net.imglib2.img.Img;
+import net.imglib2.roi.labeling.LabelingType;
 import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.util.Util;
 
-public class LabelingBuilder {
-
-	private final Img< IntType > indexImg;
-
-	private final ImgLabeling< SegmentLabel, IntType > labeling;
-
-	private final LabelRegions< SegmentLabel > labelRegions;
-
-	private final static IntType intType = new IntType();
+/**
+ * @author tpietzsch, jug
+ */
+public class LabelingBuilder extends LabelingPlus {
 
 	public LabelingBuilder( final Dimensions dimensions ) {
-		indexImg = Util.getArrayOrCellImgFactory( dimensions, intType ).create( dimensions, intType );
-		labeling = new ImgLabeling<>( indexImg );
-		labelRegions = new LabelRegions< SegmentLabel >( labeling );
+		super( dimensions );
 	}
 
 	public LabelingBuilder( final Img< IntType > indexImg ) {
-		this.indexImg = indexImg;
-		labeling = new ImgLabeling<>( indexImg );
-		labelRegions = new LabelRegions< SegmentLabel >( labeling );
+		super( indexImg );
 	}
 
-	public ImgLabeling< SegmentLabel, IntType > getLabeling() {
-		return labeling;
-	}
-
-	private ArrayList< LabelingFragment > fragments = null;
-
-	public synchronized ArrayList< LabelingFragment > getFragments() {
-		if ( fragments == null ) {
-			fragments = new ArrayList<>();
-			final LabelingMapping< SegmentLabel > mapping = labeling.getMapping();
-			for ( final SegmentLabel label : mapping.getLabels() )
-				label.getFragmentIndices().clear();
-			final int numLabelSets = mapping.numSets();
-			final boolean[] flags = new boolean[ numLabelSets ];
-			for ( final IntType t : indexImg )
-				flags[ t.get() ] = true;
-			for ( int i = 0; i < numLabelSets; ++i ) {
-				if ( flags[ i ] ) {
-					final int fragmentIndex = fragments.size();
-					final LabelingFragment fragment = new LabelingFragment( fragmentIndex );
-					fragments.add( fragment );
-					for ( final SegmentLabel label : mapping.labelsAtIndex( i ) ) {
-						fragment.getSegments().add( label );
-						label.getFragmentIndices().add( fragmentIndex );
-					}
-				}
-			}
-		}
-		return fragments;
-	}
-
-	private ArrayList< LabelingSegment > segments = null;
-
-	public synchronized ArrayList< LabelingSegment > getSegments() {
-		if ( segments == null ) {
-			segments = new ArrayList<>();
-			for ( final SegmentLabel label : getLabeling().getMapping().getLabels() )
-				segments.add( label.getSegment() );
-		}
-		return segments;
+	public LabelingBuilder( final LabelingPlus labelingPlus ) {
+		super( labelingPlus );
 	}
 
 	public synchronized < T extends TreeNode< T > & Iterable< ? extends Localizable > > LabelingForest buildLabelingForest( final Forest< T > forest ) {
@@ -114,16 +62,12 @@ public class LabelingBuilder {
 		final HashSet< LabelingTreeNode > roots = new HashSet<>();
 		for ( final T node : forest.roots() )
 			roots.add( buildLabelingTreeNodeFor( node, nodeToLabel ) );
-		return new LabelingForest( roots );
-	}
 
-	void createSegmentAndTreeNode( final SegmentLabel label )
-	{
-		final LabelRegion< SegmentLabel > labelRegion = labelRegions.getLabelRegion( label );
-		final LabelingSegment segment = new LabelingSegment( labelRegion );
-		label.setSegment( segment );
-		final LabelingTreeNode ltn = new LabelingTreeNode( segment, label );
-		label.setLabelingTreeNode( ltn );
+		// add new forest to list of forests ever added
+		final LabelingForest labelingForest = new LabelingForest( roots );
+		labelingForests.add( labelingForest );
+
+		return labelingForest;
 	}
 
 	private < T extends TreeNode< T > > LabelingTreeNode buildLabelingTreeNodeFor( final T node, final HashMap< T, SegmentLabel > nodeToLabel ) {

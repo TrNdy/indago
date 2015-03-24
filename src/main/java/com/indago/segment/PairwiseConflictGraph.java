@@ -3,6 +3,9 @@ package com.indago.segment;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * @author tpietzsch, jug
+ */
 public class PairwiseConflictGraph implements ConflictGraph< LabelingSegment > {
 
 	private final LabelingBuilder labelingBuilder;
@@ -20,11 +23,13 @@ public class PairwiseConflictGraph implements ConflictGraph< LabelingSegment > {
 		return conflictGraphCliques;
 	}
 
-	public static ArrayList< ArrayList< LabelingSegment > > getConflictGraphCliques( final LabelingBuilder labelingBuilder ) {
+	public static ArrayList< ArrayList< LabelingSegment > > getConflictGraphCliques(
+			final LabelingPlus labelingPlus ) {
 		final ArrayList< ArrayList< LabelingSegment > > conflictGraphCliques = new ArrayList<>();
 
-		labelingBuilder.getFragments(); // we call this to update FragmentIndices of all segments
-		final ArrayList< SegmentLabel > segmentLabels = new ArrayList<>( labelingBuilder.getLabeling().getMapping().getLabels() );
+		labelingPlus.getFragments(); // we call this to update FragmentIndices of all segments
+		final ArrayList< SegmentLabel > segmentLabels =
+				new ArrayList<>( labelingPlus.getLabeling().getMapping().getLabels() );
 
 		final int numSegments = segmentLabels.size();
 		for ( int i = 0; i < numSegments - 1; ++i ) {

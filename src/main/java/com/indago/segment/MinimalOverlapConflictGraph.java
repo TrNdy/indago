@@ -4,29 +4,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * @author tpietzsch, jug
+ */
 public class MinimalOverlapConflictGraph implements ConflictGraph< LabelingSegment > {
 
-	private final LabelingBuilder labelingBuilder;
+	private final LabelingPlus labelingPlus;
 
 	private Collection< ? extends Collection< LabelingSegment >> conflictGraphCliques;
 
-	public MinimalOverlapConflictGraph( final LabelingBuilder labelingBuilder ) {
-		this.labelingBuilder = labelingBuilder;
+	public MinimalOverlapConflictGraph( final LabelingPlus labelingPlus ) {
+		this.labelingPlus = labelingPlus;
 	}
 
 	@Override
 	public Collection< ? extends Collection< LabelingSegment > > getConflictGraphCliques() {
 		if ( conflictGraphCliques == null )
-			conflictGraphCliques = getConflictGraphCliques( labelingBuilder );
+			conflictGraphCliques = getConflictGraphCliques( labelingPlus );
 		return conflictGraphCliques;
 	}
 
-	public static ArrayList< ArrayList< LabelingSegment > > getConflictGraphCliques( final LabelingBuilder labelingBuilder ) {
+	public static ArrayList< ArrayList< LabelingSegment > > getConflictGraphCliques(
+			final LabelingPlus labelingPlus ) {
 		final ArrayList< ArrayList< LabelingSegment > > conflictGraphCliques = new ArrayList<>();
 
 		int heads[] = new int[ 32 ];
 
-		final ArrayList< LabelingFragment > fragments = labelingBuilder.getFragments();
+		final ArrayList< LabelingFragment > fragments = labelingPlus.getFragments();
 
 		// for each fragment
 		for ( final LabelingFragment fragment : fragments ) {

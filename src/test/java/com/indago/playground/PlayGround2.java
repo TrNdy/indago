@@ -25,11 +25,11 @@ import com.indago.ilp.SolveBooleanFGGurobi;
 import com.indago.segment.HypothesisPrinter;
 import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingForest;
+import com.indago.segment.LabelingPlus;
 import com.indago.segment.LabelingSegment;
-import com.indago.segment.MinimalOverlapConflictGraph;
+import com.indago.segment.MultiForestConflictGraph;
 import com.indago.segment.RandomSegmentCosts;
-import com.indago.segment.XmlIoLabelingBuilder;
-import com.indago.segment.XmlIoLabelingBuilder.LabelingData;
+import com.indago.segment.XmlIoLabelingPlus;
 import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
@@ -70,9 +70,10 @@ public class PlayGround2 {
 		final long t0 = System.currentTimeMillis();
 
 //		int i = 1;
-		final List< LabelingForest > labelingForests = new ArrayList<>();
+		//final List< LabelingForest > labelingForests = new ArrayList<>();
 		for ( final FilteredComponentTree< T > fctree : fctrees ) {
-			labelingForests.add( labelingBuilder.buildLabelingForest( fctree ) );
+			// labelingForests.add( labelingBuilder.buildLabelingForest( fctree ) );
+			labelingBuilder.buildLabelingForest( fctree );
 //			final Img< ARGBType > labels = ArrayImgs.argbs( dims.dimension( 0 ), dims.dimension( 1 ) );
 //			VisualizeLabeling.colorLabels( labelingBuilder.getLabeling(), ColorStream.iterator(), labels );
 //			ImageJFunctions.show( labels, "Labels " + i );
@@ -80,19 +81,24 @@ public class PlayGround2 {
 		}
 
 		final String labelingDataFilename = "/Users/jug/Desktop/labeling.xml";
-		new XmlIoLabelingBuilder().save( new LabelingData( labelingBuilder, labelingForests ), labelingDataFilename );
+		new XmlIoLabelingPlus().save( labelingBuilder, labelingDataFilename );
 
 		// = = = syncpoint = = =
 
-		final LabelingData labelingDataLoaded = new XmlIoLabelingBuilder().load( labelingDataFilename );
+		final LabelingPlus labelingPlus = new XmlIoLabelingPlus().load( labelingDataFilename );
 
-		final LabelingBuilder labelingBuilderLoaded = labelingDataLoaded.getLabelingBuilder();
-		final List< LabelingForest > labelingForestsLoaded = labelingDataLoaded.getLabelingForests();
+		final LabelingBuilder labelingBuilderLoaded = new LabelingBuilder( labelingPlus );
+		final List< LabelingForest > labelingForestsLoaded = labelingPlus.getLabelingForests();
 
-		final MinimalOverlapConflictGraph conflictGraph =
-				new MinimalOverlapConflictGraph( labelingBuilderLoaded );
-//		final MultiForestConflictGraph conflictGraph = new MultiForestConflictGraph( labelingForests );
-//		final PairwiseConflictGraph conflictGraph = new PairwiseConflictGraph( labelingBuilder );
+//		final MinimalOverlapConflictGraph conflictGraph =
+//				new MinimalOverlapConflictGraph( labelingBuilderLoaded );
+
+		final MultiForestConflictGraph conflictGraph =
+				new MultiForestConflictGraph( labelingBuilderLoaded.getLabelingForests() );
+
+//		final PairwiseConflictGraph conflictGraph =
+//				new PairwiseConflictGraph( labelingBuilderLoaded );
+
 		conflictGraph.getConflictGraphCliques();
 		final long t1 = System.currentTimeMillis();
 		System.out.println( ( t1 - t0 ) + " ms" );
