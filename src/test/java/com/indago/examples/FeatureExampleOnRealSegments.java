@@ -170,7 +170,7 @@ public class FeatureExampleOnRealSegments {
 							Views.translate( Views.extendZero( gt.get( i ) ), 10, 10 ),
 							gt.get( i ) ),
 					labeltype,
-					ArffBuilder.POSITIVE_INSTANCE );
+					ArffBuilder.NEGATIVE_INSTANCE );
 
 			testData.addData(
 					imgs.get( i ),
