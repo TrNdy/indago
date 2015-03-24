@@ -79,7 +79,7 @@ public class PlayGround2 {
 //			++i;
 		}
 
-		final String labelingDataFilename = "/Users/pietzsch/Desktop/labeling.xml";
+		final String labelingDataFilename = "/Users/jug/Desktop/labeling.xml";
 		new XmlIoLabelingBuilder().save( new LabelingData( labelingBuilder, labelingForests ), labelingDataFilename );
 
 		// = = = syncpoint = = =
@@ -89,7 +89,8 @@ public class PlayGround2 {
 		final LabelingBuilder labelingBuilderLoaded = labelingDataLoaded.getLabelingBuilder();
 		final List< LabelingForest > labelingForestsLoaded = labelingDataLoaded.getLabelingForests();
 
-		final MinimalOverlapConflictGraph conflictGraph = new MinimalOverlapConflictGraph( labelingBuilderLoaded );
+		final MinimalOverlapConflictGraph conflictGraph =
+				new MinimalOverlapConflictGraph( labelingBuilderLoaded );
 //		final MultiForestConflictGraph conflictGraph = new MultiForestConflictGraph( labelingForests );
 //		final PairwiseConflictGraph conflictGraph = new PairwiseConflictGraph( labelingBuilder );
 		conflictGraph.getConflictGraphCliques();
