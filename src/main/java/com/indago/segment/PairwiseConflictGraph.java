@@ -28,14 +28,14 @@ public class PairwiseConflictGraph implements ConflictGraph< LabelingSegment > {
 		final ArrayList< ArrayList< LabelingSegment > > conflictGraphCliques = new ArrayList<>();
 
 		labelingPlus.getFragments(); // we call this to update FragmentIndices of all segments
-		final ArrayList< SegmentLabel > segmentLabels =
+		final ArrayList< LabelData > segmentLabels =
 				new ArrayList<>( labelingPlus.getLabeling().getMapping().getLabels() );
 
 		final int numSegments = segmentLabels.size();
 		for ( int i = 0; i < numSegments - 1; ++i ) {
-			final SegmentLabel sli = segmentLabels.get( i );
+			final LabelData sli = segmentLabels.get( i );
 			for ( int j = i + 1; j < numSegments; ++j ) {
-				final SegmentLabel slj = segmentLabels.get( j );
+				final LabelData slj = segmentLabels.get( j );
 				for ( final Integer fj : slj.getFragmentIndices() ) {
 					if ( sli.getFragmentIndices().contains( fj ) ) {
 						final ArrayList< LabelingSegment > clique = new ArrayList<>();

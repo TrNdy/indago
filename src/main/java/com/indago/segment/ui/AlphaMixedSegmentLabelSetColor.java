@@ -4,7 +4,7 @@ import java.util.Set;
 
 import net.imglib2.type.numeric.ARGBType;
 
-import com.indago.segment.SegmentLabel;
+import com.indago.segment.LabelData;
 
 public class AlphaMixedSegmentLabelSetColor implements SegmentLabelSetColor {
 
@@ -15,7 +15,7 @@ public class AlphaMixedSegmentLabelSetColor implements SegmentLabelSetColor {
 		}
 
 		@Override
-		public int getSegmentLabelSetColor( final Set< SegmentLabel > labels ) {
+		public int getSegmentLabelSetColor( final Set< LabelData > labels ) {
 			if ( labels.isEmpty() )
 				return 0;
 
@@ -24,7 +24,7 @@ public class AlphaMixedSegmentLabelSetColor implements SegmentLabelSetColor {
 			double sb = 0;
 			double sa = 0;
 			double maxAlpha = 0;
-			for ( final SegmentLabel label : labels ) {
+			for ( final LabelData label : labels ) {
 				final int color = labelColors.getSegmentLabelColor( label );
 				final double a = ARGBType.alpha( color );
 				if ( a > maxAlpha )

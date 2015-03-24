@@ -1,8 +1,8 @@
 package com.indago.segment.ui;
 
-import com.indago.segment.SegmentLabel;
+import com.indago.segment.LabelData;
 
 public interface SegmentLabelColor {
 
-	int getSegmentLabelColor( SegmentLabel label );
+	int getSegmentLabelColor( LabelData label );
 }

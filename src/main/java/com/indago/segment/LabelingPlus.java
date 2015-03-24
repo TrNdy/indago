@@ -19,9 +19,9 @@ public class LabelingPlus
 {
 	private final Img< IntType > indexImg;
 
-	protected final ImgLabeling< SegmentLabel, IntType > labeling;
+	protected final ImgLabeling< LabelData, IntType > labeling;
 
-	protected final LabelRegions< SegmentLabel > labelRegions;
+	protected final LabelRegions< LabelData > labelRegions;
 
 	protected ArrayList< LabelingFragment > fragments = null;
 
@@ -34,14 +34,14 @@ public class LabelingPlus
 	public LabelingPlus( final Dimensions dimensions ) {
 		indexImg = Util.getArrayOrCellImgFactory( dimensions, intType ).create( dimensions, intType );
 		labeling = new ImgLabeling<>( indexImg );
-		labelRegions = new LabelRegions< SegmentLabel >( labeling );
+		labelRegions = new LabelRegions< LabelData >( labeling );
 		labelingForests = new ArrayList< LabelingForest >();
 	}
 
 	public LabelingPlus( final Img< IntType > indexImg ) {
 		this.indexImg = indexImg;
 		labeling = new ImgLabeling<>( indexImg );
-		labelRegions = new LabelRegions< SegmentLabel >( labeling );
+		labelRegions = new LabelRegions< LabelData >( labeling );
 		labelingForests = new ArrayList< LabelingForest >();
 	}
 
@@ -57,7 +57,7 @@ public class LabelingPlus
 		this.labelingForests = labelingPlus.labelingForests;
 	}
 
-	public ImgLabeling< SegmentLabel, IntType > getLabeling() {
+	public ImgLabeling< LabelData, IntType > getLabeling() {
 		return labeling;
 	}
 
@@ -68,8 +68,8 @@ public class LabelingPlus
 	public synchronized ArrayList< LabelingFragment > getFragments() {
 		if ( fragments == null ) {
 			fragments = new ArrayList<>();
-			final LabelingMapping< SegmentLabel > mapping = labeling.getMapping();
-			for ( final SegmentLabel label : mapping.getLabels() )
+			final LabelingMapping< LabelData > mapping = labeling.getMapping();
+			for ( final LabelData label : mapping.getLabels() )
 				label.getFragmentIndices().clear();
 			final int numLabelSets = mapping.numSets();
 			final boolean[] flags = new boolean[ numLabelSets ];
@@ -80,7 +80,7 @@ public class LabelingPlus
 					final int fragmentIndex = fragments.size();
 					final LabelingFragment fragment = new LabelingFragment( fragmentIndex );
 					fragments.add( fragment );
-					for ( final SegmentLabel label : mapping.labelsAtIndex( i ) ) {
+					for ( final LabelData label : mapping.labelsAtIndex( i ) ) {
 						fragment.getSegments().add( label );
 						label.getFragmentIndices().add( fragmentIndex );
 					}
@@ -93,15 +93,15 @@ public class LabelingPlus
 	public synchronized ArrayList< LabelingSegment > getSegments() {
 		if ( segments == null ) {
 			segments = new ArrayList<>();
-			for ( final SegmentLabel label : getLabeling().getMapping().getLabels() )
+			for ( final LabelData label : getLabeling().getMapping().getLabels() )
 				segments.add( label.getSegment() );
 		}
 		return segments;
 	}
 
-	void createSegmentAndTreeNode( final SegmentLabel label )
+	void createSegmentAndTreeNode( final LabelData label )
 	{
-		final LabelRegion< SegmentLabel > labelRegion = labelRegions.getLabelRegion( label );
+		final LabelRegion< LabelData > labelRegion = labelRegions.getLabelRegion( label );
 		final LabelingSegment segment = new LabelingSegment( labelRegion );
 		label.setSegment( segment );
 		final LabelingTreeNode ltn = new LabelingTreeNode( segment, label );

@@ -39,10 +39,10 @@ public class MinimalOverlapConflictGraph implements ConflictGraph< LabelingSegme
 
 			// find minimal elements of contained segments
 			// (those do not have a hypothesis-tree child that is also in contained segments)
-			final ArrayList< SegmentLabel > intersect = new ArrayList<>();
-			A1: for ( final SegmentLabel sl : fragment.getSegments() ) {
+			final ArrayList< LabelData > intersect = new ArrayList<>();
+			A1: for ( final LabelData sl : fragment.getSegments() ) {
 				for ( final LabelingTreeNode child : sl.getLabelingTreeNode().getChildren() )
-					for ( final SegmentLabel sl2 : fragment.getSegments() )
+					for ( final LabelData sl2 : fragment.getSegments() )
 						if ( sl2.getLabelingTreeNode() == child ) continue A1;
 				intersect.add( sl );
 			}
@@ -126,7 +126,7 @@ public class MinimalOverlapConflictGraph implements ConflictGraph< LabelingSegme
 			// found new conflict set
 			if ( intersectionSize < 2 ) {
 				final ArrayList< LabelingSegment > clique = new ArrayList<>();
-				for ( final SegmentLabel sl : fragment.getSegments() )
+				for ( final LabelData sl : fragment.getSegments() )
 					clique.add( sl.getSegment() );
 				conflictGraphCliques.add( clique );
 			}

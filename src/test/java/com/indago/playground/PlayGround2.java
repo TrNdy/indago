@@ -27,7 +27,7 @@ import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingForest;
 import com.indago.segment.LabelingPlus;
 import com.indago.segment.LabelingSegment;
-import com.indago.segment.MultiForestConflictGraph;
+import com.indago.segment.PairwiseConflictGraph;
 import com.indago.segment.RandomSegmentCosts;
 import com.indago.segment.XmlIoLabelingPlus;
 import com.indago.segment.fg.FactorGraphFactory;
@@ -93,11 +93,11 @@ public class PlayGround2 {
 //		final MinimalOverlapConflictGraph conflictGraph =
 //				new MinimalOverlapConflictGraph( labelingBuilderLoaded );
 
-		final MultiForestConflictGraph conflictGraph =
-				new MultiForestConflictGraph( labelingBuilderLoaded.getLabelingForests() );
+//		final MultiForestConflictGraph conflictGraph =
+//				new MultiForestConflictGraph( labelingBuilderLoaded.getLabelingForests() );
 
-//		final PairwiseConflictGraph conflictGraph =
-//				new PairwiseConflictGraph( labelingBuilderLoaded );
+		final PairwiseConflictGraph conflictGraph =
+				new PairwiseConflictGraph( labelingBuilderLoaded );
 
 		conflictGraph.getConflictGraphCliques();
 		final long t1 = System.currentTimeMillis();

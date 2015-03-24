@@ -86,18 +86,18 @@ public class XmlIoLabelingPlus {
 
 	private void fromXml( final Element segmentLabeling, final LabelingPlus labelingPlus )
 			throws IOException {
-		final TIntObjectMap< SegmentLabel > idToLabelMap =
+		final TIntObjectMap< LabelData > idToLabelMap =
 				getIdToLabelMap( segmentLabeling, LABELS_TAG );
 
 		final Element mapping = segmentLabeling.getChild( MAPPING_TAG );
 		if ( mapping == null )
 			throw new IOException( "no <" + MAPPING_TAG + "> element found." );
 
-		final ArrayList< Set< SegmentLabel > > labelSets = new ArrayList< Set< SegmentLabel > >();
+		final ArrayList< Set< LabelData > > labelSets = new ArrayList< Set< LabelData > >();
 		for ( final Element entry : mapping.getChildren( MAPPING_ENTRY_TAG ) ) {
 			final int i = XmlHelpers.getInt( entry, MAPPING_ENTRY_INDEX_TAG );
 			final int[] ids = XmlHelpers.getIntArray( entry, MAPPING_ENTRY_LABELS_TAG );
-			final HashSet< SegmentLabel > labelSet = new HashSet< SegmentLabel >( ids.length );
+			final HashSet< LabelData > labelSet = new HashSet< LabelData >( ids.length );
 			for ( final int id : ids )
 				labelSet.add( idToLabelMap.get( id ) );
 
@@ -113,12 +113,12 @@ public class XmlIoLabelingPlus {
 
 		for ( final Element node : labelingtree.getChildren( LABELINGTREE_NODE_TAG ) ) {
 			final int id = XmlHelpers.getInt( node, LABELINGTREE_NODE_ID_TAG );
-			final SegmentLabel label = idToLabelMap.get( id );
+			final LabelData label = idToLabelMap.get( id );
 			if ( label.getLabelingTreeNode() == null )
 				labelingPlus.createSegmentAndTreeNode( label );
 			final LabelingTreeNode ltn = label.getLabelingTreeNode();
 			for ( final int childId : XmlHelpers.getIntArray( node, LABELINGTREE_NODE_CHILDREN_TAG ) ) {
-				final SegmentLabel childLabel = idToLabelMap.get( childId );
+				final LabelData childLabel = idToLabelMap.get( childId );
 				if ( childLabel.getLabelingTreeNode() == null )
 					labelingPlus.createSegmentAndTreeNode( childLabel );
 				ltn.addChild( childLabel.getLabelingTreeNode() );
@@ -138,7 +138,7 @@ public class XmlIoLabelingPlus {
 			final LabelingPlus labelingPlus,
 			final File xmlFileDirectory,
 			final File indexImgFile ) throws IOException {
-		final LabelingMapping< SegmentLabel > mapping = labelingPlus.getLabeling().getMapping();
+		final LabelingMapping< LabelData > mapping = labelingPlus.getLabeling().getMapping();
 
 		final Element segmentLabeling = new Element( SEGMENTLABELING_TAG );
 		segmentLabeling.addContent( XmlHelpers.pathElement(
@@ -153,7 +153,7 @@ public class XmlIoLabelingPlus {
 
 		final Element indexMap = new Element( MAPPING_TAG );
 		int i = 0;
-		for ( final Set< SegmentLabel > labelSet : new SegmentLabelingSerialisation( mapping ).getLabelSets() ) {
+		for ( final Set< LabelData > labelSet : new SegmentLabelingSerialisation( mapping ).getLabelSets() ) {
 			final Element entry = new Element( MAPPING_ENTRY_TAG );
 			entry.addContent( XmlHelpers.intElement( MAPPING_ENTRY_INDEX_TAG, i++ ) );
 			entry.addContent( labelIdsElement( MAPPING_ENTRY_LABELS_TAG, labelSet ) );
@@ -175,31 +175,31 @@ public class XmlIoLabelingPlus {
 		return XmlHelpers.loadPath( root, BASEPATH_TAG, ".", xmlFileParentDirectory );
 	}
 
-	private static Element labelIdsElement( final String name, final Set< SegmentLabel > labels ) {
+	private static Element labelIdsElement( final String name, final Set< LabelData > labels ) {
 		final int[] ids = new int[ labels.size() ];
 		int i = 0;
-		for ( final SegmentLabel label : labels )
+		for ( final LabelData label : labels )
 			ids[ i++ ] = label.getId();
 		return XmlHelpers.intArrayElement( name, ids );
 	}
 
-	private static TIntObjectMap< SegmentLabel > getIdToLabelMap(
+	private static TIntObjectMap< LabelData > getIdToLabelMap(
 			final Element parent,
 			final String name ) {
 		final int[] ids = XmlHelpers.getIntArray( parent, name );
-		final TIntObjectHashMap< SegmentLabel > map =
-				new TIntObjectHashMap< SegmentLabel >( Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1 );
+		final TIntObjectHashMap< LabelData > map =
+				new TIntObjectHashMap< LabelData >( Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1 );
 		for ( final int id : ids )
-			map.put( id, new SegmentLabel( id ) );
+			map.put( id, new LabelData( id ) );
 		return map;
 	}
 
 	private static Element labelingTreeElement(
 			final String name,
-			final Set< SegmentLabel > labels,
+			final Set< LabelData > labels,
 			final List< LabelingForest > forests ) {
 		final Element labelingTree = new Element( name );
-		for ( final SegmentLabel label : labels ) {
+		for ( final LabelData label : labels ) {
 			final LabelingTreeNode node = label.getLabelingTreeNode();
 			if ( node == null ) continue;
 
@@ -236,19 +236,19 @@ public class XmlIoLabelingPlus {
 
 	private static class SegmentLabelingSerialisation
 			extends
-			LabelingMapping.SerialisationAccess< SegmentLabel > {
+			LabelingMapping.SerialisationAccess< LabelData > {
 
-		public SegmentLabelingSerialisation( final LabelingMapping< SegmentLabel > mapping ) {
+		public SegmentLabelingSerialisation( final LabelingMapping< LabelData > mapping ) {
 			super( mapping );
 		}
 
 		@Override
-		protected List< Set< SegmentLabel > > getLabelSets() {
+		protected List< Set< LabelData > > getLabelSets() {
 			return super.getLabelSets();
 		}
 
 		@Override
-		protected void setLabelSets( final List< Set< SegmentLabel > > labelSets ) {
+		protected void setLabelSets( final List< Set< LabelData > > labelSets ) {
 			super.setLabelSets( labelSets );
 		}
 	}

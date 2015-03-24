@@ -54,7 +54,7 @@ import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingSegment;
 import com.indago.segment.RandomForestFactory;
 import com.indago.segment.RandomForestSegmentCosts;
-import com.indago.segment.SegmentLabel;
+import com.indago.segment.LabelData;
 import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.fg.FactorGraphPlus;
 import com.indago.segment.fg.SegmentHypothesisVariable;
@@ -222,7 +222,7 @@ public class FeatureExampleOnRealSegments {
 				e.printStackTrace();
 			}
 
-			final ImgLabeling< SegmentLabel, IntType > labeling = costs.getLabeling();
+			final ImgLabeling< LabelData, IntType > labeling = costs.getLabeling();
 
 			final AssignmentLabelColor labelColor = new AssignmentLabelColor( assignment, fgplus.getSegmentVariableDictionary() );
 			final AlphaMixedSegmentLabelSetColor labelSetColor = new AlphaMixedSegmentLabelSetColor( labelColor );
@@ -231,7 +231,7 @@ public class FeatureExampleOnRealSegments {
 			final SegmentLabelSetARGBConverter labelingConverter = new SegmentLabelSetARGBConverter( labelSetColor, costs.getLabeling().getMapping() );
 
 			final RandomAccessibleInterval< ARGBType > argbImage = Converters.convert( ( RandomAccessibleInterval< T > ) img, imageConverter, new ARGBType() );
-			final RandomAccessibleInterval< ARGBType > argbLabeling = Converters.convert( ( RandomAccessibleInterval< LabelingType< SegmentLabel > > ) labeling, labelingConverter, new ARGBType() );
+			final RandomAccessibleInterval< ARGBType > argbLabeling = Converters.convert( ( RandomAccessibleInterval< LabelingType< LabelData > > ) labeling, labelingConverter, new ARGBType() );
 
 			final RandomAccessibleInterval< ARGBType > stack = Views2.stack( argbImage, argbLabeling );
 			final RandomAccessibleInterval< NumericComposite< ARGBType > > composite = Views.collapseNumeric( stack );
@@ -263,7 +263,7 @@ public class FeatureExampleOnRealSegments {
 		}
 
 		@Override
-		public int getSegmentLabelColor( final SegmentLabel label ) {
+		public int getSegmentLabelColor( final LabelData label ) {
 			final SegmentHypothesisVariable< LabelingSegment > v = segmentVariableDict.get( label.getSegment() );
 			final boolean isSelected = assignment.getAssignment( v ).get().booleanValue();
 //			final int randColor = 0x44000000 | ( rand.nextInt( 0x00ff ) << 16 ) | rand.nextInt( 0xffff );

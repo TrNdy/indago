@@ -37,19 +37,19 @@ public class LabelingBuilder extends LabelingPlus {
 		// TODO: use modCount invalidation instead
 
 		// maps nodes in the original forest to labels
-		final HashMap< T, SegmentLabel > nodeToLabel = new HashMap<>();
+		final HashMap< T, LabelData > nodeToLabel = new HashMap<>();
 
 		// create new labels for the nodes in the original forest and label node pixels accordingly.
 		// remember which node corresponds to which label in the nodeToLabel map.
 		ArrayList< T > currentLevel = new ArrayList< T >( forest.roots() );
-		final RandomAccess< LabelingType< SegmentLabel > > a = labeling.randomAccess();
+		final RandomAccess< LabelingType< LabelData > > a = labeling.randomAccess();
 		while ( !currentLevel.isEmpty() ) {
 			final ArrayList< T > nextLevel = new ArrayList< T >();
 			for ( final T node : currentLevel ) {
-				final SegmentLabel label = new SegmentLabel();
+				final LabelData label = new LabelData();
 				for ( final Localizable pos : node ) {
 					a.setPosition( pos );
-					final LabelingType< SegmentLabel > t = a.get();
+					final LabelingType< LabelData > t = a.get();
 					t.add( label );
 				}
 				nodeToLabel.put( node, label );
@@ -70,8 +70,8 @@ public class LabelingBuilder extends LabelingPlus {
 		return labelingForest;
 	}
 
-	private < T extends TreeNode< T > > LabelingTreeNode buildLabelingTreeNodeFor( final T node, final HashMap< T, SegmentLabel > nodeToLabel ) {
-		final SegmentLabel label = nodeToLabel.get( node );
+	private < T extends TreeNode< T > > LabelingTreeNode buildLabelingTreeNodeFor( final T node, final HashMap< T, LabelData > nodeToLabel ) {
+		final LabelData label = nodeToLabel.get( node );
 		createSegmentAndTreeNode( label );
 		final LabelingTreeNode ltn = label.getLabelingTreeNode();
 		for ( final T c : node.getChildren() )

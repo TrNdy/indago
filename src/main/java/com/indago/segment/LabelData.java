@@ -9,8 +9,9 @@ import java.util.ArrayList;
  * {@link LabelingFragment}s making up the segment.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author fjug
  */
-public class SegmentLabel {
+public class LabelData {
 
 	/**
 	 * Unique id used for serialization.
@@ -23,11 +24,11 @@ public class SegmentLabel {
 
 	private final ArrayList< Integer > fragmentIndices;
 
-	SegmentLabel() {
+	LabelData() {
 		this( createId() );
 	}
 
-	SegmentLabel( final int id ) {
+	LabelData( final int id ) {
 		this.id = id;
 		useId( id );
 		segment = null;

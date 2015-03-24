@@ -40,7 +40,7 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 
 	private ArrayList< LabelingSegment > segments;
 	private MinimalOverlapConflictGraph conflictGraph;
-	private ImgLabeling< SegmentLabel, IntType > labeling;
+	private ImgLabeling< LabelData, IntType > labeling;
 
 	private RandomForest forest;
 	private final ArffBuilder arff;
@@ -144,7 +144,7 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 	 * @return the <code>ImgLabeling</code> held by this
 	 *         <code>RandomForestSegmentCosts</code> instance.
 	 */
-	public ImgLabeling< SegmentLabel, IntType > getLabeling() {
+	public ImgLabeling< LabelData, IntType > getLabeling() {
 		return labeling;
 	}
 }

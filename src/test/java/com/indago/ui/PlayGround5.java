@@ -23,7 +23,7 @@ import net.imglib2.views.Views2;
 
 import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingForest;
-import com.indago.segment.SegmentLabel;
+import com.indago.segment.LabelData;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
@@ -56,14 +56,14 @@ public class PlayGround5 {
 
 		final LabelingBuilder labelingBuilder = new LabelingBuilder( segments );
 		final LabelingForest labelingForest = labelingBuilder.buildLabelingForest( FilteredComponentTree.buildComponentTree( segments, type, minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright ) );
-		final RandomAccessibleInterval< LabelingType< SegmentLabel > > labeling = labelingBuilder.getLabeling();
+		final RandomAccessibleInterval< LabelingType< LabelData > > labeling = labelingBuilder.getLabeling();
 
 		final RealARGBColorConverter< T > imageConverter = new RealARGBColorConverter.Imp0< T >( 0, 255 );
 		imageConverter.setColor( new ARGBType( 0xffffffff ) );
 		final SegmentLabelSetARGBConverter labelingConverter = new SegmentLabelSetARGBConverter( new AlphaMixedSegmentLabelSetColor( new SegmentLabelColor() {
 			Random rand = new Random();
 			@Override
-			public int getSegmentLabelColor( final SegmentLabel label ) {
+			public int getSegmentLabelColor( final LabelData label ) {
 				return ( rand.nextInt( 0xffff ) << 16 ) | rand.nextInt( 0xffff );
 			}
 		} ), labelingBuilder.getLabeling().getMapping() );
