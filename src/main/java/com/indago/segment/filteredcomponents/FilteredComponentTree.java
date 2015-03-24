@@ -11,11 +11,11 @@ import net.imglib2.algorithm.componenttree.ComponentForest;
 import net.imglib2.algorithm.componenttree.ComponentTree;
 import net.imglib2.algorithm.componenttree.PartialComponent;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
+import net.imglib2.algorithm.tree.Forest;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
-import net.imglib2.algorithm.tree.Forest;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
@@ -57,6 +57,11 @@ public final class FilteredComponentTree< T extends Type< T > > implements Compo
 
 		public MaxGrowthPerStep( final long maxGrowthPerStep ) {
 			this.maxGrowthPerStep = maxGrowthPerStep;
+		}
+
+		@Override
+		public String toString() {
+			return "MaxGrowthPerStep = " + maxGrowthPerStep;
 		}
 	}
 
