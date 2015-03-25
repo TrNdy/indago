@@ -12,4 +12,5 @@ public interface Variable< D extends Domain< ? > > extends FgNode {
 
 	public List< ? extends Factor< D, ?, ? > > getFactors();
 
+	public D getDomain();
 }

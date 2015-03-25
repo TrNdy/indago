@@ -8,7 +8,7 @@ import com.indago.fg.factor.Factor;
 
 public class IntLabel implements Variable< IntLabelDomain > {
 
-	private final List< Factor< IntLabelDomain, ?, ? >> factors = new ArrayList< Factor< IntLabelDomain, ?, ? >>();
+	private final List< Factor< IntLabelDomain, ?, ? > > factors = new ArrayList< Factor< IntLabelDomain, ?, ? >>();
 
 	private final IntLabelDomain domain;
 	private final int id;
@@ -41,5 +41,10 @@ public class IntLabel implements Variable< IntLabelDomain > {
 	@Override
 	public List< ? extends Factor< IntLabelDomain, ?, ? >> getFactors() {
 		return factors;
+	}
+
+	@Override
+	public IntLabelDomain getDomain() {
+		return domain;
 	}
 }

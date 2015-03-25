@@ -40,4 +40,9 @@ public class BooleanVariable implements Variable< BooleanDomain > {
 	public void addFactor( final Factor< BooleanDomain, ?, ? > factor ) {
 		factors.add( factor );
 	}
+
+	@Override
+	public BooleanDomain getDomain() {
+		return domain;
+	}
 }
