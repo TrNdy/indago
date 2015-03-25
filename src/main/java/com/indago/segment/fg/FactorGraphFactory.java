@@ -35,11 +35,11 @@ public class FactorGraphFactory {
 
 		final ArrayList< Function< ?, ? > > functions = new ArrayList<>( segments.size() + 1 );
 		final ArrayList< Factor< ?, ?, ? > > factors = new ArrayList<>( segments.size() + cliques.size() );
-		final ArrayList< SegmentHypothesisVariable< T > > variables = new ArrayList<>( segments.size() );
+		final ArrayList< BooleanVariablePlus< T > > variables = new ArrayList<>( segments.size() );
 
-		final HashMap< T, SegmentHypothesisVariable< T > > segmentVariableDict = new HashMap<>( segments.size() );
+		final HashMap< T, BooleanVariablePlus< T > > segmentVariableDict = new HashMap<>( segments.size() );
 		for ( final T segment : segments ) {
-			final SegmentHypothesisVariable< T > var = new SegmentHypothesisVariable<>( segment );
+			final BooleanVariablePlus< T > var = new BooleanVariablePlus<>( segment );
 			segmentVariableDict.put( segment, var );
 			variables.add( var );
 		}
@@ -53,7 +53,7 @@ public class FactorGraphFactory {
 			factor.setFunction( conflictConstraint );
 			int i = 0;
 			for ( final T segment : clique ) {
-				final SegmentHypothesisVariable< T > sv = segmentVariableDict.get( segment );
+				final BooleanVariablePlus< T > sv = segmentVariableDict.get( segment );
 				factor.setVariable( i, sv );
 				i++;
 			}

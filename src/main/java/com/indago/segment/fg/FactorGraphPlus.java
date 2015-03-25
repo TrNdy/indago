@@ -15,9 +15,9 @@ import com.indago.segment.Segment;
 public class FactorGraphPlus< T extends Segment > {
 	private final FactorGraph factorGraph;
 
-	private final Map< T, SegmentHypothesisVariable< T > > segmentVariableDict;
+	private final Map< T, BooleanVariablePlus< T > > segmentVariableDict;
 
-	public FactorGraphPlus( final FactorGraph factorGraph, final Map< T, SegmentHypothesisVariable< T > > segmentVariableDict )
+	public FactorGraphPlus( final FactorGraph factorGraph, final Map< T, BooleanVariablePlus< T > > segmentVariableDict )
 	{
 		this.factorGraph = factorGraph;
 		this.segmentVariableDict = segmentVariableDict;
@@ -27,7 +27,7 @@ public class FactorGraphPlus< T extends Segment > {
 		return factorGraph;
 	}
 
-	public Map< T, SegmentHypothesisVariable< T > > getSegmentVariableDictionary() {
+	public Map< T, BooleanVariablePlus< T > > getSegmentVariableDictionary() {
 		return segmentVariableDict;
 	}
 }

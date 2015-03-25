@@ -57,7 +57,7 @@ import com.indago.segment.RandomForestSegmentCosts;
 import com.indago.segment.LabelData;
 import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.fg.FactorGraphPlus;
-import com.indago.segment.fg.SegmentHypothesisVariable;
+import com.indago.segment.fg.BooleanVariablePlus;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
@@ -252,11 +252,11 @@ public class FeatureExampleOnRealSegments {
 	{
 		private final Assignment assignment;
 
-		private final Map< LabelingSegment, SegmentHypothesisVariable< LabelingSegment > > segmentVariableDict;
+		private final Map< LabelingSegment, BooleanVariablePlus< LabelingSegment > > segmentVariableDict;
 
 		Random rand = new Random();
 
-		public AssignmentLabelColor( final Assignment assignment, final Map< LabelingSegment, SegmentHypothesisVariable< LabelingSegment > > segmentVariableDict )
+		public AssignmentLabelColor( final Assignment assignment, final Map< LabelingSegment, BooleanVariablePlus< LabelingSegment > > segmentVariableDict )
 		{
 			this.assignment = assignment;
 			this.segmentVariableDict = segmentVariableDict;
@@ -264,7 +264,7 @@ public class FeatureExampleOnRealSegments {
 
 		@Override
 		public int getSegmentLabelColor( final LabelData label ) {
-			final SegmentHypothesisVariable< LabelingSegment > v = segmentVariableDict.get( label.getSegment() );
+			final BooleanVariablePlus< LabelingSegment > v = segmentVariableDict.get( label.getSegment() );
 			final boolean isSelected = assignment.getAssignment( v ).get().booleanValue();
 //			final int randColor = 0x44000000 | ( rand.nextInt( 0x00ff ) << 16 ) | rand.nextInt( 0xffff );
 			return isSelected ? 0x88ff00ff : 0;
