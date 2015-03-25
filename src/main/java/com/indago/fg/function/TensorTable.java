@@ -25,6 +25,10 @@ public class TensorTable< D extends Domain< ? >, FD extends FunctionDomain< D >,
 		this.entries = entries.clone();
 	}
 
+	public double[] getEntries() {
+		return entries;
+	}
+
 	@Override
 	public FD getDomain() {
 		return domain;
