@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.indago.fg.function;
 
@@ -24,6 +24,6 @@ public class BooleanNandFunction extends NandFunction< Boolean, BooleanDomain > 
 	 */
 	@Override
 	public BooleanFunctionDomain getDomain() {
-		return new BooleanFunctionDomain( 2 );
+		return BooleanFunctionDomain.getForNumDimensions( 2 );
 	}
 }

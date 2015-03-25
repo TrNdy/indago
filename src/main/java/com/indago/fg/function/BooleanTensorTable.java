@@ -14,8 +14,8 @@ public class BooleanTensorTable extends TensorTable< BooleanDomain, BooleanFunct
 	 * @param domain
 	 * @param entries
 	 */
-	public BooleanTensorTable( final BooleanFunctionDomain domain, final double[] entries, final int id ) {
-		super( domain, entries );
+	public BooleanTensorTable( final int numDimensions, final double[] entries, final int id ) {
+		super( BooleanFunctionDomain.getForNumDimensions( numDimensions ), entries );
 		this.id = id;
 	}
 

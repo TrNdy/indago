@@ -6,9 +6,10 @@ package com.indago.segment.fg;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.indago.fg.FactorGraph;
-import com.indago.fg.domain.BooleanFunctionDomain;
 import com.indago.fg.factor.BooleanFactor;
 import com.indago.fg.factor.Factor;
 import com.indago.fg.function.BooleanConflictConstraint;
@@ -44,13 +45,11 @@ public class FactorGraphFactory {
 			variables.add( var );
 		}
 
-		final BooleanConflictConstraint conflictConstraint = new BooleanConflictConstraint();
-		functions.add( conflictConstraint );
-
+		final Set< BooleanConflictConstraint > conflictConstraints = new HashSet< BooleanConflictConstraint >();
 		for ( final Collection< T > clique : cliques ) {
-			final BooleanFunctionDomain domain = new BooleanFunctionDomain( clique.size() );
-			final BooleanFactor factor = new BooleanFactor( domain, factorId++ );
-			factor.setFunction( conflictConstraint );
+			final BooleanConflictConstraint constraint = BooleanConflictConstraint.getForNumDimensions( clique.size() );
+			final BooleanFactor factor = new BooleanFactor( constraint.getDomain(), factorId++ );
+			factor.setFunction( constraint );
 			int i = 0;
 			for ( final T segment : clique ) {
 				final BooleanVariablePlus< T > sv = segmentVariableDict.get( segment );
@@ -58,13 +57,14 @@ public class FactorGraphFactory {
 				i++;
 			}
 			factors.add( factor );
+			conflictConstraints.add( constraint );
 		}
 
-		final BooleanFunctionDomain domain = new BooleanFunctionDomain( 1 );
+		functions.addAll( conflictConstraints );
 		for ( final Segment segment : segments ) {
 			final double[] entries = new double[] { 0.0, segmentCosts.getCost( segment ) };
-			final BooleanTensorTable btt = new BooleanTensorTable( domain, entries, functionId++ );
-			final BooleanFactor factor = new BooleanFactor( domain, factorId++ );
+			final BooleanTensorTable btt = new BooleanTensorTable( 1, entries, functionId++ );
+			final BooleanFactor factor = new BooleanFactor( btt.getDomain(), factorId++ );
 			factor.setFunction( btt );
 			factor.setVariable( 0, segmentVariableDict.get( segment ) );
 
