@@ -4,13 +4,12 @@
 package com.indago.fg.function;
 
 import com.indago.fg.domain.Domain;
-import com.indago.fg.domain.FunctionDomain;
 import com.indago.fg.value.Value;
 
 /**
  * AtMostOneNotZero returns 0 cost if at most one of the arguments is unequal to
  * <code>zeroValue</code>. Otherwise it returns the cost it is initialized with.
- * 
+ *
  * @author jug
  */
 public abstract class AtMostOneNotZeroFunction< T, D extends Domain< T >> implements Function< D, Value< T, D > > {
@@ -38,11 +37,4 @@ public abstract class AtMostOneNotZeroFunction< T, D extends Domain< T >> implem
 		}
 		return 0;
 	}
-
-	/**
-	 * @see com.indago.fg.function.Function#getDomain()
-	 */
-	@Override
-	public abstract FunctionDomain< D > getDomain();
-
 }

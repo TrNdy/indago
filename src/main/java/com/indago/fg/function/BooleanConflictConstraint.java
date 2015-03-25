@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.indago.fg.function;
 
@@ -21,12 +21,8 @@ public class BooleanConflictConstraint extends AtMostOneNotZeroFunction< Boolean
 		super( new BooleanValue( Boolean.FALSE ), Double.POSITIVE_INFINITY );
 	}
 
-	/**
-	 * @see com.indago.fg.function.AtMostOneNotZeroFunction#getDomain()
-	 */
 	@Override
 	public BooleanFunctionDomain getDomain() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
