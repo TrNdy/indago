@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>net.imagej</groupId>
 		<artifactId>pom-imagej</artifactId>
-		<version>5.12.3</version>
+		<version>7.1.0</version>
 	</parent>
 
 	<groupId>com.jug</groupId>
@@ -20,6 +20,7 @@
 	<properties>
 		<jung2.version>2.0.1</jung2.version>
 		<scijava.jvm.version>1.7</scijava.jvm.version>
+		<enforcer.skip>true</enforcer.skip>
 	</properties>
 
 	<dependencies>
@@ -80,7 +81,7 @@
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-ops</artifactId>
-			<version>0.8.1-SNAPSHOT</version>
+			<version>0.10.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>nz.ac.waikato.cms.weka</groupId>
