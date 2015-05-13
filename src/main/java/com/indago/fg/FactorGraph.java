@@ -1,6 +1,6 @@
 package com.indago.fg;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.indago.fg.factor.Factor;
 import com.indago.fg.function.Function;
@@ -8,11 +8,14 @@ import com.indago.fg.variable.Variable;
 
 public class FactorGraph {
 
-	private final List< ? extends Variable< ? > > variables;
-	private final List< ? extends Factor< ?, ?, ? > > factors;
-	private final List< ? extends Function< ?, ? > > functions;
+	private final Collection< ? extends Variable< ? > > variables;
+	private final Collection< ? extends Factor< ?, ?, ? > > factors;
+	private final Collection< ? extends Function< ?, ? > > functions;
 
-	public FactorGraph( final List< ? extends Variable< ? > > variables, final List< ? extends Factor< ?, ?, ? > > factors, final List< ? extends Function< ?, ? > > functions ) {
+	public FactorGraph(
+			final Collection< ? extends Variable< ? > > variables,
+			final Collection< ? extends Factor< ?, ?, ? > > factors,
+			final Collection< ? extends Function< ?, ? > > functions ) {
 		this.variables = variables;
 		this.factors = factors;
 		this.functions = functions;
@@ -21,21 +24,21 @@ public class FactorGraph {
 	/**
 	 * @return the variables
 	 */
-	public List< ? extends Variable< ? > > getVariables() {
+	public Collection< ? extends Variable< ? > > getVariables() {
 		return variables;
 	}
 
 	/**
 	 * @return the factors
 	 */
-	public List< ? extends Factor< ?, ?, ? > > getFactors() {
+	public Collection< ? extends Factor< ?, ?, ? > > getFactors() {
 		return factors;
 	}
 
 	/**
 	 * @return the functions
 	 */
-	public List< ? extends Function< ?, ? > > getFunctions() {
+	public Collection< ? extends Function< ?, ? > > getFunctions() {
 		return functions;
 	}
 }
