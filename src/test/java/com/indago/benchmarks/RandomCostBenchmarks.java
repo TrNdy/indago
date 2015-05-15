@@ -120,7 +120,7 @@ public class RandomCostBenchmarks {
 		summaryCollection += String.format( "minComponentSize:      \t%d\n", minComponentSize );
 		summaryCollection += String.format( "maxComponentSize:      \t%d\n", maxComponentSize );
 		summaryCollection += String.format( "filter:                \t%s\n", maxGrowthPerStep.toString() );
-		summaryCollection += String.format( "dardToBright?          \t%s\n", ( darkToBright ) ? "true" : "false" );
+		summaryCollection += String.format( "darkToBright?          \t%s\n", ( darkToBright ) ? "true" : "false" );
 
 		for ( int i = 0; i < parameterSets.size(); i++ ) {
 			System.out.print( String.format( "\n\n\n\nGenerating random synthetic dataset %d of %d... ", i + 1, parameterSets.size() ) );

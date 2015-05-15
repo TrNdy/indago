@@ -17,9 +17,11 @@ import com.indago.fg.Assignment;
 import com.indago.fg.FactorGraph;
 import com.indago.fg.factor.BooleanFactor;
 import com.indago.fg.factor.Factor;
+import com.indago.fg.function.BooleanAssignmentConstraint;
 import com.indago.fg.function.BooleanConflictConstraint;
 import com.indago.fg.function.BooleanFunction;
 import com.indago.fg.function.BooleanTensorTable;
+import com.indago.fg.function.BooleanWeightedIndexSumConstraint;
 import com.indago.fg.value.BooleanValue;
 import com.indago.fg.variable.BooleanVariable;
 import com.indago.fg.variable.Variable;
@@ -27,7 +29,7 @@ import com.indago.fg.variable.Variable;
 /**
  * A solver for boolean factor graphs that uses Gurobi for the optimization
  * step.
- * 
+ *
  * @author pietzsch, jug
  */
 @SuppressWarnings( "restriction" )
@@ -71,8 +73,12 @@ public class SolveBooleanFGGurobi {
 					constraints.add( factor );
 				else if ( function instanceof BooleanTensorTable )
 					unaries.add( factor );
+				else if ( function instanceof BooleanAssignmentConstraint )
+					constraints.add( factor );
+				else if ( function instanceof BooleanWeightedIndexSumConstraint )
+					constraints.add( factor );
 				else
-					throw new IllegalArgumentException( "Only factors of type BooleanConflictConstraint of BooleanTensorTable are currently supported." );
+					throw new IllegalArgumentException( "Only factors of type BooleanAssignmentConstraint, BooleanConflictConstraint, BooleanTensorTable, and BooleanWeightedIndexSumConstraint are currently supported." );
 			} else
 				throw new IllegalArgumentException( "Only factors of type BooleanFactor are currently supported." );
 		}

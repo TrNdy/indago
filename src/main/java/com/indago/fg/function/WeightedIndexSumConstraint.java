@@ -4,7 +4,9 @@ import com.indago.fg.domain.Domain;
 import com.indago.fg.domain.FunctionDomain;
 import com.indago.fg.value.Value;
 
-public class WeightedIndexSumConstraint< D extends Domain< ? >, FD extends FunctionDomain< D >, V extends Value< ?, D > > implements Function< D, V > {
+public class WeightedIndexSumConstraint< D extends Domain< ? >, FD extends FunctionDomain< D >, V extends Value< ?, D > >
+		implements
+		Function< D, V > {
 
 	public static enum Relation {
 		EQ( "==" ), GE( ">=" ), LE( "<=" );
