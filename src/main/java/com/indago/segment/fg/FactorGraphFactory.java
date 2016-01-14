@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.indago.fg.CostsFactory;
 import com.indago.fg.DefaultFactorGraph;
 import com.indago.fg.domain.BooleanFunctionDomain;
 import com.indago.fg.factor.BooleanFactor;
@@ -16,7 +17,6 @@ import com.indago.fg.function.BooleanTensorTable;
 import com.indago.fg.function.Function;
 import com.indago.segment.ConflictGraph;
 import com.indago.segment.Segment;
-import com.indago.segment.SegmentCosts;
 
 /**
  * @author jug
@@ -27,7 +27,7 @@ public class FactorGraphFactory {
 	public static < T extends Segment > FactorGraphPlus< T > createFromConflictGraph(
 			final Collection< ? extends T > segments,
 			final ConflictGraph< T > conflicts,
-			final SegmentCosts segmentCosts ) {
+			final CostsFactory< Segment > segmentCosts ) {
 		final Collection< ? extends Collection< T > > cliques = conflicts.getConflictGraphCliques();
 
 		int factorId = 0;
