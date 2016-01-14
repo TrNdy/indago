@@ -1,15 +1,19 @@
 package com.indago.ui;
 
-import java.util.Random;
-
+import static net.imglib2.view.StackView.StackAccessMode.MOVE_ALL_SLICE_ACCESSES;
 import ij.ImageJ;
 import io.scif.img.IO;
+
+import java.util.Random;
+
+import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.display.RealARGBColorConverter;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.roi.labeling.LabelingType;
 import net.imglib2.type.NativeType;
@@ -17,13 +21,13 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.ui.viewer.InteractiveViewer2D;
+import net.imglib2.util.BenchmarkHelper;
 import net.imglib2.view.Views;
 import net.imglib2.view.composite.NumericComposite;
-import net.imglib2.views.Views2;
 
+import com.indago.segment.LabelData;
 import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingForest;
-import com.indago.segment.LabelData;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
@@ -61,7 +65,7 @@ public class PlayGround5 {
 		final RealARGBColorConverter< T > imageConverter = new RealARGBColorConverter.Imp0< T >( 0, 255 );
 		imageConverter.setColor( new ARGBType( 0xffffffff ) );
 		final SegmentLabelSetARGBConverter labelingConverter = new SegmentLabelSetARGBConverter( new AlphaMixedSegmentLabelSetColor( new SegmentLabelColor() {
-			Random rand = new Random();
+			Random rand = new Random( 1 );
 			@Override
 			public int getSegmentLabelColor( final LabelData label ) {
 				return ( rand.nextInt( 0xffff ) << 16 ) | rand.nextInt( 0xffff );
@@ -71,13 +75,31 @@ public class PlayGround5 {
 		final RandomAccessibleInterval< ARGBType > argbImage = Converters.convert( ( RandomAccessibleInterval< T > ) image, imageConverter, new ARGBType() );
 		final RandomAccessibleInterval< ARGBType > argbLabeling = Converters.convert( labeling, labelingConverter, new ARGBType() );
 
-		final RandomAccessibleInterval< ARGBType > stack = Views2.stack( argbImage, argbLabeling );
+		final RandomAccessibleInterval< ARGBType > stack = Views.stack( MOVE_ALL_SLICE_ACCESSES, argbImage, argbLabeling );
 		final RandomAccessibleInterval< NumericComposite< ARGBType > > composite = Views.collapseNumeric( stack );
 
 		final RandomAccessibleInterval< ARGBType > blended = Converters.convert( composite, new ARGBCompositeAlphaBlender(), new ARGBType() );
-		ImageJFunctions.show( blended );
+
+		final Img< ARGBType > copy = ArrayImgs.argbs( blended.dimension( 0 ), blended.dimension( 0 ) );
+		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable() {
+			@Override
+			public void run() {
+				final Cursor< ARGBType > in = Views.flatIterable( blended ).cursor();
+				final Cursor< ARGBType > out = copy.cursor();
+				for ( int i = 0; i < 100; ++i )
+				{
+					in.reset();
+					out.reset();
+					while ( out.hasNext() )
+						out.next().set( in.next() );
+				}
+			}
+		} );
+
+//		ImageJFunctions.show( blended );
+		ImageJFunctions.show( copy );
 
 //		new InteractiveViewer2D< NumericComposite< ARGBType > >( 800, 600, Views.extendZero( composite ), new ARGBCompositeAlphaBlender() );
-		new InteractiveViewer2D< ARGBType >( 800, 600, Views.extendZero( blended ), new TypeIdentity< ARGBType >() );
+		new InteractiveViewer2D< ARGBType >( 100, 100, Views.extendZero( blended ), new TypeIdentity< ARGBType >() );
 	}
 }
