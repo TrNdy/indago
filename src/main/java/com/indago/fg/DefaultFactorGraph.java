@@ -6,13 +6,13 @@ import com.indago.fg.factor.Factor;
 import com.indago.fg.function.Function;
 import com.indago.fg.variable.Variable;
 
-public class FactorGraph {
+public class DefaultFactorGraph implements FactorGraph {
 
 	private final Collection< ? extends Variable< ? > > variables;
 	private final Collection< ? extends Factor< ?, ?, ? > > factors;
 	private final Collection< ? extends Function< ?, ? > > functions;
 
-	public FactorGraph(
+	public DefaultFactorGraph(
 			final Collection< ? extends Variable< ? > > variables,
 			final Collection< ? extends Factor< ?, ?, ? > > factors,
 			final Collection< ? extends Function< ?, ? > > functions ) {
@@ -22,23 +22,27 @@ public class FactorGraph {
 	}
 
 	/**
-	 * @return the variables
+	 * @see com.indago.fg.FactorGraph#getVariables()
 	 */
+	@Override
 	public Collection< ? extends Variable< ? > > getVariables() {
 		return variables;
 	}
 
 	/**
-	 * @return the factors
+	 * @see com.indago.fg.FactorGraph#getFactors()
 	 */
+	@Override
 	public Collection< ? extends Factor< ?, ?, ? > > getFactors() {
 		return factors;
 	}
 
 	/**
-	 * @return the functions
+	 * @see com.indago.fg.FactorGraph#getFunctions()
 	 */
+	@Override
 	public Collection< ? extends Function< ?, ? > > getFunctions() {
 		return functions;
 	}
+
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.indago.fg.FactorGraph;
+import com.indago.fg.DefaultFactorGraph;
 import com.indago.fg.domain.BooleanFunctionDomain;
 import com.indago.fg.factor.BooleanFactor;
 import com.indago.fg.factor.Factor;
@@ -72,6 +72,6 @@ public class FactorGraphFactory {
 			factors.add( factor );
 		}
 
-		return new FactorGraphPlus< T >( new  FactorGraph( variables, factors, functions ), segmentVariableDict );
+		return new FactorGraphPlus< T >( new DefaultFactorGraph( variables, factors, functions ), segmentVariableDict );
 	}
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.indago.fg.DefaultFactorGraph;
 import com.indago.fg.FactorGraph;
 import com.indago.fg.factor.IntLabelFactor;
 import com.indago.fg.function.IntLabelFunction;
@@ -74,7 +75,7 @@ public class Scalar {
 		for ( final IntLabelFactor f : factors )
 			System.out.println( f );
 
-		return new FactorGraph( variables, factors, functions );
+		return new DefaultFactorGraph( variables, factors, functions );
 	}
 
 	static int variableId = 0;
