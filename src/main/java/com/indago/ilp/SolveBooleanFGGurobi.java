@@ -17,7 +17,7 @@ import com.indago.fg.Assignment;
 import com.indago.fg.FactorGraph;
 import com.indago.fg.factor.BooleanFactor;
 import com.indago.fg.factor.Factor;
-import com.indago.fg.function.BooleanAssignmentConstraint;
+import com.indago.fg.function.OldBooleanAssignmentConstraint;
 import com.indago.fg.function.BooleanConflictConstraint;
 import com.indago.fg.function.BooleanFunction;
 import com.indago.fg.function.BooleanTensorTable;
@@ -73,7 +73,7 @@ public class SolveBooleanFGGurobi {
 					constraints.add( factor );
 				else if ( function instanceof BooleanTensorTable )
 					unaries.add( factor );
-				else if ( function instanceof BooleanAssignmentConstraint )
+				else if ( function instanceof OldBooleanAssignmentConstraint )
 					constraints.add( factor );
 				else if ( function instanceof BooleanWeightedIndexSumConstraint )
 					constraints.add( factor );

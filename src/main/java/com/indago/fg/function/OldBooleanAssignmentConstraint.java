@@ -3,6 +3,8 @@
  */
 package com.indago.fg.function;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import com.indago.fg.domain.BooleanDomain;
 import com.indago.fg.domain.BooleanFunctionDomain;
 import com.indago.fg.value.BooleanValue;
@@ -10,7 +12,7 @@ import com.indago.fg.value.BooleanValue;
 /**
  * @author jug
  */
-public class BooleanAssignmentConstraint extends AllEqualWithSwitchFunction< Boolean, BooleanDomain >
+public class OldBooleanAssignmentConstraint extends AllEqualWithSwitchFunction< Boolean, BooleanDomain >
 		implements
 		BooleanFunction {
 
@@ -19,7 +21,7 @@ public class BooleanAssignmentConstraint extends AllEqualWithSwitchFunction< Boo
 	 * AtMostOneNotZeroFunction with a FALSE BooleanValue as zero-element and
 	 * POSITIVE_INFINITY as cost (since it is a constraint).
 	 */
-	public BooleanAssignmentConstraint() {
+	public OldBooleanAssignmentConstraint() {
 		super( new BooleanValue( Boolean.FALSE ), Double.POSITIVE_INFINITY );
 	}
 
@@ -28,7 +30,6 @@ public class BooleanAssignmentConstraint extends AllEqualWithSwitchFunction< Boo
 	 */
 	@Override
 	public BooleanFunctionDomain getDomain() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException( "BooleanAssignmentConstraint::getDomain() not yet implemented!" );
 	}
 }
