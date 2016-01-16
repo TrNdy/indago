@@ -60,9 +60,9 @@ import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.ui.viewer.InteractiveViewer2D;
+import net.imglib2.view.StackView.StackAccessMode;
 import net.imglib2.view.Views;
 import net.imglib2.view.composite.NumericComposite;
-import net.imglib2.views.Views2;
 import weka.classifiers.trees.RandomForest;
 
 /**
@@ -237,7 +237,7 @@ public class FeatureExampleOnRealSegments {
 			final RandomAccessibleInterval< ARGBType > argbImage = Converters.convert( ( RandomAccessibleInterval< T > ) img, imageConverter, new ARGBType() );
 			final RandomAccessibleInterval< ARGBType > argbLabeling = Converters.convert( ( RandomAccessibleInterval< LabelingType< LabelData > > ) labeling, labelingConverter, new ARGBType() );
 
-			final RandomAccessibleInterval< ARGBType > stack = Views2.stack( argbImage, argbLabeling );
+			final RandomAccessibleInterval< ARGBType > stack = Views.stack( StackAccessMode.MOVE_ALL_SLICE_ACCESSES, argbImage, argbLabeling );
 			final RandomAccessibleInterval< NumericComposite< ARGBType > > composite = Views.collapseNumeric( stack );
 
 			final RandomAccessibleInterval< ARGBType > blended = Converters.convert( composite, new ARGBCompositeAlphaBlender(), new ARGBType() );
