@@ -39,7 +39,8 @@ public class FactorGraphFactory {
 
 		final HashMap< T, SegmentHypothesisVariable< T > > segmentVariableDict = new HashMap<>( segments.size() );
 		for ( final T segment : segments ) {
-			final SegmentHypothesisVariable< T > var = new SegmentHypothesisVariable<>( segment );
+			final SegmentHypothesisVariable< T > var =
+					new SegmentHypothesisVariable< T >( segment );
 			segmentVariableDict.put( segment, var );
 			variables.add( var );
 		}

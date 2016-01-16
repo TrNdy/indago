@@ -3,15 +3,39 @@
  */
 package com.indago.examples;
 
-import gurobi.GRBException;
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.scijava.Context;
+
+import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
+import com.indago.examples.serialization.WekaDataInstanceAccumulator;
+import com.indago.examples.serialization.featuresets.DemoFeatureSet;
+import com.indago.fg.Assignment;
+import com.indago.fg.FactorGraph;
+import com.indago.ilp.SolveBooleanFGGurobi;
+import com.indago.segment.LabelData;
+import com.indago.segment.LabelingBuilder;
+import com.indago.segment.LabelingSegment;
+import com.indago.segment.RandomForestFactory;
+import com.indago.segment.RandomForestSegmentCosts;
+import com.indago.segment.fg.FactorGraphFactory;
+import com.indago.segment.fg.FactorGraphPlus;
+import com.indago.segment.fg.SegmentHypothesisVariable;
+import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.segment.ui.ARGBCompositeAlphaBlender;
+import com.indago.segment.ui.AlphaMixedSegmentLabelSetColor;
+import com.indago.segment.ui.SegmentLabelColor;
+import com.indago.segment.ui.SegmentLabelSetARGBConverter;
+import com.indago.weka.ArffBuilder;
+
+import gurobi.GRBException;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imagej.ops.Op;
 import net.imagej.ops.OpRef;
 import net.imagej.ops.OpService;
@@ -39,33 +63,7 @@ import net.imglib2.ui.viewer.InteractiveViewer2D;
 import net.imglib2.view.Views;
 import net.imglib2.view.composite.NumericComposite;
 import net.imglib2.views.Views2;
-
-import org.scijava.Context;
-
 import weka.classifiers.trees.RandomForest;
-
-import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
-import com.indago.examples.serialization.WekaDataInstanceAccumulator;
-import com.indago.examples.serialization.featuresets.DemoFeatureSet;
-import com.indago.fg.Assignment;
-import com.indago.fg.FactorGraph;
-import com.indago.ilp.SolveBooleanFGGurobi;
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingSegment;
-import com.indago.segment.RandomForestFactory;
-import com.indago.segment.RandomForestSegmentCosts;
-import com.indago.segment.LabelData;
-import com.indago.segment.fg.FactorGraphFactory;
-import com.indago.segment.fg.FactorGraphPlus;
-import com.indago.segment.fg.SegmentHypothesisVariable;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.segment.ui.ARGBCompositeAlphaBlender;
-import com.indago.segment.ui.AlphaMixedSegmentLabelSetColor;
-import com.indago.segment.ui.SegmentLabelColor;
-import com.indago.segment.ui.SegmentLabelSetARGBConverter;
-import com.indago.weka.ArffBuilder;
 
 /**
  * @author jug

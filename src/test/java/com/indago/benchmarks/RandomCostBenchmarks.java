@@ -1,25 +1,9 @@
 package com.indago.benchmarks;
 
-import gurobi.GRB;
-import gurobi.GRB.DoubleAttr;
-import gurobi.GRBEnv;
-import gurobi.GRBException;
-import gurobi.GRBLinExpr;
-import gurobi.GRBModel;
-import gurobi.GRBVar;
-import ij.IJ;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import net.imglib2.Dimensions;
-import net.imglib2.img.Img;
-import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedIntType;
 
 import com.indago.fg.Assignment;
 import com.indago.fg.FactorGraph;
@@ -43,6 +27,21 @@ import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+
+import gurobi.GRB;
+import gurobi.GRB.DoubleAttr;
+import gurobi.GRBEnv;
+import gurobi.GRBException;
+import gurobi.GRBLinExpr;
+import gurobi.GRBModel;
+import gurobi.GRBVar;
+import ij.IJ;
+import net.imglib2.Dimensions;
+import net.imglib2.img.Img;
+import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedIntType;
 
 public class RandomCostBenchmarks {
 
