@@ -3,20 +3,44 @@
  */
 package com.indago.examples;
 
-import gurobi.GRBException;
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import net.imagej.ops.Op;
-import net.imagej.ops.OpRef;
+import org.scijava.Context;
+
+import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
+import com.indago.examples.serialization.WekaDataInstanceAccumulator;
+import com.indago.fg.Assignment;
+import com.indago.fg.FactorGraph;
+import com.indago.ilp.SolveBooleanFGGurobi;
+import com.indago.segment.LabelData;
+import com.indago.segment.LabelingBuilder;
+import com.indago.segment.LabelingSegment;
+import com.indago.segment.RandomForestFactory;
+import com.indago.segment.RandomForestSegmentCosts;
+import com.indago.segment.features.FeatureSet;
+import com.indago.segment.fg.FactorGraphFactory;
+import com.indago.segment.fg.FactorGraphPlus;
+import com.indago.segment.fg.SegmentHypothesisVariable;
+import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.segment.ui.ARGBCompositeAlphaBlender;
+import com.indago.segment.ui.AlphaMixedSegmentLabelSetColor;
+import com.indago.segment.ui.SegmentLabelColor;
+import com.indago.segment.ui.SegmentLabelSetARGBConverter;
+import com.indago.weka.ArffBuilder;
+
+import gurobi.GRBException;
+import ij.ImageJ;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imagej.ops.OpService;
-import net.imagej.ops.features.AbstractAutoResolvingFeatureSet;
-import net.imagej.ops.features.OpResolverService;
+import net.imagej.ops.Ops.Stats.Mean;
+import net.imagej.ops.Ops.Stats.Sum;
+import net.imagej.ops.Ops.Stats.Variance;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
@@ -39,33 +63,7 @@ import net.imglib2.ui.viewer.InteractiveViewer2D;
 import net.imglib2.view.Views;
 import net.imglib2.view.composite.NumericComposite;
 import net.imglib2.views.Views2;
-
-import org.scijava.Context;
-
 import weka.classifiers.trees.RandomForest;
-
-import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
-import com.indago.examples.serialization.WekaDataInstanceAccumulator;
-import com.indago.examples.serialization.featuresets.DemoFeatureSet;
-import com.indago.fg.Assignment;
-import com.indago.fg.FactorGraph;
-import com.indago.ilp.SolveBooleanFGGurobi;
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingSegment;
-import com.indago.segment.RandomForestFactory;
-import com.indago.segment.RandomForestSegmentCosts;
-import com.indago.segment.LabelData;
-import com.indago.segment.fg.FactorGraphFactory;
-import com.indago.segment.fg.FactorGraphPlus;
-import com.indago.segment.fg.SegmentHypothesisVariable;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.segment.ui.ARGBCompositeAlphaBlender;
-import com.indago.segment.ui.AlphaMixedSegmentLabelSetColor;
-import com.indago.segment.ui.SegmentLabelColor;
-import com.indago.segment.ui.SegmentLabelSetARGBConverter;
-import com.indago.weka.ArffBuilder;
 
 /**
  * @author jug
@@ -75,7 +73,7 @@ public class FeatureExampleOnRealSegments {
 	private static String pathprefix = "src/main/resources/synthetic/0001_z63";
 
 	public static void main(final String[] args) {
-
+		new ImageJ();
 		try {
 			final List< String > filenamesImgs = new ArrayList< String >();
 			filenamesImgs.add( pathprefix + "/image-final_0001-z63.tif" );
@@ -138,13 +136,19 @@ public class FeatureExampleOnRealSegments {
 		// create service & context
 		// ------------------------
 		final Context c = new Context();
-		final OpResolverService ors = c.service(OpResolverService.class);
 		final OpService ops = c.service(OpService.class);
 
 		// create our own feature set
 		// ------------------------
-		final DemoFeatureSet< T > ourFeatureSet = new DemoFeatureSet< T >();
-		c.inject( ourFeatureSet );
+		@SuppressWarnings( "unchecked" )
+		final FeatureSet< IterableInterval< T >, DoubleType > ourFeatureSet =
+				( FeatureSet< IterableInterval< T >, DoubleType > ) ( Object ) new FeatureSet< >(
+						ops,
+						new DoubleType(),
+						IterableInterval.class,
+						Mean.class,
+						Sum.class,
+						Variance.class );
 
 		// create training- and testset
 		final WekaDataInstanceAccumulator< T, L > trainingData =
@@ -290,7 +294,7 @@ public class FeatureExampleOnRealSegments {
 					final RandomAccessibleInterval< T > img,
 					final RandomAccessibleInterval< L > sumImg,
 					final L labeltype,
-					final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet,
+					final FeatureSet< IterableInterval< T >, DoubleType > featureSet,
 					final ArffBuilder arffBuilder,
 					final String classIdentifier ) {
 
@@ -314,9 +318,8 @@ public class FeatureExampleOnRealSegments {
 		for ( final LabelingSegment segment : segments ) {
 
 			final IterableInterval< T > pixels = Regions.sample( segment.getRegion(), img );
-			final Map< OpRef< ? extends Op >, DoubleType > features = featureSet.compute( pixels );
-
-			arffBuilder.addData( features, classIdentifier );
+			featureSet.compute( pixels );
+			arffBuilder.addData( featureSet.getNamedOutputs(), classIdentifier );
 		}
 	}
 

@@ -4,15 +4,21 @@
 package com.indago.examples;
 
 import java.util.ArrayList;
-import java.util.Map;
 
-import net.imagej.ops.Op;
-import net.imagej.ops.OpRef;
+import org.scijava.Context;
+
+import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
+import com.indago.segment.LabelingBuilder;
+import com.indago.segment.LabelingSegment;
+import com.indago.segment.RandomForestFactory;
+import com.indago.segment.features.FeatureSet;
+import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+
 import net.imagej.ops.OpService;
-import net.imagej.ops.features.DefaultAutoResolvingFeatureSet;
-import net.imagej.ops.features.OpResolverService;
-import net.imagej.ops.features.firstorder.FirstOrderFeatures.MeanFeature;
-import net.imagej.ops.features.firstorder.FirstOrderFeatures.SumFeature;
+import net.imagej.ops.Ops.Stats.Mean;
+import net.imagej.ops.Ops.Stats.Sum;
 import net.imglib2.IterableInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -22,16 +28,6 @@ import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.real.DoubleType;
-
-import org.scijava.Context;
-
-import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingSegment;
-import com.indago.segment.RandomForestFactory;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
 
 /**
  * @author jug
@@ -55,24 +51,18 @@ public class FeatureExampleOnSegments {
 		// ------------------------
 
 		final Context c = new Context();
-		final OpResolverService ors = c.service(OpResolverService.class);
-		final OpService ops = c.service(OpService.class);
+		final OpService ops = c.service( OpService.class );
 
 		// create our own feature set
 		// ------------------------
 
-		final DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet =
-				new DefaultAutoResolvingFeatureSet< IterableInterval< T >, DoubleType >();
-		c.inject( featureSet );
+		final FeatureSet< IterableInterval, DoubleType > features = new FeatureSet<>(
+				ops,
+				new DoubleType(),
+				IterableInterval.class,
+				Mean.class,
+				Sum.class );
 
-		@SuppressWarnings( "rawtypes" )
-		final OpRef< MeanFeature > oprefMean = new OpRef< MeanFeature >( MeanFeature.class );
-
-		@SuppressWarnings( "rawtypes" )
-		final OpRef< SumFeature > oprefSum = new OpRef< SumFeature >( SumFeature.class );
-
-		featureSet.addOutputOp( oprefMean );
-		featureSet.addOutputOp( oprefSum );
 
 		// loop over parameter sets, build images and segments + throw features at it
 		// --------------------------------------------------------------------------
@@ -106,8 +96,11 @@ public class FeatureExampleOnSegments {
 				final ArrayList< LabelingSegment > segments = builder.getSegments();
 				for ( final LabelingSegment segment : segments ) {
 					final IterableInterval< T > pixels = Regions.sample( segment.getRegion(), img );
-					final Map< OpRef< ? extends Op >, DoubleType > features = featureSet.compute( pixels );
-					System.out.println( String.format( "\tSum:\t%10.2f  \tMean:\t%10.2f  \tSize:\t%d", features.get( oprefSum ).get(), features.get( oprefMean ).get(), segment.getRegion().size() ) );
+					features.compute( pixels );
+					System.out.println( String.format( "\tSum:\t%10.2f  \tMean:\t%10.2f  \tSize:\t%d",
+							features.getOutput( Sum.class ).get(),
+							features.getOutput( Mean.class ).get(),
+							segment.getRegion().size() ) );
 				}
 
 				j++;

@@ -8,8 +8,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Map;
 
-import net.imagej.ops.Op;
-import net.imagej.ops.OpRef;
 import net.imglib2.type.numeric.real.DoubleType;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -48,12 +46,11 @@ public class ArffBuilder {
 	 * <code>UNKNOWN_INSTANCE</code>.
 	 *
 	 * @param features
-	 *            Features as they are spit out of an feature set (like e.g.
-	 *            <code>DefaultAutoResolvingFeatureSet</code>
+	 *            Features as they are spit out of an feature set.
 	 * @return the number of features that could be matched to the columns of
 	 *         this <code>ArffWriter</code>.
 	 */
-	public int addData( final Map< OpRef< ? extends Op >, DoubleType > features ) {
+	public int addData( final Map< String, DoubleType > features ) {
 		return addData( features, UNKNOWN_INSTANCE );
 	}
 
@@ -62,8 +59,7 @@ public class ArffBuilder {
 	 * <code>ArffWriter</code>.
 	 *
 	 * @param features
-	 *            Features as they are spit out of an feature set (like e.g.
-	 *            <code>DefaultAutoResolvingFeatureSet</code>
+	 *            Features as they are spit out of an feature set.
 	 * @param classIdentifier
 	 *            must be one of ArffBuilder.POSITIVE_INSTANCE,
 	 *            ArffBuilder.NEGATIVE_INSTANCE, or
@@ -72,7 +68,7 @@ public class ArffBuilder {
 	 *         this <code>ArffWriter</code>.
 	 */
 	public int addData(
-			final Map< OpRef< ? extends Op >, DoubleType > features,
+			final Map< String, DoubleType > features,
 			final String classIdentifier ) {
 		final Instance newrow = new DenseInstance(fvAttributes.size());
 		int fieldCount = 0;
@@ -82,17 +78,16 @@ public class ArffBuilder {
 			newrow.setValue( fvAttributes.get( 0 ), classIdentifier );
 		}
 
-		for ( final OpRef< ? extends Op > oOp : features.keySet() ) {
-			for ( final Attribute attribute : fvAttributes ) {
-				if ( attribute.name().equals( oOp.getLabel() ) ) {
-					newrow.setValue( attribute, features.get( oOp ).get() );
-					fieldCount++;
-				}
+		for ( final Attribute attribute : fvAttributes ) {
+			final DoubleType value = features.get( attribute );
+			if ( value != null ) {
+				newrow.setValue( attribute, value.get() );
+				fieldCount++;
 			}
 		}
 
 		// add the instance
-		data.add(newrow);
+		data.add( newrow );
 
 		return fieldCount;
 	}
@@ -106,7 +101,7 @@ public class ArffBuilder {
 
 	/**
 	 * Useful to retrieve the latest instance added by <code>addData</code>.
-	 * 
+	 *
 	 * @return all added data instances.
 	 */
 	public Instance getLatestAddedInstance() {

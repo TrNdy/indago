@@ -5,9 +5,8 @@ package com.indago.weka;
 
 import java.util.ArrayList;
 
-import net.imagej.ops.Op;
-import net.imagej.ops.OpRef;
-import net.imagej.ops.features.AbstractAutoResolvingFeatureSet;
+import com.indago.segment.features.FeatureSet;
+
 import net.imglib2.IterableInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -20,7 +19,7 @@ import weka.core.Attribute;
 public class ArffWriterFactory {
 
 	public static < T extends RealType< T > & NativeType< T > > ArffBuilder getArffBuilderFor(
-			final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet ) {
+			final FeatureSet< IterableInterval< T >, DoubleType > featureSet ) {
 
 		// Declare the feature vector
 		final ArrayList< Attribute > fvWekaAttributes = new ArrayList< Attribute >();
@@ -28,11 +27,8 @@ public class ArffWriterFactory {
 		// Create the class label attribute
 		fvWekaAttributes.add( ArffBuilder.getClassAttribute() );
 
-		for ( final OpRef< ? extends Op > oOp : featureSet.getOutputOps() ) {
-			if ( oOp.getName() == null ) {
-				throw new IllegalArgumentException("ArffWriterFactory requires that all OutputOps in a FeatureSet are named. Please name them when adding ops to the feauter set.");
-			}
-			final Attribute attrFeature = new Attribute( oOp.getLabel() );
+		for ( final String name : featureSet.getNamedOutputs().keySet() ) {
+			final Attribute attrFeature = new Attribute( name );
 			fvWekaAttributes.add( attrFeature );
 		}
 
