@@ -2,6 +2,17 @@ package com.indago.ui;
 
 import java.util.Random;
 
+import com.indago.segment.LabelData;
+import com.indago.segment.LabelingBuilder;
+import com.indago.segment.LabelingForest;
+import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.segment.ui.ARGBCompositeAlphaBlender;
+import com.indago.segment.ui.AlphaMixedSegmentLabelSetColor;
+import com.indago.segment.ui.SegmentLabelColor;
+import com.indago.segment.ui.SegmentLabelSetARGBConverter;
+
 import ij.ImageJ;
 import io.scif.img.IO;
 import net.imglib2.RandomAccessibleInterval;
@@ -17,20 +28,9 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.ui.viewer.InteractiveViewer2D;
+import net.imglib2.view.StackView.StackAccessMode;
 import net.imglib2.view.Views;
 import net.imglib2.view.composite.NumericComposite;
-import net.imglib2.views.Views2;
-
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingForest;
-import com.indago.segment.LabelData;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.segment.ui.ARGBCompositeAlphaBlender;
-import com.indago.segment.ui.AlphaMixedSegmentLabelSetColor;
-import com.indago.segment.ui.SegmentLabelColor;
-import com.indago.segment.ui.SegmentLabelSetARGBConverter;
 
 public class PlayGround5 {
 
@@ -71,7 +71,7 @@ public class PlayGround5 {
 		final RandomAccessibleInterval< ARGBType > argbImage = Converters.convert( ( RandomAccessibleInterval< T > ) image, imageConverter, new ARGBType() );
 		final RandomAccessibleInterval< ARGBType > argbLabeling = Converters.convert( labeling, labelingConverter, new ARGBType() );
 
-		final RandomAccessibleInterval< ARGBType > stack = Views2.stack( argbImage, argbLabeling );
+		final RandomAccessibleInterval< ARGBType > stack = Views.stack( StackAccessMode.MOVE_ALL_SLICE_ACCESSES, argbImage, argbLabeling );
 		final RandomAccessibleInterval< NumericComposite< ARGBType > > composite = Views.collapseNumeric( stack );
 
 		final RandomAccessibleInterval< ARGBType > blended = Converters.convert( composite, new ARGBCompositeAlphaBlender(), new ARGBType() );

@@ -12,7 +12,6 @@ import org.scijava.Context;
 
 import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
 import com.indago.examples.serialization.WekaDataInstanceAccumulator;
-import com.indago.examples.serialization.featuresets.DemoFeatureSet;
 import com.indago.fg.Assignment;
 import com.indago.fg.FactorGraph;
 import com.indago.ilp.SolveBooleanFGGurobi;
@@ -21,6 +20,7 @@ import com.indago.segment.LabelingBuilder;
 import com.indago.segment.LabelingSegment;
 import com.indago.segment.RandomForestFactory;
 import com.indago.segment.RandomForestSegmentCosts;
+import com.indago.segment.features.FeatureSet;
 import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.fg.FactorGraphPlus;
 import com.indago.segment.fg.SegmentHypothesisVariable;
@@ -34,13 +34,13 @@ import com.indago.segment.ui.SegmentLabelSetARGBConverter;
 import com.indago.weka.ArffBuilder;
 
 import gurobi.GRBException;
+import ij.ImageJ;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
-import net.imagej.ops.Op;
-import net.imagej.ops.OpRef;
 import net.imagej.ops.OpService;
-import net.imagej.ops.features.AbstractAutoResolvingFeatureSet;
-import net.imagej.ops.features.OpResolverService;
+import net.imagej.ops.Ops.Stats.Mean;
+import net.imagej.ops.Ops.Stats.Sum;
+import net.imagej.ops.Ops.Stats.Variance;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
@@ -60,9 +60,9 @@ import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.ui.viewer.InteractiveViewer2D;
+import net.imglib2.view.StackView.StackAccessMode;
 import net.imglib2.view.Views;
 import net.imglib2.view.composite.NumericComposite;
-import net.imglib2.views.Views2;
 import weka.classifiers.trees.RandomForest;
 
 /**
@@ -73,7 +73,7 @@ public class FeatureExampleOnRealSegments {
 	private static String pathprefix = "src/main/resources/synthetic/0001_z63";
 
 	public static void main(final String[] args) {
-
+		new ImageJ();
 		try {
 			final List< String > filenamesImgs = new ArrayList< String >();
 			filenamesImgs.add( pathprefix + "/image-final_0001-z63.tif" );
@@ -136,13 +136,19 @@ public class FeatureExampleOnRealSegments {
 		// create service & context
 		// ------------------------
 		final Context c = new Context();
-		final OpResolverService ors = c.service(OpResolverService.class);
 		final OpService ops = c.service(OpService.class);
 
 		// create our own feature set
 		// ------------------------
-		final DemoFeatureSet< T > ourFeatureSet = new DemoFeatureSet< T >();
-		c.inject( ourFeatureSet );
+		@SuppressWarnings( "unchecked" )
+		final FeatureSet< IterableInterval< T >, DoubleType > ourFeatureSet =
+				( FeatureSet< IterableInterval< T >, DoubleType > ) ( Object ) new FeatureSet< >(
+						ops,
+						new DoubleType(),
+						IterableInterval.class,
+						Mean.class,
+						Sum.class,
+						Variance.class );
 
 		// create training- and testset
 		final WekaDataInstanceAccumulator< T, L > trainingData =
@@ -231,7 +237,7 @@ public class FeatureExampleOnRealSegments {
 			final RandomAccessibleInterval< ARGBType > argbImage = Converters.convert( ( RandomAccessibleInterval< T > ) img, imageConverter, new ARGBType() );
 			final RandomAccessibleInterval< ARGBType > argbLabeling = Converters.convert( ( RandomAccessibleInterval< LabelingType< LabelData > > ) labeling, labelingConverter, new ARGBType() );
 
-			final RandomAccessibleInterval< ARGBType > stack = Views2.stack( argbImage, argbLabeling );
+			final RandomAccessibleInterval< ARGBType > stack = Views.stack( StackAccessMode.MOVE_ALL_SLICE_ACCESSES, argbImage, argbLabeling );
 			final RandomAccessibleInterval< NumericComposite< ARGBType > > composite = Views.collapseNumeric( stack );
 
 			final RandomAccessibleInterval< ARGBType > blended = Converters.convert( composite, new ARGBCompositeAlphaBlender(), new ARGBType() );
@@ -288,7 +294,7 @@ public class FeatureExampleOnRealSegments {
 					final RandomAccessibleInterval< T > img,
 					final RandomAccessibleInterval< L > sumImg,
 					final L labeltype,
-					final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet,
+					final FeatureSet< IterableInterval< T >, DoubleType > featureSet,
 					final ArffBuilder arffBuilder,
 					final String classIdentifier ) {
 
@@ -312,9 +318,8 @@ public class FeatureExampleOnRealSegments {
 		for ( final LabelingSegment segment : segments ) {
 
 			final IterableInterval< T > pixels = Regions.sample( segment.getRegion(), img );
-			final Map< OpRef< ? extends Op >, DoubleType > features = featureSet.compute( pixels );
-
-			arffBuilder.addData( features, classIdentifier );
+			featureSet.compute( pixels );
+			arffBuilder.addData( featureSet.getNamedOutputs(), classIdentifier );
 		}
 	}
 

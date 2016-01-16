@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.imagej.ops.Op;
-import net.imagej.ops.OpRef;
-import net.imagej.ops.features.AbstractAutoResolvingFeatureSet;
+import com.indago.segment.features.FeatureSet;
+import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.weka.ArffBuilder;
+import com.indago.weka.ArffWriterFactory;
+
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.roi.Regions;
@@ -18,12 +22,6 @@ import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.DoubleType;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
-
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.weka.ArffBuilder;
-import com.indago.weka.ArffWriterFactory;
 
 /**
  * Assigns costs by evaluating a random forest and assigning
@@ -71,7 +69,7 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 			final RandomAccessibleInterval< L > sumImg,
 			final RandomAccessibleInterval< T > img,
 			final RandomForest trainedForest,
-			final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > ourFeatureSet,
+			final FeatureSet< IterableInterval< T >, DoubleType > ourFeatureSet,
 			final L labeltype ) {
 
 		this( getSegmentsFromSumImg( sumImg, labeltype ), img, trainedForest, ourFeatureSet,
@@ -82,7 +80,7 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 			final LabelingBuilder labelingBuilder,
 			final RandomAccessibleInterval< T > img,
 			final RandomForest trainedForest,
-			final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > ourFeatureSet,
+			final FeatureSet< IterableInterval< T >, DoubleType > ourFeatureSet,
 			final L labeltype ) {
 
 		this.labeling = labelingBuilder.getLabeling();
@@ -95,8 +93,8 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 		for ( final Segment segment : segments ) {
 
 			final IterableInterval< T > pixels = Regions.sample( segment.getRegion(), img );
-			final Map< OpRef< ? extends Op >, DoubleType > features =
-					ourFeatureSet.compute( pixels );
+			ourFeatureSet.compute( pixels );
+			final Map< String, DoubleType > features = ourFeatureSet.getNamedOutputs();
 
 			arff.addData( features, ArffBuilder.UNKNOWN_INSTANCE );
 			final Instance latestInstance = arff.getLatestAddedInstance();

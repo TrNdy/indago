@@ -5,11 +5,16 @@ package com.indago.examples.serialization;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Map;
 
-import net.imagej.ops.Op;
-import net.imagej.ops.OpRef;
-import net.imagej.ops.features.AbstractAutoResolvingFeatureSet;
+import com.indago.segment.LabelingBuilder;
+import com.indago.segment.LabelingSegment;
+import com.indago.segment.features.FeatureSet;
+import com.indago.segment.filteredcomponents.FilteredComponentTree;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.weka.ArffBuilder;
+import com.indago.weka.ArffWriterFactory;
+
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.roi.Regions;
@@ -19,42 +24,34 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 import weka.core.Instances;
 
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingSegment;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.weka.ArffBuilder;
-import com.indago.weka.ArffWriterFactory;
-
 
 /**
  * Module to collect all the feature data later used to train or feed into a
  * classifier (most likely) weka thing.
- * 
+ *
  * Input:
  * ------
  * (i) image data
  * (ii) labeling of true instances
  * (iii) labeling of false instances
  * (iv) specification of a feature-set to be used
- * 
+ *
  * Output:
  * -------
  * (i) ARFF data collection (can be stored in file) fit for further processing
  * in weka algorithms.
- * 
+ *
  * Part of: IIa
- * 
+ *
  * @author jug
  */
 public class WekaDataInstanceAccumulator< T extends RealType< T > & NativeType< T >, L extends IntegerType< L > & NativeType< L > > {
 
-	private final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet;
+	private final FeatureSet< IterableInterval< T >, DoubleType > featureSet;
 	private final ArffBuilder arffData;
 
 	public WekaDataInstanceAccumulator(
-			final AbstractAutoResolvingFeatureSet< IterableInterval< T >, DoubleType > featureSet ) {
+			final FeatureSet< IterableInterval< T >, DoubleType > featureSet ) {
 
 		this.featureSet = featureSet;
 		arffData = ArffWriterFactory.getArffBuilderFor( featureSet );
@@ -143,9 +140,8 @@ public class WekaDataInstanceAccumulator< T extends RealType< T > & NativeType< 
 		for ( final LabelingSegment segment : segments ) {
 
 			final IterableInterval< T > pixels = Regions.sample( segment.getRegion(), img );
-			final Map< OpRef< ? extends Op >, DoubleType > features = featureSet.compute( pixels );
-
-			arffData.addData( features, classIdentifier );
+			featureSet.compute( pixels );
+			arffData.addData( featureSet.getNamedOutputs(), classIdentifier );
 		}
 	}
 }
