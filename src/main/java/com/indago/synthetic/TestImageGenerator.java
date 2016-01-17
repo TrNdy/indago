@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import com.indago.iddea.view.component.IddeaComponent;
 import com.indago.segment.DataMover;
 import com.indago.segment.RandomForestFactory;
 import com.indago.segment.RealDoubleNormalizeConverter;
@@ -23,7 +24,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.real.DoubleType;
-import view.component.IddeaComponent;
 
 public class TestImageGenerator {
 
