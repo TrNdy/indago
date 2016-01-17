@@ -9,7 +9,7 @@ import com.indago.fg.value.Value;
 public class BooleanWeightedIndexSumConstraint implements BooleanFunction {
 
 	protected final BooleanFunctionDomain domain;
-	private final double[] coefficients;
+	protected final double[] coefficients;
 	private final Relation relation;
 	private final double value;
 
