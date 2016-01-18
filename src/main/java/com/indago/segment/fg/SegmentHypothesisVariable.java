@@ -50,4 +50,9 @@ public class SegmentHypothesisVariable< T extends Segment >
 		return rightNeighbors;
 	}
 
+	@Override
+	public String toString() {
+		return super.toString() + String.format( " (%s)", getSegment().toString() );
+	}
+
 }

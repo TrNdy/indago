@@ -63,4 +63,14 @@ public class LabelingSegment implements Segment {
 	public int numDimensions() {
 		return region.numDimensions();
 	}
+
+	@Override
+	public String toString() {
+		String ret = "LabelingSegment:";
+		final RealLocalizable com = region.getCenterOfMass();
+		for ( int i=0; i<com.numDimensions(); i++) {
+			ret += String.format("%.0f:",region.getCenterOfMass().getDoublePosition( i ));
+		}
+		return ret;
+	}
 }
