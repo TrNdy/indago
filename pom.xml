@@ -10,9 +10,9 @@
 
 	<groupId>com.indago</groupId>
 	<artifactId>Indago</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 
-	<description>Latin: indago (verb) - track, spoor, smell out, nose, trace, dog.</description>
+	<description>indigare (ital.) - investigate.</description>
 
 	<properties>
 		<jung2.version>2.0.1</jung2.version>
