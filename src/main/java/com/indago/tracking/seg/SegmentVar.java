@@ -4,11 +4,28 @@ import com.indago.tracking.IndicatorVar;
 import com.indago.tracking.SegmentationProblem;
 import com.indago.tracking.map.AssignmentVars;
 
-public interface SegmentVar extends IndicatorVar {
+public class SegmentVar extends IndicatorVar {
 
-	public AssignmentVars getInAssignments();
+	private final SegmentationProblem segprob;
+	private final AssignmentVars in;
+	private final AssignmentVars out;
 
-	public AssignmentVars getOutAssignments();
+	public SegmentVar( final double cost, final SegmentationProblem segprob ) {
+		super( cost );
+		this.segprob = segprob;
+		in = new AssignmentVars();
+		out = new AssignmentVars();
+	}
 
-	public SegmentationProblem getSegmentationProblem();
+	public AssignmentVars getInAssignments() {
+		return in;
+	}
+
+	public AssignmentVars getOutAssignments() {
+		return out;
+	}
+
+	public SegmentationProblem getSegmentationProblem() {
+		return segprob;
+	}
 }

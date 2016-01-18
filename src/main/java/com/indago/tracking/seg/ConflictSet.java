@@ -1,7 +1,6 @@
 package com.indago.tracking.seg;
 
-import java.util.Collection;
+import java.util.ArrayList;
 
-public interface ConflictSet extends Collection< SegmentVar >
-{
+public class ConflictSet extends ArrayList< SegmentVar > {
 }

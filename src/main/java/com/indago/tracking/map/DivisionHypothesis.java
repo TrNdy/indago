@@ -2,11 +2,45 @@ package com.indago.tracking.map;
 
 import com.indago.tracking.seg.SegmentVar;
 
-public interface DivisionHypothesis extends AssignmentVar {
+public class DivisionHypothesis extends AssignmentVar {
 
-	public SegmentVar getSrc();
+	private double cost;
+	private final SegmentVar src;
+	private final SegmentVar dest1;
+	private final SegmentVar dest2;
 
-	public SegmentVar getDest1();
+	/**
+	 * @param cost
+	 */
+	public DivisionHypothesis(
+			final double cost,
+			final SegmentVar src,
+			final SegmentVar dest1,
+			final SegmentVar dest2 ) {
+		super( cost );
+		this.src = src;
+		this.dest1 = dest1;
+		this.dest2 = dest2;
+	}
 
-	public SegmentVar getDest2();
+	/**
+	 * @see com.indago.tracking.IndicatorVar#getCost()
+	 */
+	@Override
+	public double getCost() {
+		return cost;
+	}
+
+	public SegmentVar getSrc() {
+		return src;
+	}
+
+	public SegmentVar getDest1() {
+		return dest1;
+	}
+
+	public SegmentVar getDest2() {
+		return dest2;
+	}
+
 }

@@ -2,7 +2,19 @@ package com.indago.tracking.map;
 
 import com.indago.tracking.seg.SegmentVar;
 
-public interface DisappearanceHypothesis extends AssignmentVar {
+public class DisappearanceHypothesis extends AssignmentVar {
 
-	public SegmentVar getSrc();
+	private final SegmentVar src;
+
+	/**
+	 * @param cost
+	 */
+	public DisappearanceHypothesis( final double cost, final SegmentVar src ) {
+		super( cost );
+		this.src = src;
+	}
+
+	public SegmentVar getSrc() {
+		return src;
+	}
 }
