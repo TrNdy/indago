@@ -1,18 +1,24 @@
 package com.indago.tracking.seg;
 
+import com.indago.segment.LabelingSegment;
 import com.indago.tracking.IndicatorVar;
 import com.indago.tracking.SegmentationProblem;
 import com.indago.tracking.map.AssignmentVars;
 
 public class SegmentVar extends IndicatorVar {
 
-	private final SegmentationProblem segprob;
+	private SegmentationProblem sp;
+	private final LabelingSegment segment;
 	private final AssignmentVars in;
 	private final AssignmentVars out;
 
-	public SegmentVar( final double cost, final SegmentationProblem segprob ) {
-		super( cost );
-		this.segprob = segprob;
+	/**
+	 * @param segment
+	 */
+	public SegmentVar( final LabelingSegment segment ) {
+		super(0.0);
+		this.segment = segment;
+		this.sp = null;
 		in = new AssignmentVars();
 		out = new AssignmentVars();
 	}
@@ -25,7 +31,11 @@ public class SegmentVar extends IndicatorVar {
 		return out;
 	}
 
+	public void setSegmentationProblem( final SegmentationProblem sp ) {
+		this.sp = sp;
+	}
+
 	public SegmentationProblem getSegmentationProblem() {
-		return segprob;
+		return sp;
 	}
 }
