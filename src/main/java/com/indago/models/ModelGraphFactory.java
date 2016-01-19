@@ -69,8 +69,7 @@ public class ModelGraphFactory {
 		final AssignmentMapper< SegmentVar, LabelingSegment > mapper =
 				new AssignmentMapper< SegmentVar, LabelingSegment >() {
 			@Override
-					public Assignment< LabelingSegment > map(
-							final Assignment< SegmentVar > assignment ) {
+					public Assignment< LabelingSegment > map( final Assignment< ? super SegmentVar > assignment ) {
 						return new Assignment< LabelingSegment >() {
 					@Override
 							public boolean isAssigned( final LabelingSegment variable ) {

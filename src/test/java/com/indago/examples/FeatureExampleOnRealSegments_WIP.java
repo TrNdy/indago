@@ -27,9 +27,11 @@ import com.indago.examples.serialization.WekaDataInstanceAccumulator;
 import com.indago.fg.Assignment;
 import com.indago.fg.AssignmentMapper;
 import com.indago.fg.FactorGraphFactory;
+import com.indago.fg.FactorGraphFactory.MappedFactorGraph;
 import com.indago.fg.UnaryCostConstraintGraph;
 import com.indago.fg.Variable;
 import com.indago.ilp.SolveGurobi;
+import com.indago.models.IndicatorVar;
 import com.indago.models.ModelGraphFactory;
 import com.indago.models.SegmentationModel;
 import com.indago.models.segments.SegmentVar;
@@ -225,13 +227,13 @@ public class FeatureExampleOnRealSegments_WIP {
 			final AssignmentMapper< SegmentVar, LabelingSegment > problemMapper = problemAndMapper.getB();
 
 
-			final Pair< UnaryCostConstraintGraph, AssignmentMapper< Variable, SegmentVar > > fgAndMapper =
+			final MappedFactorGraph fgAndMapper =
 					FactorGraphFactory.createFactorGraph( problem );
-			final UnaryCostConstraintGraph fg = fgAndMapper.getA();
-			final AssignmentMapper< Variable, SegmentVar > fgMapper = fgAndMapper.getB();
+			final UnaryCostConstraintGraph fg = fgAndMapper.getFg();
+			final AssignmentMapper< Variable, IndicatorVar > fgMapper = fgAndMapper.getMapper();
 
 			final Assignment< Variable > fgSolution = SolveGurobi.staticSolve( fg );
-			final Assignment< SegmentVar > problemSolution = fgMapper.map( fgSolution );
+			final Assignment< IndicatorVar > problemSolution = fgMapper.map( fgSolution );
 			final Assignment< LabelingSegment > assignment = problemMapper.map( problemSolution );
 
 //			final FactorGraphPlus< LabelingSegment > fgplus = FactorGraphFactory.createFromConflictGraph(
