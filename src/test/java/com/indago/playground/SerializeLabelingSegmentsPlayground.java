@@ -5,6 +5,16 @@ import io.scif.img.ImgOpener;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.indago.data.segmentation.LabelingBuilder;
+import com.indago.data.segmentation.LabelingForest;
+import com.indago.data.segmentation.LabelingPlus;
+import com.indago.data.segmentation.XmlIoLabelingPlus;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.data.segmentation.visualization.ColorStream;
+import com.indago.data.segmentation.visualization.VisualizeLabeling;
+
 import net.imglib2.Dimensions;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -14,16 +24,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
-
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingForest;
-import com.indago.segment.LabelingPlus;
-import com.indago.segment.XmlIoLabelingPlus;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.segment.visualization.ColorStream;
-import com.indago.segment.visualization.VisualizeLabeling;
 
 public class SerializeLabelingSegmentsPlayground {
 

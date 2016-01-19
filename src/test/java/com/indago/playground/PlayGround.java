@@ -1,5 +1,15 @@
 package com.indago.playground;
 
+import com.indago.data.segmentation.HypothesisPrinter;
+import com.indago.data.segmentation.LabelingBuilder;
+import com.indago.data.segmentation.LabelingForest;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.data.segmentation.visualization.ColorStream;
+import com.indago.data.segmentation.visualization.VisualizeForest;
+import com.indago.data.segmentation.visualization.VisualizeLabeling;
+
 import ij.ImageJ;
 import io.scif.img.ImgOpener;
 import net.imglib2.Dimensions;
@@ -11,16 +21,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
-
-import com.indago.segment.HypothesisPrinter;
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingForest;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.segment.visualization.ColorStream;
-import com.indago.segment.visualization.VisualizeForest;
-import com.indago.segment.visualization.VisualizeLabeling;
 
 public class PlayGround {
 

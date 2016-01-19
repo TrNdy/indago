@@ -8,13 +8,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.indago.data.segmentation.ConflictGraph;
+import com.indago.data.segmentation.LabelingSegment;
 import com.indago.fg.CostsFactory;
-import com.indago.segment.ConflictGraph;
-import com.indago.segment.LabelingSegment;
-import com.indago.tracking.SegmentationProblem;
-import com.indago.tracking.map.AssignmentVars;
-import com.indago.tracking.seg.ConflictSet;
-import com.indago.tracking.seg.SegmentVar;
+import com.indago.models.SegmentationModel;
+import com.indago.models.assignments.AssignmentVars;
+import com.indago.models.segments.ConflictSet;
+import com.indago.models.segments.SegmentVar;
 
 import net.imglib2.util.Pair;
 import net.imglib2.util.ValuePair;
@@ -24,7 +24,7 @@ import net.imglib2.util.ValuePair;
  */
 public class ProblemGraphFactory_WIP {
 
-	public static Pair< SegmentationProblem, AssignmentMapper< SegmentVar, LabelingSegment > > createSegmentationProblem(
+	public static Pair< SegmentationModel, AssignmentMapper< SegmentVar, LabelingSegment > > createSegmentationProblem(
 			final Collection< LabelingSegment > segments,
 			final ConflictGraph< LabelingSegment > conflicts,
 			final CostsFactory< ? super LabelingSegment > segmentCosts ) {
@@ -47,7 +47,7 @@ public class ProblemGraphFactory_WIP {
 			conflictSets.add( cs );
 		}
 
-		final SegmentationProblem problem = new SegmentationProblem() {
+		final SegmentationModel problem = new SegmentationModel() {
 
 			@Override
 			public Collection< SegmentVar > getSegments() {
@@ -96,7 +96,7 @@ public class ProblemGraphFactory_WIP {
 	}
 
 	public static Pair< UnaryCostConstraintGraph, AssignmentMapper< Variable, SegmentVar > >
-			createFactorGraph( final SegmentationProblem segmentationProblem ) {
+			createFactorGraph( final SegmentationModel segmentationProblem ) {
 
 		final Map< SegmentVar, Variable > varmap = new HashMap<>();
 

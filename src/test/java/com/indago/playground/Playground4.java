@@ -1,18 +1,17 @@
 package com.indago.playground;
 
+import com.indago.data.segmentation.LabelingBuilder;
+import com.indago.data.segmentation.LabelingForest;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStepRatio;
+import com.indago.data.segmentation.groundtruth.FlatForest;
+import com.indago.data.segmentation.visualization.ColorStream;
+import com.indago.data.segmentation.visualization.VisualizeForest;
+
 import ij.ImageJ;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
-
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingForest;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStepRatio;
-import com.indago.segment.groundtruth.FlatForest;
-import com.indago.segment.visualization.ColorStream;
-import com.indago.segment.visualization.VisualizeForest;
-
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.gauss3.Gauss3;
 import net.imglib2.exception.IncompatibleTypeException;

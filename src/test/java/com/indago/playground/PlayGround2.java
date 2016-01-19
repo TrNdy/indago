@@ -18,22 +18,22 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 
+import com.indago.data.segmentation.HypothesisPrinter;
+import com.indago.data.segmentation.LabelingBuilder;
+import com.indago.data.segmentation.LabelingForest;
+import com.indago.data.segmentation.LabelingPlus;
+import com.indago.data.segmentation.LabelingSegment;
+import com.indago.data.segmentation.PairwiseConflictGraph;
+import com.indago.data.segmentation.RandomSegmentCosts;
+import com.indago.data.segmentation.XmlIoLabelingPlus;
+import com.indago.data.segmentation.fg.FactorGraphFactory;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
 import com.indago.fg.Assignment;
 import com.indago.fg.FactorGraph;
 import com.indago.fg.gui.FgPanel;
 import com.indago.ilp.SolveBooleanFGGurobi;
-import com.indago.segment.HypothesisPrinter;
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingForest;
-import com.indago.segment.LabelingPlus;
-import com.indago.segment.LabelingSegment;
-import com.indago.segment.PairwiseConflictGraph;
-import com.indago.segment.RandomSegmentCosts;
-import com.indago.segment.XmlIoLabelingPlus;
-import com.indago.segment.fg.FactorGraphFactory;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
 
 public class PlayGround2 {
 

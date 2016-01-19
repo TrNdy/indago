@@ -5,7 +5,7 @@ package com.indago.weka;
 
 import java.util.ArrayList;
 
-import com.indago.segment.features.FeatureSet;
+import com.indago.data.segmentation.features.FeatureSet;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.type.NativeType;

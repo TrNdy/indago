@@ -16,22 +16,22 @@ import com.indago.brandnewfg.ProblemGraphFactory_WIP;
 import com.indago.brandnewfg.UnaryCostConstraintGraph;
 import com.indago.brandnewfg.SolveGurobi;
 import com.indago.brandnewfg.Variable;
+import com.indago.data.segmentation.LabelData;
+import com.indago.data.segmentation.LabelingBuilder;
+import com.indago.data.segmentation.LabelingSegment;
+import com.indago.data.segmentation.RandomForestFactory;
+import com.indago.data.segmentation.RandomForestSegmentCosts;
+import com.indago.data.segmentation.features.FeatureSet;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.data.segmentation.ui.ARGBCompositeAlphaBlender;
+import com.indago.data.segmentation.ui.AlphaMixedSegmentLabelSetColor;
+import com.indago.data.segmentation.ui.SegmentLabelColor;
+import com.indago.data.segmentation.ui.SegmentLabelSetARGBConverter;
 import com.indago.examples.serialization.WekaDataInstanceAccumulator;
-import com.indago.segment.LabelData;
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingSegment;
-import com.indago.segment.RandomForestFactory;
-import com.indago.segment.RandomForestSegmentCosts;
-import com.indago.segment.features.FeatureSet;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.segment.ui.ARGBCompositeAlphaBlender;
-import com.indago.segment.ui.AlphaMixedSegmentLabelSetColor;
-import com.indago.segment.ui.SegmentLabelColor;
-import com.indago.segment.ui.SegmentLabelSetARGBConverter;
-import com.indago.tracking.SegmentationProblem;
-import com.indago.tracking.seg.SegmentVar;
+import com.indago.models.SegmentationModel;
+import com.indago.models.segments.SegmentVar;
 import com.indago.weka.ArffBuilder;
 
 import gurobi.GRBException;
@@ -215,12 +215,12 @@ public class FeatureExampleOnRealSegments_WIP {
 
 			System.out.print( "\tOptimum search for Image " + i + ": Finding optimum..." );
 
-			final Pair< SegmentationProblem, AssignmentMapper< SegmentVar, LabelingSegment > > problemAndMapper =
+			final Pair< SegmentationModel, AssignmentMapper< SegmentVar, LabelingSegment > > problemAndMapper =
 					ProblemGraphFactory_WIP.createSegmentationProblem(
 							costs.getSegments(),
 							costs.getConflictGraph(),
 							costs );
-			final SegmentationProblem problem = problemAndMapper.getA();
+			final SegmentationModel problem = problemAndMapper.getA();
 			final AssignmentMapper< SegmentVar, LabelingSegment > problemMapper = problemAndMapper.getB();
 
 

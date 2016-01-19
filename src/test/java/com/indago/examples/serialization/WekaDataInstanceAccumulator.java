@@ -6,12 +6,12 @@ package com.indago.examples.serialization;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingSegment;
-import com.indago.segment.features.FeatureSet;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.data.segmentation.LabelingBuilder;
+import com.indago.data.segmentation.LabelingSegment;
+import com.indago.data.segmentation.features.FeatureSet;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
 import com.indago.weka.ArffBuilder;
 import com.indago.weka.ArffWriterFactory;
 

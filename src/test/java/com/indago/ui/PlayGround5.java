@@ -2,16 +2,16 @@ package com.indago.ui;
 
 import java.util.Random;
 
-import com.indago.segment.LabelData;
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingForest;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.segment.ui.ARGBCompositeAlphaBlender;
-import com.indago.segment.ui.AlphaMixedSegmentLabelSetColor;
-import com.indago.segment.ui.SegmentLabelColor;
-import com.indago.segment.ui.SegmentLabelSetARGBConverter;
+import com.indago.data.segmentation.LabelData;
+import com.indago.data.segmentation.LabelingBuilder;
+import com.indago.data.segmentation.LabelingForest;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.data.segmentation.ui.ARGBCompositeAlphaBlender;
+import com.indago.data.segmentation.ui.AlphaMixedSegmentLabelSetColor;
+import com.indago.data.segmentation.ui.SegmentLabelColor;
+import com.indago.data.segmentation.ui.SegmentLabelSetARGBConverter;
 
 import ij.ImageJ;
 import io.scif.img.IO;

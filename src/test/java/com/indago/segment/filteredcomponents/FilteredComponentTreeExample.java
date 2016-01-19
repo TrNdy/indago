@@ -1,5 +1,14 @@
 package com.indago.segment.filteredcomponents;
 
+import com.indago.data.segmentation.RandomForestFactory;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponent;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStepRatio;
+import com.indago.data.segmentation.visualization.ColorStream;
+import com.indago.data.segmentation.visualization.VisualizeForest;
+
 import ij.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
@@ -9,13 +18,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
-
-import com.indago.segment.RandomForestFactory;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStepRatio;
-import com.indago.segment.visualization.ColorStream;
-import com.indago.segment.visualization.VisualizeForest;
 
 public class FilteredComponentTreeExample {
 

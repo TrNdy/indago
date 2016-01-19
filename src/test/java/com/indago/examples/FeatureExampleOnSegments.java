@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import org.scijava.Context;
 
 import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
-import com.indago.segment.LabelingBuilder;
-import com.indago.segment.LabelingSegment;
-import com.indago.segment.RandomForestFactory;
-import com.indago.segment.features.FeatureSet;
-import com.indago.segment.filteredcomponents.FilteredComponentTree;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
-import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.data.segmentation.LabelingBuilder;
+import com.indago.data.segmentation.LabelingSegment;
+import com.indago.data.segmentation.RandomForestFactory;
+import com.indago.data.segmentation.features.FeatureSet;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
+import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
 
 import net.imagej.ops.OpService;
 import net.imagej.ops.Ops.Stats.Mean;
