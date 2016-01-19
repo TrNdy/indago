@@ -4,5 +4,6 @@ import java.util.List;
 
 public interface TrackingProblem
 {
-	List< SegmentationProblem > getTimepoints();
+
+	List< ? extends SegmentationProblem > getTimepoints();
 }

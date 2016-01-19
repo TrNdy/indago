@@ -2,7 +2,7 @@ package com.indago.tracking.map;
 
 import com.indago.tracking.seg.SegmentVar;
 
-public class MoveHypothesis extends AssignmentVar
+public class MovementHypothesis extends AssignmentVar
 {
 
 	private double cost;
@@ -12,7 +12,7 @@ public class MoveHypothesis extends AssignmentVar
 	/**
 	 * @param cost
 	 */
-	public MoveHypothesis (
+	public MovementHypothesis (
 			final double cost,
 			final SegmentVar src,
 			final SegmentVar dest ) {
