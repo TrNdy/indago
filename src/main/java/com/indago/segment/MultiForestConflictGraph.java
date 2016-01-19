@@ -3,18 +3,16 @@ package com.indago.segment;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import com.indago.tracking.seg.ConflictGraph;
-import com.indago.tracking.seg.ConflictSet;
-import com.indago.tracking.seg.SegmentVar;
 
 import net.imglib2.util.Pair;
 import net.imglib2.util.ValuePair;
 
-public class MultiForestConflictGraph implements ConflictGraph {
+// TODO: could be generalized from LabelingForest to Forest< ? extends HypothesisTreeNode< ? > >
+public class MultiForestConflictGraph implements ConflictGraph< LabelingSegment > {
 
-	private Collection< ConflictSet > conflictCliques;
+	private Collection< ? extends Collection< LabelingSegment > > conflictGraphCliques;
 
 	private final Collection< LabelingForest > forests;
 
@@ -23,23 +21,22 @@ public class MultiForestConflictGraph implements ConflictGraph {
 	}
 
 	@Override
-	public Collection< ConflictSet > getConflictCliques() {
-		if ( conflictCliques == null )
-			conflictCliques = getConflictCliques( forests );
-		return conflictCliques;
+	public Collection< ? extends Collection< LabelingSegment > > getConflictGraphCliques() {
+		if ( conflictGraphCliques == null )
+			conflictGraphCliques = getConflictGraphCliques( forests );
+		return conflictGraphCliques;
 	}
 
 	/**
 	 * This method computes the conflict cliques. This can be done somewhat
 	 * efficiently since we know that our segments come from multiple forests.
 	 */
-	public static Collection< ConflictSet > getConflictCliques(
-			final Collection< LabelingForest > forests ) {
-		final Collection< ConflictSet > cliques = new ArrayList< ConflictSet >();
+	public static Collection< ? extends Collection< LabelingSegment > > getConflictGraphCliques( final Collection< LabelingForest > forests ) {
+		final ArrayList< Collection< LabelingSegment > > cliques = new ArrayList< Collection< LabelingSegment > >();
 
 		// Adding the 'trivial' cliques (the ones given by each leave-root path in all trees)
 		for ( final LabelingForest forest : forests )
-			cliques.addAll( forest.getConflictCliques() );
+			cliques.addAll( forest.getConflictGraphCliques() );
 
 		// Adding the overlap cliques (for each pair of forests in multiRoots)
 		final ArrayList< LabelingForest > forestList = new ArrayList<>( forests );
@@ -63,11 +60,9 @@ public class MultiForestConflictGraph implements ConflictGraph {
 	 * @param rootsB
 	 *            roots of the other forest
 	 */
-	private static Collection< ConflictSet > getInterForestCliques(
-			final Set< LabelingTreeNode > rootsA,
-			final Set< LabelingTreeNode > rootsB ) {
+	private static List< Collection< LabelingSegment > > getInterForestCliques( final Set< LabelingTreeNode > rootsA, final Set< LabelingTreeNode > rootsB ) {
 
-		final Collection< ConflictSet > cliques = new ArrayList< ConflictSet >();
+		final List< Collection< LabelingSegment > > cliques = new ArrayList< Collection< LabelingSegment >>();
 
 		// Determine all leave nodes in A and B
 		final Set< Collection< LabelingTreeNode > > leavesPerRootInA = new HashSet< Collection< LabelingTreeNode >>();
@@ -110,13 +105,13 @@ public class MultiForestConflictGraph implements ConflictGraph {
 
 		// Finally add cliques corresponding to accumulated 'visible' edges
 		for ( final Pair< LabelingTreeNode, LabelingTreeNode > visibleEdge : accumulatedSegmentPairs ) {
-			final ConflictSet newClique = new ConflictSet();
-			newClique.add( new SegmentVar( visibleEdge.getA().getSegment() ) );
+			final List< LabelingSegment > newClique = new ArrayList< LabelingSegment >();
+			newClique.add( visibleEdge.getA().getSegment() );
 			for ( final LabelingTreeNode ancestor : visibleEdge.getA().getAncestors() )
-				newClique.add( new SegmentVar( ancestor.getSegment() ) );
-			newClique.add( new SegmentVar( visibleEdge.getB().getSegment() ) );
+				newClique.add( ancestor.getSegment() );
+			newClique.add( visibleEdge.getB().getSegment() );
 			for ( final LabelingTreeNode ancestor : visibleEdge.getB().getAncestors() )
-				newClique.add( new SegmentVar( ancestor.getSegment() ) );
+				newClique.add( ancestor.getSegment() );
 			cliques.add( newClique );
 		}
 

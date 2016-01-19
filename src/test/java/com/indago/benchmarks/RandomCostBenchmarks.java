@@ -197,7 +197,7 @@ public class RandomCostBenchmarks {
 		System.out.print( "Constructing PairwiseConflictGraph... " );
 		t0 = System.currentTimeMillis();
 		final PairwiseConflictGraph conflictGraph1 = new PairwiseConflictGraph( labelingBuilder );
-		conflictGraph1.getConflictCliques();
+		conflictGraph1.getConflictGraphCliques();
 		t1 = System.currentTimeMillis();
 		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 		summaryCollection += String.format( "PairwiseConflictGraph:      \t%6.2f\n", ( t1 - t0 ) / 1000. );
@@ -205,7 +205,7 @@ public class RandomCostBenchmarks {
 		System.out.print( "Constructing MultiForestConflictGraph... " );
 		t0 = System.currentTimeMillis();
 		final MultiForestConflictGraph conflictGraph2 = new MultiForestConflictGraph( labelingForests );
-		conflictGraph2.getConflictCliques();
+		conflictGraph2.getConflictGraphCliques();
 		t1 = System.currentTimeMillis();
 		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 		summaryCollection += String.format( "MultiForestConflictGraph:   \t%6.2f\n", ( t1 - t0 ) / 1000. );
@@ -213,7 +213,7 @@ public class RandomCostBenchmarks {
 		System.out.print( "Constructing MinimalOverlapConflictGraph... " );
 		t0 = System.currentTimeMillis();
 		final MinimalOverlapConflictGraph conflictGraph3 = new MinimalOverlapConflictGraph( labelingBuilder );
-		conflictGraph3.getConflictCliques();
+		conflictGraph3.getConflictGraphCliques();
 		t1 = System.currentTimeMillis();
 		System.out.println( String.format( "completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 		summaryCollection += String.format( "MinimalOverlapConflictGraph:\t%6.2f\n", ( t1 - t0 ) / 1000. );

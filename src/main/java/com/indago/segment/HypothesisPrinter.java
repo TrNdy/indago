@@ -3,10 +3,6 @@ package com.indago.segment;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.indago.tracking.seg.ConflictGraph;
-import com.indago.tracking.seg.ConflictSet;
-import com.indago.tracking.seg.SegmentVar;
-
 import net.imglib2.algorithm.tree.Forest;
 
 /**
@@ -60,12 +56,12 @@ public class HypothesisPrinter {
 			printHypothesisTreeNode( prefix + "  ", child );
 	}
 
-	public void printConflictGraphCliques( final ConflictGraph conflictGraph ) {
-		final Collection< ConflictSet > cliques = conflictGraph.getConflictCliques();
-		for ( final ConflictSet clique : cliques ) {
+	public void printConflictGraphCliques( final ConflictGraph< ? extends Segment > conflictGraph ) {
+		final Collection< ? extends Collection< ? extends Segment > > cliques = conflictGraph.getConflictGraphCliques();
+		for ( final Collection< ? extends Segment > clique : cliques ) {
 			System.out.print( "( " );
-			for ( final SegmentVar segVar : clique )
-				System.out.print( segmentToId.get( segVar ) + " " );
+			for ( final Segment segment : clique )
+				System.out.print( segmentToId.get( segment ) + " " );
 			System.out.println( ")" );
 		}
 	}

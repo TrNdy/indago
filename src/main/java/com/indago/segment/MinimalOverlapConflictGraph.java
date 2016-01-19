@@ -4,33 +4,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.indago.tracking.seg.ConflictGraph;
-import com.indago.tracking.seg.ConflictSet;
-import com.indago.tracking.seg.SegmentVar;
-
 /**
  * @author tpietzsch, jug
  */
-public class MinimalOverlapConflictGraph implements ConflictGraph {
+public class MinimalOverlapConflictGraph implements ConflictGraph< LabelingSegment > {
 
 	private final LabelingPlus labelingPlus;
 
-	private Collection< ConflictSet > conflictCliques;
+	private Collection< ? extends Collection< LabelingSegment >> conflictGraphCliques;
 
 	public MinimalOverlapConflictGraph( final LabelingPlus labelingPlus ) {
 		this.labelingPlus = labelingPlus;
 	}
 
 	@Override
-	public Collection< ConflictSet > getConflictCliques() {
-		if ( conflictCliques == null )
-			conflictCliques = getConflictCliques( labelingPlus );
-		return conflictCliques;
+	public Collection< ? extends Collection< LabelingSegment > > getConflictGraphCliques() {
+		if ( conflictGraphCliques == null )
+			conflictGraphCliques = getConflictGraphCliques( labelingPlus );
+		return conflictGraphCliques;
 	}
 
-	public static Collection< ConflictSet > getConflictCliques(
+	public static ArrayList< ArrayList< LabelingSegment > > getConflictGraphCliques(
 			final LabelingPlus labelingPlus ) {
-		final ArrayList< ConflictSet > conflictCliques = new ArrayList< >();
+		final ArrayList< ArrayList< LabelingSegment > > conflictGraphCliques = new ArrayList<>();
 
 		int heads[] = new int[ 32 ];
 
@@ -129,13 +125,13 @@ public class MinimalOverlapConflictGraph implements ConflictGraph {
 
 			// found new conflict set
 			if ( intersectionSize < 2 ) {
-				final ConflictSet clique = new ConflictSet();
+				final ArrayList< LabelingSegment > clique = new ArrayList<>();
 				for ( final LabelData sl : fragment.getSegments() )
-					clique.add( new SegmentVar( sl.getSegment() ) );
-				conflictCliques.add( clique );
+					clique.add( sl.getSegment() );
+				conflictGraphCliques.add( clique );
 			}
 		}
 
-		return conflictCliques;
+		return conflictGraphCliques;
 	}
 }

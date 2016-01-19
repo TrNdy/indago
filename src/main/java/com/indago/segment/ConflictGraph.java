@@ -1,4 +1,4 @@
-package com.indago.tracking.seg;
+package com.indago.segment;
 
 import java.util.Collection;
 
@@ -9,7 +9,7 @@ import java.util.Collection;
  * @param <T>
  *            vertex type (segment hypotheses).
  */
-public interface ConflictGraph {
+public interface ConflictGraph< T > {
 
-	public Collection< ConflictSet > getConflictCliques();
+	public Collection< ? extends Collection< T > > getConflictGraphCliques();
 }

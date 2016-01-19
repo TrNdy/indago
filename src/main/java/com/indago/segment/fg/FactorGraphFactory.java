@@ -15,10 +15,8 @@ import com.indago.fg.factor.Factor;
 import com.indago.fg.function.BooleanConflictConstraint;
 import com.indago.fg.function.BooleanTensorTable;
 import com.indago.fg.function.Function;
+import com.indago.segment.ConflictGraph;
 import com.indago.segment.Segment;
-import com.indago.tracking.seg.ConflictGraph;
-import com.indago.tracking.seg.ConflictSet;
-import com.indago.tracking.seg.SegmentVar;
 
 /**
  * @author jug
@@ -28,9 +26,9 @@ public class FactorGraphFactory {
 
 	public static < T extends Segment > FactorGraphPlus< T > createFromConflictGraph(
 			final Collection< ? extends T > segments,
-			final ConflictGraph conflicts,
+			final ConflictGraph< T > conflicts,
 			final CostsFactory< Segment > segmentCosts ) {
-		final Collection< ConflictSet > cliques = conflicts.getConflictCliques();
+		final Collection< ? extends Collection< T > > cliques = conflicts.getConflictGraphCliques();
 
 		int factorId = 0;
 		int functionId = 0;
@@ -50,13 +48,13 @@ public class FactorGraphFactory {
 		final BooleanConflictConstraint conflictConstraint = new BooleanConflictConstraint();
 		functions.add( conflictConstraint );
 
-		for ( final ConflictSet clique : cliques ) {
+		for ( final Collection< T > clique : cliques ) {
 			final BooleanFunctionDomain domain = new BooleanFunctionDomain( clique.size() );
 			final BooleanFactor factor = new BooleanFactor( domain, factorId++ );
 			factor.setFunction( conflictConstraint );
 			int i = 0;
-			for ( final SegmentVar segVar : clique ) {
-				final SegmentHypothesisVariable< T > sv = segmentVariableDict.get( segVar );
+			for ( final T segment : clique ) {
+				final SegmentHypothesisVariable< T > sv = segmentVariableDict.get( segment );
 				factor.setVariable( i, sv );
 				i++;
 			}

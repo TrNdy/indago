@@ -1,5 +1,8 @@
 package com.indago.playground;
 
+import ij.ImageJ;
+import io.scif.img.ImgOpener;
+
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -7,6 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+
+import net.imglib2.Dimensions;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedIntType;
 
 import com.indago.fg.Assignment;
 import com.indago.fg.FactorGraph;
@@ -24,15 +34,6 @@ import com.indago.segment.fg.FactorGraphFactory;
 import com.indago.segment.filteredcomponents.FilteredComponentTree;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.segment.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-
-import ij.ImageJ;
-import io.scif.img.ImgOpener;
-import net.imglib2.Dimensions;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedIntType;
 
 public class PlayGround2 {
 
@@ -98,7 +99,7 @@ public class PlayGround2 {
 		final PairwiseConflictGraph conflictGraph =
 				new PairwiseConflictGraph( labelingBuilderLoaded );
 
-		conflictGraph.getConflictCliques();
+		conflictGraph.getConflictGraphCliques();
 		final long t1 = System.currentTimeMillis();
 		System.out.println( ( t1 - t0 ) + " ms" );
 
