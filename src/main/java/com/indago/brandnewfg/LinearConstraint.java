@@ -4,16 +4,16 @@ import java.util.List;
 
 public class LinearConstraint implements Constraint {
 
-	private final int[] coefficients;
+	private final double[] coefficients;
 
 	private final Relation relation;
 
-	private final int rhs;
+	private final double rhs;
 
 	private final List< Domain > argumentDomains;
 
 	public LinearConstraint(
-			final int[] coefficients,
+			final double[] coefficients,
 			final Relation relation,
 			final int rhs,
 			final List< Domain > argumentDomains ) {
@@ -32,7 +32,7 @@ public class LinearConstraint implements Constraint {
 		return argumentDomains;
 	}
 
-	public int[] getCoefficients() {
+	public double[] getCoefficients() {
 		return coefficients;
 	}
 
@@ -40,7 +40,7 @@ public class LinearConstraint implements Constraint {
 		return relation;
 	}
 
-	public int getRhs() {
+	public double getRhs() {
 		return rhs;
 	}
 

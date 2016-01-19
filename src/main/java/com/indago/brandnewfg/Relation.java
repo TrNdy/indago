@@ -20,7 +20,7 @@ public enum Relation {
 		throw new IllegalArgumentException();
 	}
 
-	public static boolean holds( final int lhs, final Relation relation, final int rhs ) {
+	public static boolean holds( final double lhs, final Relation relation, final double rhs ) {
 		switch ( relation ) {
 		default:
 		case EQ:

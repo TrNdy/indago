@@ -10,7 +10,7 @@ public class Constraints {
 
 	public static LinearConstraint atMostOneConstraint( final int arity ) {
 		while ( arity > atMostOneConstraints.size() - 1 ) {
-			final int[] coefficients = new int[ atMostOneConstraints.size() ];
+			final double[] coefficients = new double[ atMostOneConstraints.size() ];
 			Arrays.fill( coefficients, 1 );
 			final LinearConstraint c = new LinearConstraint(
 					coefficients,
