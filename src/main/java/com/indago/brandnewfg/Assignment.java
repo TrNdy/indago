@@ -1,24 +1,31 @@
 package com.indago.brandnewfg;
 
-public interface Assignment {
+/**
+ * Assignment from some type variable to integer labels
+ *
+ * @param <V>
+ *
+ * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ */
+public interface Assignment< V > {
 
 	/**
-	 * Return {@code true} iff the given {@link Variable} is contained in this
+	 * Return {@code true} iff the given {@code variable} is contained in this
 	 * {@link Assignment}.
 	 *
-	 * @param var
-	 *            {@link Variable} to query.
-	 * @return {@code true} iff {@code var} is contained in this
+	 * @param variable
+	 *            variable to query.
+	 * @return {@code true} iff {@code variable} is contained in this
 	 *         {@link Assignment}.
 	 */
-	boolean isAssigned( Variable var );
+	boolean isAssigned( V variable );
 
 	/**
-	 * Get the label assigned to {@code var}.
+	 * Get the label assigned to {@code variable}.
 	 *
-	 * @param var
-	 *            {@link Variable} to query.
-	 * @return the label assigned to {@code var}.
+	 * @param variable
+	 *            variable to query.
+	 * @return the label assigned to {@code variable}.
 	 */
-	int getAssignment( Variable var );
+	int getAssignment( V variable );
 }
