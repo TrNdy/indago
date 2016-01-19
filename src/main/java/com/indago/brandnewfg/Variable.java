@@ -6,12 +6,15 @@ public class Variable {
 
 	private final ArrayList< Factor > factors;
 
-	public Variable() {
+	private final Domain domain;
+
+	public Variable( final Domain domain ) {
+		this.domain = domain;
 		factors = new ArrayList<>();
 	}
 
 	public Domain getDomain() {
-		return null; // TODO
+		return domain;
 	}
 
 	public void addFactor( final Factor factor ) {
