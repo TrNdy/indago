@@ -1,8 +1,15 @@
-package com.indago.fg;
+package com.indago.ilp;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+
+import com.indago.fg.Assignment;
+import com.indago.fg.Factor;
+import com.indago.fg.LinearConstraint;
+import com.indago.fg.Relation;
+import com.indago.fg.UnaryCostConstraintGraph;
+import com.indago.fg.Variable;
 
 import gnu.trove.impl.Constants;
 import gnu.trove.iterator.TObjectDoubleIterator;

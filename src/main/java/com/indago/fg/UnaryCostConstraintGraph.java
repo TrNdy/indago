@@ -2,6 +2,8 @@ package com.indago.fg;
 
 import java.util.Collection;
 
+import com.indago.ilp.SolveGurobi;
+
 /**
  * A factor graph with only binary variables, unary cost functions, and linear
  * constraints. This is the type of FactorGraph that we can currently solve with
