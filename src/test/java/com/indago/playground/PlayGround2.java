@@ -26,14 +26,14 @@ import com.indago.data.segmentation.LabelingSegment;
 import com.indago.data.segmentation.PairwiseConflictGraph;
 import com.indago.data.segmentation.RandomSegmentCosts;
 import com.indago.data.segmentation.XmlIoLabelingPlus;
-import com.indago.data.segmentation.fg.FactorGraphFactory;
+import com.indago.data.segmentation.fg.OldFactorGraphFactory;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.fg.Assignment;
-import com.indago.fg.FactorGraph;
-import com.indago.fg.gui.FgPanel;
 import com.indago.ilp.SolveBooleanFGGurobi;
+import com.indago.old_fg.Assignment;
+import com.indago.old_fg.FactorGraph;
+import com.indago.old_fg.gui.FgPanel;
 
 public class PlayGround2 {
 
@@ -113,7 +113,7 @@ public class PlayGround2 {
 
 		final ArrayList< LabelingSegment > segments = labelingBuilderLoaded.getSegments();
 		final RandomSegmentCosts costs = new RandomSegmentCosts( segments, 815 ); // assign random costs to segments in MultiForest (for testing purposes)
-		final FactorGraph fg = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph, costs ).getFactorGraph();
+		final FactorGraph fg = OldFactorGraphFactory.createFromConflictGraph( segments, conflictGraph, costs ).getFactorGraph();
 
 		final SolveBooleanFGGurobi solver = new SolveBooleanFGGurobi();
 		final Assignment assignment = solver.solve( fg );

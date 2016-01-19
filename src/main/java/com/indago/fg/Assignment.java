@@ -1,37 +1,31 @@
 package com.indago.fg;
 
-import java.util.HashMap;
-import java.util.List;
+/**
+ * Assignment from some type variable to integer labels
+ *
+ * @param <V>
+ *
+ * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ */
+public interface Assignment< V > {
 
-import com.indago.fg.domain.Domain;
-import com.indago.fg.value.Value;
-import com.indago.fg.variable.Variable;
+	/**
+	 * Return {@code true} iff the given {@code variable} is contained in this
+	 * {@link Assignment}.
+	 *
+	 * @param variable
+	 *            variable to query.
+	 * @return {@code true} iff {@code variable} is contained in this
+	 *         {@link Assignment}.
+	 */
+	boolean isAssigned( V variable );
 
-
-public class Assignment {
-	private final HashMap< Variable< ? >, Value< ?, ? > > variableToValue;
-
-	public Assignment( final List< ? extends Variable< ?> > variables )
-	{
-		variableToValue = new HashMap<>();
-	}
-
-	public boolean isAssigned( final Variable< ? > variable )
-	{
-		return variableToValue.containsKey( variable );
-	}
-
-	@SuppressWarnings( "unchecked" )
-	public < T, D extends Domain< T > > Value< T, D > getAssignment( final Variable< D > variable )
-	{
-		return ( Value< T, D > ) variableToValue.get( variable );
-	}
-
-	public < T, D extends Domain< T > > void assign( final Variable< D > variable, final Value< T, D > value )
-	{
-		if ( value == null )
-			variableToValue.remove( variable );
-		else
-			variableToValue.put( variable, value );
-	}
+	/**
+	 * Get the label assigned to {@code variable}.
+	 *
+	 * @param variable
+	 *            variable to query.
+	 * @return the label assigned to {@code variable}.
+	 */
+	int getAssignment( V variable );
 }

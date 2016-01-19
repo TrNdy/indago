@@ -3,7 +3,7 @@
  */
 package com.indago.data.segmentation;
 
-import com.indago.fg.CostsFactory;
+import com.indago.old_fg.CostsFactory;
 
 /**
  * @author jug

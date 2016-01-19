@@ -10,12 +10,6 @@ import java.util.Random;
 import org.scijava.Context;
 
 import com.indago.benchmarks.RandomCostBenchmarks.Parameters;
-import com.indago.brandnewfg.Assignment;
-import com.indago.brandnewfg.AssignmentMapper;
-import com.indago.brandnewfg.ProblemGraphFactory_WIP;
-import com.indago.brandnewfg.UnaryCostConstraintGraph;
-import com.indago.brandnewfg.SolveGurobi;
-import com.indago.brandnewfg.Variable;
 import com.indago.data.segmentation.LabelData;
 import com.indago.data.segmentation.LabelingBuilder;
 import com.indago.data.segmentation.LabelingSegment;
@@ -30,6 +24,13 @@ import com.indago.data.segmentation.ui.AlphaMixedSegmentLabelSetColor;
 import com.indago.data.segmentation.ui.SegmentLabelColor;
 import com.indago.data.segmentation.ui.SegmentLabelSetARGBConverter;
 import com.indago.examples.serialization.WekaDataInstanceAccumulator;
+import com.indago.fg.Assignment;
+import com.indago.fg.AssignmentMapper;
+import com.indago.fg.FactorGraphFactory;
+import com.indago.fg.SolveGurobi;
+import com.indago.fg.UnaryCostConstraintGraph;
+import com.indago.fg.Variable;
+import com.indago.models.ModelGraphFactory;
 import com.indago.models.SegmentationModel;
 import com.indago.models.segments.SegmentVar;
 import com.indago.weka.ArffBuilder;
@@ -216,7 +217,7 @@ public class FeatureExampleOnRealSegments_WIP {
 			System.out.print( "\tOptimum search for Image " + i + ": Finding optimum..." );
 
 			final Pair< SegmentationModel, AssignmentMapper< SegmentVar, LabelingSegment > > problemAndMapper =
-					ProblemGraphFactory_WIP.createSegmentationProblem(
+					ModelGraphFactory.createSegmentationProblem(
 							costs.getSegments(),
 							costs.getConflictGraph(),
 							costs );
@@ -225,7 +226,7 @@ public class FeatureExampleOnRealSegments_WIP {
 
 
 			final Pair< UnaryCostConstraintGraph, AssignmentMapper< Variable, SegmentVar > > fgAndMapper =
-					ProblemGraphFactory_WIP.createFactorGraph( problem );
+					FactorGraphFactory.createFactorGraph( problem );
 			final UnaryCostConstraintGraph fg = fgAndMapper.getA();
 			final AssignmentMapper< Variable, SegmentVar > fgMapper = fgAndMapper.getB();
 

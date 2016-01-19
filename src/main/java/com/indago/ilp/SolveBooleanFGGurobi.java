@@ -13,18 +13,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.indago.fg.Assignment;
-import com.indago.fg.FactorGraph;
-import com.indago.fg.factor.BooleanFactor;
-import com.indago.fg.factor.Factor;
-import com.indago.fg.function.OldBooleanAssignmentConstraint;
-import com.indago.fg.function.BooleanConflictConstraint;
-import com.indago.fg.function.BooleanFunction;
-import com.indago.fg.function.BooleanTensorTable;
-import com.indago.fg.function.BooleanWeightedIndexSumConstraint;
-import com.indago.fg.value.BooleanValue;
-import com.indago.fg.variable.BooleanVariable;
-import com.indago.fg.variable.Variable;
+import com.indago.old_fg.Assignment;
+import com.indago.old_fg.FactorGraph;
+import com.indago.old_fg.factor.BooleanFactor;
+import com.indago.old_fg.factor.Factor;
+import com.indago.old_fg.function.BooleanConflictConstraint;
+import com.indago.old_fg.function.BooleanFunction;
+import com.indago.old_fg.function.BooleanTensorTable;
+import com.indago.old_fg.function.BooleanWeightedIndexSumConstraint;
+import com.indago.old_fg.function.OldBooleanAssignmentConstraint;
+import com.indago.old_fg.value.BooleanValue;
+import com.indago.old_fg.variable.BooleanVariable;
+import com.indago.old_fg.variable.Variable;
 
 /**
  * A solver for boolean factor graphs that uses Gurobi for the optimization

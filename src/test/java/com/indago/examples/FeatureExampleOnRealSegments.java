@@ -17,7 +17,7 @@ import com.indago.data.segmentation.LabelingSegment;
 import com.indago.data.segmentation.RandomForestFactory;
 import com.indago.data.segmentation.RandomForestSegmentCosts;
 import com.indago.data.segmentation.features.FeatureSet;
-import com.indago.data.segmentation.fg.FactorGraphFactory;
+import com.indago.data.segmentation.fg.OldFactorGraphFactory;
 import com.indago.data.segmentation.fg.FactorGraphPlus;
 import com.indago.data.segmentation.fg.SegmentHypothesisVariable;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
@@ -28,9 +28,9 @@ import com.indago.data.segmentation.ui.AlphaMixedSegmentLabelSetColor;
 import com.indago.data.segmentation.ui.SegmentLabelColor;
 import com.indago.data.segmentation.ui.SegmentLabelSetARGBConverter;
 import com.indago.examples.serialization.WekaDataInstanceAccumulator;
-import com.indago.fg.Assignment;
-import com.indago.fg.FactorGraph;
 import com.indago.ilp.SolveBooleanFGGurobi;
+import com.indago.old_fg.Assignment;
+import com.indago.old_fg.FactorGraph;
 import com.indago.weka.ArffBuilder;
 
 import gurobi.GRBException;
@@ -211,7 +211,7 @@ public class FeatureExampleOnRealSegments {
 					new RandomForestSegmentCosts< L, T >( lblImg, img, tree, ourFeatureSet, labeltype );
 
 			System.out.print( "\tOptimum search for Image " + i + ": Finding optimum..." );
-			final FactorGraphPlus< LabelingSegment > fgplus = FactorGraphFactory.createFromConflictGraph(
+			final FactorGraphPlus< LabelingSegment > fgplus = OldFactorGraphFactory.createFromConflictGraph(
 					costs.getSegments(),
 					costs.getConflictGraph(),
 					costs );

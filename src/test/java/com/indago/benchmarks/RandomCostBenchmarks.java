@@ -13,20 +13,20 @@ import com.indago.data.segmentation.MultiForestConflictGraph;
 import com.indago.data.segmentation.PairwiseConflictGraph;
 import com.indago.data.segmentation.RandomForestFactory;
 import com.indago.data.segmentation.RandomSegmentCosts;
-import com.indago.data.segmentation.fg.FactorGraphFactory;
+import com.indago.data.segmentation.fg.OldFactorGraphFactory;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
-import com.indago.fg.Assignment;
-import com.indago.fg.FactorGraph;
-import com.indago.fg.factor.BooleanFactor;
-import com.indago.fg.factor.Factor;
-import com.indago.fg.function.BooleanConflictConstraint;
-import com.indago.fg.function.BooleanFunction;
-import com.indago.fg.function.BooleanTensorTable;
-import com.indago.fg.value.BooleanValue;
-import com.indago.fg.variable.BooleanVariable;
-import com.indago.fg.variable.Variable;
+import com.indago.old_fg.Assignment;
+import com.indago.old_fg.FactorGraph;
+import com.indago.old_fg.factor.BooleanFactor;
+import com.indago.old_fg.factor.Factor;
+import com.indago.old_fg.function.BooleanConflictConstraint;
+import com.indago.old_fg.function.BooleanFunction;
+import com.indago.old_fg.function.BooleanTensorTable;
+import com.indago.old_fg.value.BooleanValue;
+import com.indago.old_fg.variable.BooleanVariable;
+import com.indago.old_fg.variable.Variable;
 
 import gurobi.GRB;
 import gurobi.GRB.DoubleAttr;
@@ -253,21 +253,21 @@ public class RandomCostBenchmarks {
 
 			System.out.print( ">>\t Constructing FG1 from PairwiseConflictGraph... " );
 			t0 = System.currentTimeMillis();
-			final FactorGraph fg1 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph1, costs ).getFactorGraph();
+			final FactorGraph fg1 = OldFactorGraphFactory.createFromConflictGraph( segments, conflictGraph1, costs ).getFactorGraph();
 			t1 = System.currentTimeMillis();
 			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 			fgBuildTimeTotal[ 0 ] += ( t1 - t0 ) / 1000.;
 
 			System.out.print( ">>\t Constructing FG2 from MultiForestConflictGraph... " );
 			t0 = System.currentTimeMillis();
-			final FactorGraph fg2 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph2, costs ).getFactorGraph();
+			final FactorGraph fg2 = OldFactorGraphFactory.createFromConflictGraph( segments, conflictGraph2, costs ).getFactorGraph();
 			t1 = System.currentTimeMillis();
 			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 			fgBuildTimeTotal[ 1 ] += ( t1 - t0 ) / 1000.;
 
 			System.out.print( ">>\t Constructing FG3 from MinimalOverlapConflictGraph... " );
 			t0 = System.currentTimeMillis();
-			final FactorGraph fg3 = FactorGraphFactory.createFromConflictGraph( segments, conflictGraph3, costs ).getFactorGraph();
+			final FactorGraph fg3 = OldFactorGraphFactory.createFromConflictGraph( segments, conflictGraph3, costs ).getFactorGraph();
 			t1 = System.currentTimeMillis();
 			System.out.println( String.format( ">>\t completed in %.2f seconds!", ( t1 - t0 ) / 1000. ) );
 			fgBuildTimeTotal[ 2 ] += ( t1 - t0 ) / 1000.;
