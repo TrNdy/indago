@@ -8,8 +8,8 @@ import gnu.trove.impl.Constants;
 import gnu.trove.iterator.TObjectDoubleIterator;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
 import gurobi.GRB;
 import gurobi.GRBEnv;
 import gurobi.GRBException;
@@ -34,12 +34,19 @@ public class SolveGurobi {
 		env = null;
 	}
 
-	public Assignment solve(
-			final Collection< Variable > variables,
-			final Collection< Factor > unaries,
-			final Collection< Factor > constraints )
-					throws GRBException {
-		final TObjectIntMap< Variable > variableToIndex = new TObjectIntCustomHashMap<>();
+	public static Assignment< Variable > staticSolve( final UnaryCostConstraintGraph fg ) throws GRBException {
+		final SolveGurobi solver = new SolveGurobi();
+		final Assignment< Variable > assignment = solver.solve( fg );
+		solver.dispose();
+		return assignment;
+	}
+
+	public Assignment< Variable > solve( final UnaryCostConstraintGraph fg ) throws GRBException {
+		final Collection< Variable > variables = fg.getVariables();
+		final Collection< Factor > unaries = fg.getUnaries();
+		final Collection< Factor > constraints = fg.getConstraints();
+
+		final TObjectIntMap< Variable > variableToIndex = new TObjectIntHashMap<>();
 		int variableIndex = 0;
 		for ( final Variable v : variables )
 			variableToIndex.put( v, variableIndex++ );
@@ -83,12 +90,10 @@ public class SolveGurobi {
 			final int arity = factor.getArity();
 			final LinearConstraint constr = ( LinearConstraint ) factor.getFunction();
 
-			final double[] constrCoeffs = new double[ arity ];
+			final double[] constrCoeffs = constr.getCoefficients();
 			final GRBVar[] constrVars = new GRBVar[ arity ];
 			final List< Variable > fv = factor.getVariables();
-			final int[] fc = constr.getCoefficients();
 			for ( int i = 0; i < arity; ++i ) {
-				constrCoeffs[ i ] = fc[ i ];
 				constrVars[ i ] = vars[ variableToIndex.get( fv.get( i ) ) ];
 			}
 
@@ -130,7 +135,7 @@ public class SolveGurobi {
 		}
 	}
 
-	private static class GurobiAssignment implements Assignment {
+	private static class GurobiAssignment implements Assignment< Variable > {
 
 		private final TObjectIntMap< Variable > variableToIndex;
 
