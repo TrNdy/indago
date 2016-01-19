@@ -4,29 +4,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import com.indago.tracking.seg.ConflictGraph;
+import com.indago.tracking.seg.ConflictSet;
+import com.indago.tracking.seg.SegmentVar;
+
 /**
  * @author tpietzsch, jug
  */
-public class MinimalOverlapConflictGraph implements ConflictGraph< LabelingSegment > {
+public class MinimalOverlapConflictGraph implements ConflictGraph {
 
 	private final LabelingPlus labelingPlus;
 
-	private Collection< ? extends Collection< LabelingSegment >> conflictGraphCliques;
+	private Collection< ConflictSet > conflictCliques;
 
 	public MinimalOverlapConflictGraph( final LabelingPlus labelingPlus ) {
 		this.labelingPlus = labelingPlus;
 	}
 
 	@Override
-	public Collection< ? extends Collection< LabelingSegment > > getConflictGraphCliques() {
-		if ( conflictGraphCliques == null )
-			conflictGraphCliques = getConflictGraphCliques( labelingPlus );
-		return conflictGraphCliques;
+	public Collection< ConflictSet > getConflictCliques() {
+		if ( conflictCliques == null )
+			conflictCliques = getConflictCliques( labelingPlus );
+		return conflictCliques;
 	}
 
-	public static ArrayList< ArrayList< LabelingSegment > > getConflictGraphCliques(
+	public static Collection< ConflictSet > getConflictCliques(
 			final LabelingPlus labelingPlus ) {
-		final ArrayList< ArrayList< LabelingSegment > > conflictGraphCliques = new ArrayList<>();
+		final ArrayList< ConflictSet > conflictCliques = new ArrayList< >();
 
 		int heads[] = new int[ 32 ];
 
@@ -125,13 +129,13 @@ public class MinimalOverlapConflictGraph implements ConflictGraph< LabelingSegme
 
 			// found new conflict set
 			if ( intersectionSize < 2 ) {
-				final ArrayList< LabelingSegment > clique = new ArrayList<>();
+				final ConflictSet clique = new ConflictSet();
 				for ( final LabelData sl : fragment.getSegments() )
-					clique.add( sl.getSegment() );
-				conflictGraphCliques.add( clique );
+					clique.add( new SegmentVar( sl.getSegment() ) );
+				conflictCliques.add( clique );
 			}
 		}
 
-		return conflictGraphCliques;
+		return conflictCliques;
 	}
 }

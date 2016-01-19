@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.indago.tracking.seg.ConflictGraph;
+import com.indago.tracking.seg.ConflictSet;
+import com.indago.tracking.seg.SegmentVar;
+
 import net.imglib2.algorithm.tree.Forest;
 import net.imglib2.algorithm.tree.TreeUtils;
 
-public class LabelingForest implements Forest< LabelingTreeNode >, ConflictGraph< LabelingSegment > {
+public class LabelingForest implements Forest< LabelingTreeNode >, ConflictGraph {
 
 	private final HashSet< LabelingTreeNode > roots;
 
@@ -27,14 +31,14 @@ public class LabelingForest implements Forest< LabelingTreeNode >, ConflictGraph
 	 * be very efficient!
 	 */
 	@Override
-	public Collection< ? extends Collection< LabelingSegment > > getConflictGraphCliques() {
-		final ArrayList< ArrayList< LabelingSegment > > cliques = new ArrayList<>();
+	public Collection< ConflictSet > getConflictCliques() {
+		final ArrayList< ConflictSet > cliques = new ArrayList< >();
 		final ArrayList< LabelingTreeNode > leafs = TreeUtils.getLeafs( this );
 		for ( final LabelingTreeNode leaf : leafs ) {
-			final ArrayList< LabelingSegment > clique = new ArrayList<>();
-			clique.add( leaf.getSegment() );
+			final ConflictSet clique = new ConflictSet();
+			clique.add( new SegmentVar( leaf.getSegment() ) );
 			for ( final LabelingTreeNode node : leaf.getConflictingHypotheses() ) {
-				clique.add( node.getSegment() );
+				clique.add( new SegmentVar( leaf.getSegment() ) );
 			}
 			if ( clique.size() > 1 ) cliques.add( clique );
 		}

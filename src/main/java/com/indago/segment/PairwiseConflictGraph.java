@@ -3,29 +3,32 @@ package com.indago.segment;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.indago.tracking.seg.ConflictGraph;
+import com.indago.tracking.seg.ConflictSet;
+import com.indago.tracking.seg.SegmentVar;
+
 /**
  * @author tpietzsch, jug
  */
-public class PairwiseConflictGraph implements ConflictGraph< LabelingSegment > {
+public class PairwiseConflictGraph implements ConflictGraph {
 
 	private final LabelingBuilder labelingBuilder;
 
-	private Collection< ? extends Collection< LabelingSegment > > conflictGraphCliques;
+	private Collection< ConflictSet > conflictCliques;
 
 	public PairwiseConflictGraph( final LabelingBuilder labelingBuilder ) {
 		this.labelingBuilder = labelingBuilder;
 	}
 
 	@Override
-	public Collection< ? extends Collection< LabelingSegment > > getConflictGraphCliques() {
-		if ( conflictGraphCliques == null )
-			conflictGraphCliques = getConflictGraphCliques( labelingBuilder );
-		return conflictGraphCliques;
+	public Collection< ConflictSet > getConflictCliques() {
+		if ( conflictCliques == null )
+			conflictCliques = getConflictCliques( labelingBuilder );
+		return conflictCliques;
 	}
 
-	public static ArrayList< ArrayList< LabelingSegment > > getConflictGraphCliques(
-			final LabelingPlus labelingPlus ) {
-		final ArrayList< ArrayList< LabelingSegment > > conflictGraphCliques = new ArrayList<>();
+	public static Collection< ConflictSet > getConflictCliques( final LabelingPlus labelingPlus ) {
+		final Collection< ConflictSet > conflictCliques = new ArrayList< >();
 
 		labelingPlus.getFragments(); // we call this to update FragmentIndices of all segments
 		final ArrayList< LabelData > segmentLabels =
@@ -38,16 +41,16 @@ public class PairwiseConflictGraph implements ConflictGraph< LabelingSegment > {
 				final LabelData slj = segmentLabels.get( j );
 				for ( final Integer fj : slj.getFragmentIndices() ) {
 					if ( sli.getFragmentIndices().contains( fj ) ) {
-						final ArrayList< LabelingSegment > clique = new ArrayList<>();
-						clique.add( sli.getSegment() );
-						clique.add( slj.getSegment() );
-						conflictGraphCliques.add( clique );
+						final ConflictSet clique = new ConflictSet();
+						clique.add( new SegmentVar( sli.getSegment() ) );
+						clique.add( new SegmentVar( slj.getSegment() ) );
+						conflictCliques.add( clique );
 						break;
 					}
 				}
 			}
 		}
 
-		return conflictGraphCliques;
+		return conflictCliques;
 	}
 }
