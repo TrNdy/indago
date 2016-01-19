@@ -6,7 +6,7 @@ import java.util.Collection;
 public class AssignmentVars {
 
 	Collection< AssignmentVar > all = new ArrayList< AssignmentVar >();
-	Collection< MoveHypothesis > moves = new ArrayList< MoveHypothesis >();
+	Collection< MovementHypothesis > moves = new ArrayList< MovementHypothesis >();
 	Collection< DivisionHypothesis > divisions = new ArrayList< DivisionHypothesis >();
 	Collection< AppearanceHypothesis > apps = new ArrayList< AppearanceHypothesis >();
 	Collection< DisappearanceHypothesis > disapps = new ArrayList< DisappearanceHypothesis >();
@@ -15,7 +15,7 @@ public class AssignmentVars {
 		return all;
 	}
 
-	public Collection< MoveHypothesis > getMoves() {
+	public Collection< MovementHypothesis > getMoves() {
 		return moves;
 	}
 
@@ -33,8 +33,8 @@ public class AssignmentVars {
 
 	public void add( final AssignmentVar var ) {
 		all.add( var );
-		if ( var instanceof MoveHypothesis ) {
-			moves.add( ( MoveHypothesis ) var );
+		if ( var instanceof MovementHypothesis ) {
+			moves.add( ( MovementHypothesis ) var );
 		}
 		if ( var instanceof DivisionHypothesis ) {
 			divisions.add( ( DivisionHypothesis ) var );

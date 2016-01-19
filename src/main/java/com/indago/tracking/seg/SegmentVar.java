@@ -38,4 +38,5 @@ public class SegmentVar extends IndicatorVar {
 	public SegmentationProblem getSegmentationProblem() {
 		return sp;
 	}
+
 }
