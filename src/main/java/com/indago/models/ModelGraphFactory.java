@@ -12,7 +12,6 @@ import com.indago.data.segmentation.ConflictGraph;
 import com.indago.data.segmentation.LabelingSegment;
 import com.indago.fg.Assignment;
 import com.indago.fg.AssignmentMapper;
-import com.indago.models.assignments.AssignmentVars;
 import com.indago.models.segments.ConflictSet;
 import com.indago.models.segments.SegmentVar;
 import com.indago.old_fg.CostsFactory;
@@ -65,15 +64,6 @@ public class ModelGraphFactory {
 				return 0;
 			}
 
-			@Override
-			public AssignmentVars getOutAssignments() {
-				return null;
-			}
-
-			@Override
-			public AssignmentVars getInAssignments() {
-				return null;
-			}
 		};
 
 		final AssignmentMapper< SegmentVar, LabelingSegment > mapper =
