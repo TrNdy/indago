@@ -27,7 +27,7 @@ import com.indago.examples.serialization.WekaDataInstanceAccumulator;
 import com.indago.fg.Assignment;
 import com.indago.fg.AssignmentMapper;
 import com.indago.fg.FactorGraphFactory;
-import com.indago.fg.FactorGraphFactory.MappedFactorGraph;
+import com.indago.fg.MappedFactorGraph;
 import com.indago.fg.UnaryCostConstraintGraph;
 import com.indago.fg.Variable;
 import com.indago.ilp.SolveGurobi;
@@ -230,7 +230,7 @@ public class FeatureExampleOnRealSegments_WIP {
 			final MappedFactorGraph fgAndMapper =
 					FactorGraphFactory.createFactorGraph( problem );
 			final UnaryCostConstraintGraph fg = fgAndMapper.getFg();
-			final AssignmentMapper< Variable, IndicatorVar > fgMapper = fgAndMapper.getMapper();
+			final AssignmentMapper< Variable, IndicatorVar > fgMapper = fgAndMapper.getAssmntMapper();
 
 			final Assignment< Variable > fgSolution = SolveGurobi.staticSolve( fg );
 			final Assignment< IndicatorVar > problemSolution = fgMapper.map( fgSolution );

@@ -5,11 +5,11 @@ import java.util.Collection;
 
 public class AssignmentVars {
 
-	Collection< AssignmentVar > all = new ArrayList< AssignmentVar >();
-	Collection< MovementHypothesis > moves = new ArrayList< MovementHypothesis >();
-	Collection< DivisionHypothesis > divisions = new ArrayList< DivisionHypothesis >();
-	Collection< AppearanceHypothesis > apps = new ArrayList< AppearanceHypothesis >();
-	Collection< DisappearanceHypothesis > disapps = new ArrayList< DisappearanceHypothesis >();
+	private final Collection< AssignmentVar > all = new ArrayList< AssignmentVar >();
+	private final Collection< MovementHypothesis > moves = new ArrayList< MovementHypothesis >();
+	private final Collection< DivisionHypothesis > divisions = new ArrayList< DivisionHypothesis >();
+	private final Collection< AppearanceHypothesis > apps = new ArrayList< AppearanceHypothesis >();
+	private final Collection< DisappearanceHypothesis > disapps = new ArrayList< DisappearanceHypothesis >();
 
 	public Collection< AssignmentVar > getAllAssignments() {
 		return all;
@@ -32,6 +32,9 @@ public class AssignmentVars {
 	}
 
 	public void add( final AssignmentVar var ) {
+		if ( var == null ) {
+			throw new IllegalArgumentException( "'null' cannot be added to AssignmentVars." );
+		}
 		all.add( var );
 		if ( var instanceof MovementHypothesis ) {
 			moves.add( ( MovementHypothesis ) var );

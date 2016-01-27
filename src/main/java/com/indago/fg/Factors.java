@@ -16,4 +16,24 @@ public class Factors {
 	public static Factor atMostOneConstraint( final List< Variable > variables ) {
 		return new Factor( Constraints.atMostOneConstraint( variables.size() ), variables );
 	}
+
+	public static Factor firstExactlyWithOneOtherOrNoneConstraint( final Variable... variables ) {
+		return new Factor( Constraints
+				.firstExactlyWithOneOtherOrNoneConstraint( variables.length ), variables );
+	}
+
+	public static Factor firstExactlyWithOneOtherOrNoneConstraint( final List< Variable > variables ) {
+		return new Factor( Constraints
+				.firstExactlyWithOneOtherOrNoneConstraint( variables.size() ), variables );
+	}
+
+	public static Factor firstImpliesAtLeastOneOtherConstraint( final Variable... variables ) {
+		return new Factor( Constraints
+				.firstImpliesAtLeastOneOtherConstraint( variables.length ), variables );
+	}
+
+	public static Factor firstImpliesAtLeastOneOtherConstraint( final List< Variable > variables ) {
+		return new Factor( Constraints
+				.firstImpliesAtLeastOneOtherConstraint( variables.size() ), variables );
+	}
 }
