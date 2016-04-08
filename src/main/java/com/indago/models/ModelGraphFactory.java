@@ -13,7 +13,7 @@ import com.indago.data.segmentation.LabelingSegment;
 import com.indago.fg.Assignment;
 import com.indago.fg.AssignmentMapper;
 import com.indago.models.segments.ConflictSet;
-import com.indago.models.segments.SegmentVar;
+import com.indago.models.segments.SegmentNode;
 import com.indago.old_fg.CostsFactory;
 
 import net.imglib2.util.Pair;
@@ -24,16 +24,16 @@ import net.imglib2.util.ValuePair;
  */
 public class ModelGraphFactory {
 
-	public static Pair< SegmentationModel, AssignmentMapper< SegmentVar, LabelingSegment > > createSegmentationProblem(
+	public static Pair< SegmentationProblem, AssignmentMapper< SegmentNode, LabelingSegment > > createSegmentationProblem(
 			final Collection< LabelingSegment > segments,
 			final ConflictGraph< LabelingSegment > conflicts,
 			final CostsFactory< ? super LabelingSegment > segmentCosts ) {
 
-		final ArrayList< SegmentVar > segmentVars = new ArrayList< >();
+		final ArrayList< SegmentNode > segmentVars = new ArrayList< >();
 
-		final Map< LabelingSegment, SegmentVar > varmap = new HashMap< >();
+		final Map< LabelingSegment, SegmentNode > varmap = new HashMap< >();
 		for ( final LabelingSegment segment : segments ) {
-			final SegmentVar var = new SegmentVar( segment, segmentCosts.getCost( segment ) );
+			final SegmentNode var = new SegmentNode( segment, segmentCosts.getCost( segment ) );
 			varmap.put( segment, var );
 			segmentVars.add( var );
 		}
@@ -47,10 +47,10 @@ public class ModelGraphFactory {
 			conflictSets.add( cs );
 		}
 
-		final SegmentationModel problem = new SegmentationModel() {
+		final SegmentationProblem problem = new SegmentationProblem() {
 
 			@Override
-			public Collection< SegmentVar > getSegments() {
+			public Collection< SegmentNode > getSegments() {
 				return segmentVars;
 			}
 
@@ -66,10 +66,10 @@ public class ModelGraphFactory {
 
 		};
 
-		final AssignmentMapper< SegmentVar, LabelingSegment > mapper =
-				new AssignmentMapper< SegmentVar, LabelingSegment >() {
+		final AssignmentMapper< SegmentNode, LabelingSegment > mapper =
+				new AssignmentMapper< SegmentNode, LabelingSegment >() {
 			@Override
-					public Assignment< LabelingSegment > map( final Assignment< ? super SegmentVar > assignment ) {
+					public Assignment< LabelingSegment > map( final Assignment< ? super SegmentNode > assignment ) {
 						return new Assignment< LabelingSegment >() {
 					@Override
 							public boolean isAssigned( final LabelingSegment variable ) {

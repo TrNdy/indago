@@ -31,10 +31,10 @@ import com.indago.fg.MappedFactorGraph;
 import com.indago.fg.UnaryCostConstraintGraph;
 import com.indago.fg.Variable;
 import com.indago.ilp.SolveGurobi;
-import com.indago.models.IndicatorVar;
+import com.indago.models.IndicatorNode;
 import com.indago.models.ModelGraphFactory;
-import com.indago.models.SegmentationModel;
-import com.indago.models.segments.SegmentVar;
+import com.indago.models.SegmentationProblem;
+import com.indago.models.segments.SegmentNode;
 import com.indago.weka.ArffBuilder;
 
 import gurobi.GRBException;
@@ -218,22 +218,22 @@ public class FeatureExampleOnRealSegments_WIP {
 
 			System.out.print( "\tOptimum search for Image " + i + ": Finding optimum..." );
 
-			final Pair< SegmentationModel, AssignmentMapper< SegmentVar, LabelingSegment > > problemAndMapper =
+			final Pair< SegmentationProblem, AssignmentMapper< SegmentNode, LabelingSegment > > problemAndMapper =
 					ModelGraphFactory.createSegmentationProblem(
 							costs.getSegments(),
 							costs.getConflictGraph(),
 							costs );
-			final SegmentationModel problem = problemAndMapper.getA();
-			final AssignmentMapper< SegmentVar, LabelingSegment > problemMapper = problemAndMapper.getB();
+			final SegmentationProblem problem = problemAndMapper.getA();
+			final AssignmentMapper< SegmentNode, LabelingSegment > problemMapper = problemAndMapper.getB();
 
 
 			final MappedFactorGraph fgAndMapper =
 					FactorGraphFactory.createFactorGraph( problem );
 			final UnaryCostConstraintGraph fg = fgAndMapper.getFg();
-			final AssignmentMapper< Variable, IndicatorVar > fgMapper = fgAndMapper.getAssmntMapper();
+			final AssignmentMapper< Variable, IndicatorNode > fgMapper = fgAndMapper.getAssmntMapper();
 
 			final Assignment< Variable > fgSolution = SolveGurobi.staticSolve( fg );
-			final Assignment< IndicatorVar > problemSolution = fgMapper.map( fgSolution );
+			final Assignment< IndicatorNode > problemSolution = fgMapper.map( fgSolution );
 			final Assignment< LabelingSegment > assignment = problemMapper.map( problemSolution );
 
 //			final FactorGraphPlus< LabelingSegment > fgplus = FactorGraphFactory.createFromConflictGraph(

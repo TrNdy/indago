@@ -1,39 +1,39 @@
 package com.indago.models.assignments;
 
-import com.indago.models.segments.SegmentVar;
+import com.indago.models.segments.SegmentNode;
 
-public class MovementHypothesis extends AssignmentVar
+public class MovementHypothesis extends AssignmentNode
 {
 
 	private double cost;
-	private final SegmentVar src;
-	private final SegmentVar dest;
+	private final SegmentNode src;
+	private final SegmentNode dest;
 
 	/**
 	 * @param cost
 	 */
 	public MovementHypothesis (
 			final double cost,
-			final SegmentVar src,
-			final SegmentVar dest ) {
+			final SegmentNode src,
+			final SegmentNode dest ) {
 		super( cost );
 		this.src = src;
 		this.dest = dest;
 	}
 
 	/**
-	 * @see com.indago.models.IndicatorVar#getCost()
+	 * @see com.indago.models.IndicatorNode#getCost()
 	 */
 	@Override
 	public double getCost() {
 		return cost;
 	}
 
-	public SegmentVar getSrc() {
+	public SegmentNode getSrc() {
 		return src;
 	}
 
-	public SegmentVar getDest() {
+	public SegmentNode getDest() {
 		return dest;
 	}
 

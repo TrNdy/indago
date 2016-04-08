@@ -1,10 +1,10 @@
 package com.indago.models;
 
-public class IndicatorVar {
+public class IndicatorNode {
 
 	private final double cost;
 
-	public IndicatorVar( final double cost ) {
+	public IndicatorNode( final double cost ) {
 		this.cost = cost;
 	}
 

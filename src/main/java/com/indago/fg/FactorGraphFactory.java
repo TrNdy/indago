@@ -9,31 +9,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.indago.models.IndicatorVar;
-import com.indago.models.SegmentationModel;
-import com.indago.models.TrackingModel;
+import com.indago.models.IndicatorNode;
+import com.indago.models.SegmentationProblem;
+import com.indago.models.TrackingProblem;
 import com.indago.models.assignments.AppearanceHypothesis;
-import com.indago.models.assignments.AssignmentVar;
+import com.indago.models.assignments.AssignmentNode;
 import com.indago.models.assignments.DisappearanceHypothesis;
 import com.indago.models.assignments.DivisionHypothesis;
 import com.indago.models.assignments.MovementHypothesis;
 import com.indago.models.segments.ConflictSet;
-import com.indago.models.segments.SegmentVar;
+import com.indago.models.segments.SegmentNode;
 
 /**
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ * @author Florian Jug &lt;jug@mpi-cbg.de&gt;
  */
 public class FactorGraphFactory {
 
-	public static MappedFactorGraph createFactorGraph( final SegmentationModel segmentationModel ) {
+	public static MappedFactorGraph createFactorGraph( final SegmentationProblem segmentationModel ) {
 
-		final Map< IndicatorVar, Variable > varmap = new HashMap< >();
+		final Map< IndicatorNode, Variable > varmap = new HashMap< >();
 
-		final Collection< Variable > variables = varmap.values();
 		final ArrayList< Factor > unaries = new ArrayList<>();
 		final ArrayList< Factor > constraints = new ArrayList<>();
 
-		for ( final SegmentVar segvar : segmentationModel.getSegments() ) {
+		for ( final SegmentNode segvar : segmentationModel.getSegments() ) {
 			final Variable var = Variables.binary();
 			varmap.put( segvar, var );
 			unaries.add( Factors.unary( var, 0.0, segvar.getCost() ) );
@@ -41,24 +41,25 @@ public class FactorGraphFactory {
 
 		for ( final ConflictSet conflictSet : segmentationModel.getConflictSets() ) {
 			final ArrayList< Variable > vars = new ArrayList<>();
-			for ( final SegmentVar segvar : conflictSet )
+			for ( final SegmentNode segvar : conflictSet )
 				vars.add( varmap.get( segvar ) );
 			constraints.add( Factors.atMostOneConstraint( vars ) );
 		}
 
+		final Collection< Variable > variables = varmap.values();
 		final UnaryCostConstraintGraph fg = new UnaryCostConstraintGraph( variables, unaries, constraints );
-		final AssignmentMapper< Variable, IndicatorVar > mapper =
-				new AssignmentMapper< Variable, IndicatorVar >() {
+		final AssignmentMapper< Variable, IndicatorNode > mapper =
+				new AssignmentMapper< Variable, IndicatorNode >() {
 			@Override
-			public Assignment< IndicatorVar > map( final Assignment< ? super Variable > assignment ) {
-						return new Assignment< IndicatorVar >() {
+			public Assignment< IndicatorNode > map( final Assignment< ? super Variable > assignment ) {
+						return new Assignment< IndicatorNode >() {
 					@Override
-					public boolean isAssigned( final IndicatorVar variable ) {
+					public boolean isAssigned( final IndicatorNode variable ) {
 						return assignment.isAssigned( varmap.get( variable ) );
 					}
 
 					@Override
-					public int getAssignment( final IndicatorVar variable ) {
+					public int getAssignment( final IndicatorNode variable ) {
 						return assignment.getAssignment( varmap.get( variable ) );
 					}
 				};
@@ -68,21 +69,27 @@ public class FactorGraphFactory {
 		return new MappedFactorGraph( fg, varmap, mapper );
 	}
 
-	public static MappedFactorGraph createFactorGraph( final TrackingModel trackingModel ) {
+	public static MappedFactorGraph createFactorGraph( final TrackingProblem trackingModel ) {
 
-		final Map< IndicatorVar, Variable > varmap = new HashMap< >();
+		final Map< IndicatorNode, Variable > varmap = new HashMap< >();
 
 		final ArrayList< Variable > variables = new ArrayList< >();
 		final ArrayList< Factor > unaries = new ArrayList< >();
 		final ArrayList< Factor > constraints = new ArrayList< >();
 
 		// Create FGs for SegmentationModels (timepoints)
-		for ( final SegmentationModel frameModel : trackingModel.getTimepoints() ) {
+		for ( final SegmentationProblem frameModel : trackingModel.getTimepoints() ) {
 			final MappedFactorGraph frameMFG = FactorGraphFactory.createFactorGraph( frameModel );
 
+			System.out.println(
+					"#vars/#unaries/#constraints = " +
+							frameMFG.getVarmap().keySet().size() + "/" +
+							frameMFG.getFg().getUnaries().size() + "/" +
+							frameMFG.getFg().getConstraints().size() );
+
 			// copy generated FG components here
-			// note: variables get collected below, after connections frames
-			for ( final IndicatorVar segvar : frameMFG.getVarmap().keySet() ) {
+			// note: variables get collected below, after connecting frames
+			for ( final IndicatorNode segvar : frameMFG.getVarmap().keySet() ) {
 				varmap.put( segvar, frameMFG.getVarmap().get( segvar ) );
 			}
 			unaries.addAll( frameMFG.getFg().getUnaries() );
@@ -91,9 +98,9 @@ public class FactorGraphFactory {
 
 		// Connect timepoints as described in given model graph
 		for ( int frameId = 0; frameId < trackingModel.getTimepoints().size(); frameId++ ) {
-			final SegmentationModel frameOneSegModel = trackingModel.getTimepoints().get( frameId );
+			final SegmentationProblem frameOneSegModel = trackingModel.getTimepoints().get( frameId );
 
-			for ( final SegmentVar segVar : frameOneSegModel.getSegments() ) {
+			for ( final SegmentNode segVar : frameOneSegModel.getSegments() ) {
 
 				for ( final AppearanceHypothesis app : segVar.getInAssignments().getAppearances() ) {
 					final Variable toFgVar = varmap.get( app.getDest() );
@@ -135,17 +142,19 @@ public class FactorGraphFactory {
 
 		// Add continuation constraints (sum left NH = sum right NH = value segVar)
 		for ( int frameId = 0; frameId < trackingModel.getTimepoints().size(); frameId++ ) {
-			final SegmentationModel frameModel = trackingModel.getTimepoints().get( frameId );
+			final SegmentationProblem frameModel = trackingModel.getTimepoints().get( frameId );
 
-			for ( final SegmentVar segVar : frameModel.getSegments() ) {
+			for ( final SegmentNode segVar : frameModel.getSegments() ) {
 				final List< Variable > varsToConnect1 = new ArrayList< Variable >();
-				for ( final AssignmentVar assVar : segVar.getInAssignments().getAllAssignments() ) {
+				varsToConnect1.add( varmap.get( segVar ) );
+				for ( final AssignmentNode assVar : segVar.getInAssignments().getAllAssignments() ) {
 					varsToConnect1.add( varmap.get( assVar ) );
 				}
 				constraints.add( Factors.firstExactlyWithOneOtherOrNoneConstraint( varsToConnect1 ) );
 
 				final List< Variable > varsToConnect2 = new ArrayList< Variable >();
-				for ( final AssignmentVar assVar : segVar.getOutAssignments().getAllAssignments() ) {
+				varsToConnect2.add( varmap.get( segVar ) );
+				for ( final AssignmentNode assVar : segVar.getOutAssignments().getAllAssignments() ) {
 					varsToConnect2.add( varmap.get( assVar ) );
 				}
 				constraints.add( Factors.firstExactlyWithOneOtherOrNoneConstraint( varsToConnect2 ) );
@@ -158,18 +167,18 @@ public class FactorGraphFactory {
 		}
 
 		final UnaryCostConstraintGraph fg = new UnaryCostConstraintGraph( variables, unaries, constraints );
-		final AssignmentMapper< Variable, IndicatorVar > mapper = new AssignmentMapper< Variable, IndicatorVar >() {
+		final AssignmentMapper< Variable, IndicatorNode > mapper = new AssignmentMapper< Variable, IndicatorNode >() {
 			@Override
-			public Assignment< IndicatorVar > map( final Assignment< ? super Variable > assignment ) {
-				return new Assignment< IndicatorVar >() {
+			public Assignment< IndicatorNode > map( final Assignment< ? super Variable > assignment ) {
+				return new Assignment< IndicatorNode >() {
 
 					@Override
-					public boolean isAssigned( final IndicatorVar variable ) {
+					public boolean isAssigned( final IndicatorNode variable ) {
 						return assignment.isAssigned( varmap.get( variable ) );
 					}
 
 					@Override
-					public int getAssignment( final IndicatorVar variable ) {
+					public int getAssignment( final IndicatorNode variable ) {
 						return assignment.getAssignment( varmap.get( variable ) );
 					}
 				};

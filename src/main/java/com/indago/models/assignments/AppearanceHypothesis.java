@@ -1,21 +1,21 @@
 package com.indago.models.assignments;
 
-import com.indago.models.segments.SegmentVar;
+import com.indago.models.segments.SegmentNode;
 
-public class AppearanceHypothesis extends AssignmentVar
+public class AppearanceHypothesis extends AssignmentNode
 {
 
-	private final SegmentVar dest;
+	private final SegmentNode dest;
 
 	/**
 	 * @param cost
 	 */
-	public AppearanceHypothesis( final double cost, final SegmentVar dest ) {
+	public AppearanceHypothesis( final double cost, final SegmentNode dest ) {
 		super( cost );
 		this.dest = dest;
 	}
 
-	public SegmentVar getDest() {
+	public SegmentNode getDest() {
 		return dest;
 	}
 }

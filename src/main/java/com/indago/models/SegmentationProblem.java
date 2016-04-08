@@ -3,13 +3,13 @@ package com.indago.models;
 import java.util.Collection;
 
 import com.indago.models.segments.ConflictSet;
-import com.indago.models.segments.SegmentVar;
+import com.indago.models.segments.SegmentNode;
 
-public interface SegmentationModel {
+public interface SegmentationProblem {
 
 	public int getTime();
 
-	public Collection< SegmentVar > getSegments();
+	public Collection< SegmentNode > getSegments();
 
 	public Collection< ConflictSet > getConflictSets();
 

@@ -33,7 +33,7 @@ public class Constraints {
 			final double[] coefficients = new double[ firstExactlyWithOneOtherOrNoneConstraints.size() ];
 			Arrays.fill( coefficients, -1 );
 			if ( coefficients.length > 0 ) {
-				coefficients[ 0 ] = firstExactlyWithOneOtherOrNoneConstraints.size();
+				coefficients[ 0 ] = 1;
 			}
 			final LinearConstraint c = new LinearConstraint(
 					coefficients,
@@ -50,7 +50,7 @@ public class Constraints {
 			final double[] coefficients = new double[ firstImpliesAtLeastOneOtherConstraints.size() ];
 			Arrays.fill( coefficients, -1 );
 			if ( coefficients.length > 0 ) {
-				coefficients[ 0 ] = firstImpliesAtLeastOneOtherConstraints.size();
+				coefficients[ 0 ] = 1;
 			}
 			final LinearConstraint c = new LinearConstraint(
 					coefficients,

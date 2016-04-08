@@ -3,15 +3,15 @@ package com.indago.models.assignments;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class AssignmentVars {
+public class AssignmentNodes {
 
-	private final Collection< AssignmentVar > all = new ArrayList< AssignmentVar >();
+	private final Collection< AssignmentNode > all = new ArrayList< AssignmentNode >();
 	private final Collection< MovementHypothesis > moves = new ArrayList< MovementHypothesis >();
 	private final Collection< DivisionHypothesis > divisions = new ArrayList< DivisionHypothesis >();
 	private final Collection< AppearanceHypothesis > apps = new ArrayList< AppearanceHypothesis >();
 	private final Collection< DisappearanceHypothesis > disapps = new ArrayList< DisappearanceHypothesis >();
 
-	public Collection< AssignmentVar > getAllAssignments() {
+	public Collection< AssignmentNode > getAllAssignments() {
 		return all;
 	}
 
@@ -31,7 +31,7 @@ public class AssignmentVars {
 		return disapps;
 	}
 
-	public void add( final AssignmentVar var ) {
+	public void add( final AssignmentNode var ) {
 		if ( var == null ) {
 			throw new IllegalArgumentException( "'null' cannot be added to AssignmentVars." );
 		}

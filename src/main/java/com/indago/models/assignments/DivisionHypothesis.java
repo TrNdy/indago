@@ -1,22 +1,22 @@
 package com.indago.models.assignments;
 
-import com.indago.models.segments.SegmentVar;
+import com.indago.models.segments.SegmentNode;
 
-public class DivisionHypothesis extends AssignmentVar {
+public class DivisionHypothesis extends AssignmentNode {
 
 	private double cost;
-	private final SegmentVar src;
-	private final SegmentVar dest1;
-	private final SegmentVar dest2;
+	private final SegmentNode src;
+	private final SegmentNode dest1;
+	private final SegmentNode dest2;
 
 	/**
 	 * @param cost
 	 */
 	public DivisionHypothesis(
 			final double cost,
-			final SegmentVar src,
-			final SegmentVar dest1,
-			final SegmentVar dest2 ) {
+			final SegmentNode src,
+			final SegmentNode dest1,
+			final SegmentNode dest2 ) {
 		super( cost );
 		this.src = src;
 		this.dest1 = dest1;
@@ -24,22 +24,22 @@ public class DivisionHypothesis extends AssignmentVar {
 	}
 
 	/**
-	 * @see com.indago.models.IndicatorVar#getCost()
+	 * @see com.indago.models.IndicatorNode#getCost()
 	 */
 	@Override
 	public double getCost() {
 		return cost;
 	}
 
-	public SegmentVar getSrc() {
+	public SegmentNode getSrc() {
 		return src;
 	}
 
-	public SegmentVar getDest1() {
+	public SegmentNode getDest1() {
 		return dest1;
 	}
 
-	public SegmentVar getDest2() {
+	public SegmentNode getDest2() {
 		return dest2;
 	}
 
