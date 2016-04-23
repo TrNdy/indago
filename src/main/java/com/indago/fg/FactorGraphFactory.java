@@ -9,16 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.indago.models.IndicatorNode;
-import com.indago.models.SegmentationProblem;
-import com.indago.models.TrackingProblem;
-import com.indago.models.assignments.AppearanceHypothesis;
-import com.indago.models.assignments.AssignmentNode;
-import com.indago.models.assignments.DisappearanceHypothesis;
-import com.indago.models.assignments.DivisionHypothesis;
-import com.indago.models.assignments.MovementHypothesis;
-import com.indago.models.segments.ConflictSet;
-import com.indago.models.segments.SegmentNode;
+import com.indago.pg.IndicatorNode;
+import com.indago.pg.SegmentationProblem;
+import com.indago.pg.TrackingProblem;
+import com.indago.pg.assignments.AppearanceHypothesis;
+import com.indago.pg.assignments.AssignmentNode;
+import com.indago.pg.assignments.DisappearanceHypothesis;
+import com.indago.pg.assignments.DivisionHypothesis;
+import com.indago.pg.assignments.MovementHypothesis;
+import com.indago.pg.segments.ConflictSet;
+import com.indago.pg.segments.SegmentNode;
 
 /**
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;

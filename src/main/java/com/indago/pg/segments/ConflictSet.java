@@ -1,4 +1,4 @@
-package com.indago.models.segments;
+package com.indago.pg.segments;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,6 @@
-package com.indago.models.assignments;
+package com.indago.pg.assignments;
 
-import com.indago.models.segments.SegmentNode;
+import com.indago.pg.segments.SegmentNode;
 
 public class DisappearanceHypothesis extends AssignmentNode {
 

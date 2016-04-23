@@ -2,7 +2,7 @@ package com.indago.fg;
 
 import java.util.Map;
 
-import com.indago.models.IndicatorNode;
+import com.indago.pg.IndicatorNode;
 
 public class MappedFactorGraph {
 

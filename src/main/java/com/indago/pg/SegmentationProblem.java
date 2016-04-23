@@ -1,9 +1,9 @@
-package com.indago.models;
+package com.indago.pg;
 
 import java.util.Collection;
 
-import com.indago.models.segments.ConflictSet;
-import com.indago.models.segments.SegmentNode;
+import com.indago.pg.segments.ConflictSet;
+import com.indago.pg.segments.SegmentNode;
 
 public interface SegmentationProblem {
 

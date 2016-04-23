@@ -1,9 +1,9 @@
-package com.indago.models.segments;
+package com.indago.pg.segments;
 
 import com.indago.data.segmentation.LabelingSegment;
-import com.indago.models.IndicatorNode;
-import com.indago.models.SegmentationProblem;
-import com.indago.models.assignments.AssignmentNodes;
+import com.indago.pg.IndicatorNode;
+import com.indago.pg.SegmentationProblem;
+import com.indago.pg.assignments.AssignmentNodes;
 
 public class SegmentNode extends IndicatorNode {
 

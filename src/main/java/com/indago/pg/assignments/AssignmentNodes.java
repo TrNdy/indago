@@ -1,4 +1,4 @@
-package com.indago.models.assignments;
+package com.indago.pg.assignments;
 
 import java.util.ArrayList;
 import java.util.Collection;

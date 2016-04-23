@@ -1,6 +1,6 @@
-package com.indago.models.assignments;
+package com.indago.pg.assignments;
 
-import com.indago.models.segments.SegmentNode;
+import com.indago.pg.segments.SegmentNode;
 
 public class DivisionHypothesis extends AssignmentNode {
 
@@ -24,7 +24,7 @@ public class DivisionHypothesis extends AssignmentNode {
 	}
 
 	/**
-	 * @see com.indago.models.IndicatorNode#getCost()
+	 * @see com.indago.pg.IndicatorNode#getCost()
 	 */
 	@Override
 	public double getCost() {

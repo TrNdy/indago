@@ -1,4 +1,4 @@
-package com.indago.models;
+package com.indago.pg;
 
 import java.util.List;
 

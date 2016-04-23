@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.indago.models;
+package com.indago.pg;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,9 +12,9 @@ import com.indago.data.segmentation.ConflictGraph;
 import com.indago.data.segmentation.LabelingSegment;
 import com.indago.fg.Assignment;
 import com.indago.fg.AssignmentMapper;
-import com.indago.models.segments.ConflictSet;
-import com.indago.models.segments.SegmentNode;
 import com.indago.old_fg.CostsFactory;
+import com.indago.pg.segments.ConflictSet;
+import com.indago.pg.segments.SegmentNode;
 
 import net.imglib2.util.Pair;
 import net.imglib2.util.ValuePair;

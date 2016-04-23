@@ -31,10 +31,10 @@ import com.indago.fg.MappedFactorGraph;
 import com.indago.fg.UnaryCostConstraintGraph;
 import com.indago.fg.Variable;
 import com.indago.ilp.SolveGurobi;
-import com.indago.models.IndicatorNode;
-import com.indago.models.ModelGraphFactory;
-import com.indago.models.SegmentationProblem;
-import com.indago.models.segments.SegmentNode;
+import com.indago.pg.IndicatorNode;
+import com.indago.pg.ModelGraphFactory;
+import com.indago.pg.SegmentationProblem;
+import com.indago.pg.segments.SegmentNode;
 import com.indago.weka.ArffBuilder;
 
 import gurobi.GRBException;

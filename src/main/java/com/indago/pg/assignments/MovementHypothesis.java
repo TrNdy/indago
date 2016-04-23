@@ -1,6 +1,6 @@
-package com.indago.models.assignments;
+package com.indago.pg.assignments;
 
-import com.indago.models.segments.SegmentNode;
+import com.indago.pg.segments.SegmentNode;
 
 public class MovementHypothesis extends AssignmentNode
 {
@@ -22,7 +22,7 @@ public class MovementHypothesis extends AssignmentNode
 	}
 
 	/**
-	 * @see com.indago.models.IndicatorNode#getCost()
+	 * @see com.indago.pg.IndicatorNode#getCost()
 	 */
 	@Override
 	public double getCost() {

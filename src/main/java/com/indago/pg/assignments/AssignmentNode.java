@@ -1,6 +1,6 @@
-package com.indago.models.assignments;
+package com.indago.pg.assignments;
 
-import com.indago.models.IndicatorNode;
+import com.indago.pg.IndicatorNode;
 
 public class AssignmentNode extends IndicatorNode {
 
