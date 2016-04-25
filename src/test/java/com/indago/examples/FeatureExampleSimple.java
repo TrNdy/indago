@@ -6,9 +6,9 @@ package com.indago.examples;
 import org.scijava.Context;
 
 import net.imagej.ops.OpService;
-import net.imagej.ops.Ops.Stats.Mean;
-import net.imagej.ops.special.Computers;
-import net.imagej.ops.special.UnaryComputerOp;
+import net.imagej.ops.Ops.Filter.Mean;
+import net.imagej.ops.special.computer.Computers;
+import net.imagej.ops.special.computer.UnaryComputerOp;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -44,12 +44,12 @@ public class FeatureExampleSimple {
 		 */
 		// 1. Create ResolvedOp (my naming sucks, ideas welcome)
 		final DoubleType mean = new DoubleType();
-		final UnaryComputerOp< Img< FloatType >, DoubleType > meanOp = Computers.unary(ops, Mean.class, DoubleType.class, rndImgA );
+		final UnaryComputerOp< Img< FloatType >, DoubleType > meanOp = Computers.unary( ops, Mean.class, DoubleType.class, rndImgA );
 
 		// 2. Calculate and print results
 		meanOp.compute1( rndImgA, mean );
-		System.out.println("Mean: " + mean.get());
+		System.out.println( "Mean: " + mean.get() );
 		meanOp.compute1( rndImgB, mean );
-		System.out.println("Mean: " + mean.get());
+		System.out.println( "Mean: " + mean.get() );
 	}
 }
