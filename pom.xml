@@ -8,16 +8,17 @@
 		<version>15.5.0</version>
 	</parent>
 
+ 	<properties>
+<!-- 		<enforcer.skip>true</enforcer.skip> -->
+		<jung2.version>2.0.1</jung2.version>
+		<scijava.jvm.version>1.8</scijava.jvm.version>
+	</properties>
+	
 	<groupId>com.indago</groupId>
 	<artifactId>Indago</artifactId>
 	<version>0.1.1-SNAPSHOT</version>
 
 	<description>indigare (ital.) - investigate.</description>
-
-	<properties>
-		<jung2.version>2.0.1</jung2.version>
-		<scijava.jvm.version>1.8</scijava.jvm.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -34,11 +35,11 @@
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
-			<artifactId>imglib2-algorithm</artifactId>
+			<artifactId>imglib2-ui</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
-			<artifactId>imglib2-ui</artifactId>
+			<artifactId>imglib2-algorithm</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>

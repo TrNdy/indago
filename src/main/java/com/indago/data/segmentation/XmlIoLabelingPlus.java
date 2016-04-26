@@ -1,10 +1,5 @@
 package com.indago.data.segmentation;
 
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import io.scif.img.IO;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,18 +8,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+
+import gnu.trove.impl.Constants;
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
+import io.scif.img.IO;
 import mpicbg.spim.data.XmlHelpers;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgView;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.roi.labeling.LabelingMapping;
 import net.imglib2.type.numeric.integer.IntType;
-
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 
 /**
  * @author tpietzsch, jug
@@ -50,17 +49,22 @@ public class XmlIoLabelingPlus {
 	public static final String LABELINGTREE_FOREST_TAG = "Forest";
 	public static final String LABELINGTREE_FOREST_ROOTS_TAG = "Roots";
 
+
 	public LabelingPlus load( final String xmlFilename ) throws IOException {
+		return load( new File( xmlFilename ) );
+	}
+
+	public LabelingPlus load( final File xmlFile ) throws IOException {
 		final SAXBuilder sax = new SAXBuilder();
 		Document doc;
 		try {
-			doc = sax.build( xmlFilename );
+			doc = sax.build( xmlFile );
 		} catch ( final Exception e ) {
 			throw new IOException( e );
 		}
 		final Element root = doc.getRootElement();
 
-		final File basePath = loadBasePath( root, new File( xmlFilename ) );
+		final File basePath = loadBasePath( root, xmlFile );
 		final File indexImgFile = XmlHelpers.loadPath( root, INDEXIMG_TAG, basePath );
 		final Img< IntType > indexImg =
 				IO.openImgs(
