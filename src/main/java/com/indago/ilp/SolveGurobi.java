@@ -28,6 +28,8 @@ public class SolveGurobi {
 
 	public static File defaultLogFileDirectory = new File( "." );
 
+	public static int GRB_PRESOLVE = -1; // values are -1 (auto); 0 (off), 1 (moderate), and 2 (aggressive)
+
 	private final File logFileDirectory;
 
 	private GRBEnv env;
@@ -60,6 +62,9 @@ public class SolveGurobi {
 
 		createEnvIfNecessary();
 		final GRBModel model = new GRBModel( env );
+
+		// Set model parameters
+		model.getEnv().set( GRB.IntParam.Presolve, GRB_PRESOLVE );
 
 		// Create variables
 		final GRBVar[] vars = model.addVars( variables.size(), GRB.BINARY );
