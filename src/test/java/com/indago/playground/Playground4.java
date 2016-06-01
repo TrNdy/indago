@@ -51,7 +51,7 @@ public class Playground4 {
 			ImageJFunctions.show( ( RandomAccessibleInterval ) input );
 		}
 
-		final LabelingBuilder builder = new LabelingBuilder( input );
+		final LabelingBuilder builder = new LabelingBuilder( input ); // TODO: this might be broken, it's probably intended to call the (Dimensions) constructor, but it calls the (Img<IntType>) constructor!!!
 
 		final FilteredComponentTree tree = buildComponentTree( input, 3.0, minComponentSize, maxComponentSize, maxGrowthPerStepRatio, darkToBright, show );
 		final LabelingForest ctForest = builder.buildLabelingForest( tree );
