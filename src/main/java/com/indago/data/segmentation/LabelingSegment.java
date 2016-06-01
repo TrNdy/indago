@@ -44,7 +44,7 @@ public class LabelingSegment implements Segment {
 	 */
 	@Override
 	public boolean conflictsWith( final Segment segment ) {
-		final IterableRegion< ? > segmentRegion = ( ( LabelingSegment ) segment ).getRegion();
+		final IterableRegion< ? > segmentRegion = segment.getRegion();
 		if ( segment instanceof LabelingSegment )
 			if ( Intervals.isEmpty( Intervals.intersect( this.region, segmentRegion ) ) )
 				return false;
