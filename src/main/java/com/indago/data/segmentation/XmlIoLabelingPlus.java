@@ -17,13 +17,22 @@ import org.jdom2.output.XMLOutputter;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import ij.ImagePlus;
 import io.scif.img.IO;
 import mpicbg.spim.data.XmlHelpers;
+import net.imglib2.Cursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgView;
+import net.imglib2.img.array.ArrayCursor;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.img.basictypeaccess.array.IntArray;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.roi.labeling.LabelingMapping;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.Views;
 
 /**
  * @author tpietzsch, jug
@@ -49,6 +58,7 @@ public class XmlIoLabelingPlus {
 	public static final String LABELINGTREE_FOREST_TAG = "Forest";
 	public static final String LABELINGTREE_FOREST_ROOTS_TAG = "Roots";
 
+	public static boolean openIndexImageWithIJ = true;
 
 	public LabelingPlus load( final String xmlFilename ) throws IOException {
 		return load( new File( xmlFilename ) );
@@ -66,8 +76,9 @@ public class XmlIoLabelingPlus {
 
 		final File basePath = loadBasePath( root, xmlFile );
 		final File indexImgFile = XmlHelpers.loadPath( root, INDEXIMG_TAG, basePath );
-		final Img< IntType > indexImg =
-				IO.openImgs(
+		final Img< IntType > indexImg = openIndexImageWithIJ
+				? openIntImageFastButDangerous( indexImgFile.getAbsolutePath() )
+				: IO.openImgs(
 						indexImgFile.getAbsolutePath(),
 						new ArrayImgFactory< IntType >(),
 						new IntType() ).get( 0 ).getImg();
@@ -236,6 +247,25 @@ public class XmlIoLabelingPlus {
 		}
 
 		return labelingTree;
+	}
+
+	/**
+	 * IJ opens the int image as float32, and we convert it to a int
+	 * {@link ArrayImg}. This is a receipe for disaster but as long as the ints
+	 * in the image don't get too big it will work...
+	 */
+	private static ArrayImg< IntType, IntArray > openIntImageFastButDangerous( final String fn )
+	{
+		final ImagePlus imp = new ImagePlus( fn );
+		final Img<FloatType> wrapped = ImageJFunctions.wrapFloat( imp );
+		final long[] dimensions = new long[ wrapped.numDimensions() ];
+		wrapped.dimensions( dimensions );
+		final ArrayImg< IntType, IntArray > img = ArrayImgs.ints( dimensions );
+		final Cursor< FloatType > in = Views.flatIterable( wrapped ).cursor();
+		final ArrayCursor< IntType > out = img.cursor();
+		while( out.hasNext() )
+			out.next().set( ( int ) in.next().get() );
+		return img;
 	}
 
 	private static class SegmentLabelingSerialisation
