@@ -78,7 +78,7 @@ public class LabelingPlus
 			for ( int i = 0; i < numLabelSets; ++i ) {
 				if ( flags[ i ] ) {
 					final int fragmentIndex = fragments.size();
-					final LabelingFragment fragment = new LabelingFragment( fragmentIndex );
+					final LabelingFragment fragment = new LabelingFragment( fragmentIndex, i );
 					fragments.add( fragment );
 					for ( final LabelData label : mapping.labelsAtIndex( i ) ) {
 						fragment.getSegments().add( label );
