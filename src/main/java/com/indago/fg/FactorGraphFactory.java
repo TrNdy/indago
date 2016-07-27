@@ -39,11 +39,26 @@ public class FactorGraphFactory {
 			unaries.add( Factors.unary( var, 0.0, segvar.getCost() ) );
 		}
 
+		// CONFLICT CONSTRAINTS
 		for ( final ConflictSet conflictSet : segmentationModel.getConflictSets() ) {
 			final ArrayList< Variable > vars = new ArrayList<>();
 			for ( final SegmentNode segvar : conflictSet )
 				vars.add( varmap.get( segvar ) );
 			constraints.add( Factors.atMostOneConstraint( vars ) );
+		}
+
+		// FORCED AND AVOIDED SEGMENT NODES
+		for ( final SegmentNode forcedNode : segmentationModel.getForcedNodes() ) {
+			System.out.println( "Consider forced node: " + forcedNode.toString() );
+			final ArrayList< Variable > vars = new ArrayList<>();
+			vars.add( varmap.get( forcedNode ) );
+			constraints.add( Factors.equalOneConstraint( vars ) );
+		}
+		for ( final SegmentNode avoidedNode : segmentationModel.getAvoidedNodes() ) {
+			System.out.println( "Consider avoided node: " + avoidedNode.toString() );
+			final ArrayList< Variable > vars = new ArrayList<>();
+			vars.add( varmap.get( avoidedNode ) );
+			constraints.add( Factors.equalZeroConstraint( vars ) );
 		}
 
 		final Collection< Variable > variables = varmap.values();

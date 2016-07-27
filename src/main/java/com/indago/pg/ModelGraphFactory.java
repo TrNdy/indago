@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.indago.data.segmentation.ConflictGraph;
 import com.indago.data.segmentation.LabelingSegment;
@@ -62,6 +63,30 @@ public class ModelGraphFactory {
 			@Override
 			public int getTime() {
 				return 0;
+			}
+
+			@Override
+			public void force( final SegmentNode segVar ) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void avoid( final SegmentNode segVar ) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public Set< SegmentNode > getForcedNodes() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Set< SegmentNode > getAvoidedNodes() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 
 		};
