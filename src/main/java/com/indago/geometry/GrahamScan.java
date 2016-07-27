@@ -252,8 +252,15 @@ public final class GrahamScan {
     }
 
 	/**
+	 * Returns the area of a Convex Polygon (Convex Hull)
+	 * The coordinates (x1, y1), (x2, y2), (x3, y3), . . . , (xn, yn) of a
+	 * convex polygon are arranged in the "determinant" below.
+	 * The coordinates must be taken in counterclockwise order around the
+	 * polygon, beginning and ending at the same point.
+	 * See also: http://www.mathwords.com/a/area_convex_polygon.htm
+	 *
 	 * @param convexHull
-	 * @return
+	 * @return the area of the convex hull
 	 */
 	public static double getHullArea( final List< Point > convexHull ) {
 		double area = 0;
