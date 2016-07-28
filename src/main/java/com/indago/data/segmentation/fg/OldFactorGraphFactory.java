@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.indago.costs.CostsFactory;
 import com.indago.data.segmentation.ConflictGraph;
 import com.indago.data.segmentation.Segment;
-import com.indago.old_fg.CostsFactory;
 import com.indago.old_fg.DefaultFactorGraph;
 import com.indago.old_fg.domain.BooleanFunctionDomain;
 import com.indago.old_fg.factor.BooleanFactor;

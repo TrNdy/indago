@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.indago.old_fg;
+package com.indago.costs;
 
 /**
  * @author jug

@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.indago.costs.CostsFactory;
 import com.indago.data.segmentation.ConflictGraph;
 import com.indago.data.segmentation.LabelingSegment;
 import com.indago.fg.Assignment;
 import com.indago.fg.AssignmentMapper;
-import com.indago.old_fg.CostsFactory;
 import com.indago.pg.segments.ConflictSet;
 import com.indago.pg.segments.SegmentNode;
 
