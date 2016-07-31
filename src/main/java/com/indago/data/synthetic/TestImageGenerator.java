@@ -1,7 +1,5 @@
 package com.indago.data.synthetic;
 
-import ij.IJ;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,11 +11,12 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import com.indago.data.segmentation.DataMover;
 import com.indago.data.segmentation.RandomForestFactory;
 import com.indago.data.segmentation.RealDoubleNormalizeConverter;
 import com.indago.iddea.view.component.IddeaComponent;
+import com.indago.io.DataMover;
 
+import ij.IJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
 import net.imglib2.img.Img;

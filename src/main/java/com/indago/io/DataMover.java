@@ -3,12 +3,16 @@
  */
 package com.indago.io;
 
+import java.util.List;
+
+import io.scif.img.ImgIOException;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.NativeType;
@@ -264,25 +268,25 @@ public class DataMover {
 
 					( ( IntType ) targetCursor.get() ).set( ( ( UnsignedShortType ) sourceRandomAccess.get() ).get() );
 				}
-			} else
-			if ( targetType instanceof ARGBType ) {
-				final Cursor< TT > targetCursor = target.localizingCursor();
-				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-				int v;
-				while ( targetCursor.hasNext() ) {
-					targetCursor.fwd();
-					sourceRandomAccess.setPosition( targetCursor );
-					try {
-						v =
-								Math.round( ( ( UnsignedShortType ) sourceRandomAccess.get() ).getRealFloat() * 255 );
-					} catch ( final ArrayIndexOutOfBoundsException e ) {
-						v = 255; // If image-sizes do not match we pad with white pixels...
-					}
-					if ( v > 255 ) { throw new Exception( "TODO: in this case (source in not within [0,1]) I did not finish the code!!! Now would likely be a good time... ;)" ); }
-					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-				}
-			} else {
-				throwException = true;
+//			} else
+//			if ( targetType instanceof ARGBType ) {
+//				final Cursor< TT > targetCursor = target.localizingCursor();
+//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
+//				int v;
+//				while ( targetCursor.hasNext() ) {
+//					targetCursor.fwd();
+//					sourceRandomAccess.setPosition( targetCursor );
+//					try {
+//						v =
+//								Math.round( ( ( UnsignedShortType ) sourceRandomAccess.get() ).getRealFloat() * 255 );
+//					} catch ( final ArrayIndexOutOfBoundsException e ) {
+//						v = 255; // If image-sizes do not match we pad with white pixels...
+//					}
+//					if ( v > 255 ) { throw new Exception( "TODO: in this case (source in not within [0,1]) I did not finish the code!!! Now would likely be a good time... ;)" ); }
+//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
+//				}
+//			} else {
+//				throwException = true;
 			}
 		} else if ( sourceType instanceof ARGBType ) {
 
@@ -409,4 +413,38 @@ public class DataMover {
 //		if ( throwException )
 //			throw new Exception( "Convertion between the given NativeTypes not implemented!" );
 //	}
+
+	public static < T extends RealType< T > & NativeType< T > > Img< T > stackThemAsFrames( final List< Img< T > > imageList )
+			throws ImgIOException, IncompatibleTypeException, Exception {
+
+		Img< T > stack = null;
+
+		final long width = imageList.get( 0 ).dimension( 0 );
+		final long height = imageList.get( 0 ).dimension( 1 );
+		final long channels = imageList.get( 0 ).dimension( 2 );
+		final long frames = imageList.size();
+
+		stack = new ArrayImgFactory< T >().create( new long[] { width, height, channels, frames }, imageList.get( 0 ).firstElement() );
+
+		// Add images to stack...
+		int i = 0;
+		for ( final RandomAccessible< T > image : imageList ) {
+			final RandomAccessibleInterval< T > viewZSlize = Views.hyperSlice( stack, 3, i );
+
+			for ( int c = 0; c < channels; c++ ) {
+				final RandomAccessibleInterval< T > viewChannel = Views.hyperSlice( viewZSlize, 2, c );
+				final IterableInterval< T > iterChannel = Views.iterable( viewChannel );
+
+				if ( image.numDimensions() < 3 ) {
+					if ( c > 0 ) { throw new ImgIOException( "Not all images to be loaded contain the same number of color channels!" ); }
+					DataMover.copy( image, iterChannel );
+				} else {
+					DataMover.copy( Views.hyperSlice( image, 2, c ), iterChannel );
+				}
+			}
+			i++;
+		}
+
+		return stack;
+	}
 }
