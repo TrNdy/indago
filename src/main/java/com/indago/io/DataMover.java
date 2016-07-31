@@ -288,26 +288,26 @@ public class DataMover {
 //			} else {
 //				throwException = true;
 			}
-		} else if ( sourceType instanceof ARGBType ) {
-
-			// ARGBType --> FloatType
-			if ( targetType instanceof ARGBType ) {
-				final Cursor< TT > targetCursor = target.localizingCursor();
-				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-				double v;
-				int intRGB;
-				while ( targetCursor.hasNext() ) {
-					targetCursor.fwd();
-					sourceRandomAccess.setPosition( targetCursor );
-					intRGB = ( ( ARGBType ) sourceRandomAccess.get() ).get();
-					v =
-							0.2989 * ARGBType.red( intRGB ) + 0.5870 * ARGBType.green( intRGB ) + 0.1140 * ARGBType.blue( intRGB );
-					v /= 255;
-					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-				}
-			} else {
-				throwException = true;
-			}
+//		} else if ( sourceType instanceof ARGBType ) {
+//
+//			// ARGBType --> FloatType
+//			if ( targetType instanceof ARGBType ) {
+//				final Cursor< TT > targetCursor = target.localizingCursor();
+//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
+//				double v;
+//				int intRGB;
+//				while ( targetCursor.hasNext() ) {
+//					targetCursor.fwd();
+//					sourceRandomAccess.setPosition( targetCursor );
+//					intRGB = ( ( ARGBType ) sourceRandomAccess.get() ).get();
+//					v =
+//							0.2989 * ARGBType.red( intRGB ) + 0.5870 * ARGBType.green( intRGB ) + 0.1140 * ARGBType.blue( intRGB );
+//					v /= 255;
+//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
+//				}
+//			} else {
+//				throwException = true;
+//			}
 		} else {
 			throwException = true;
 		}
