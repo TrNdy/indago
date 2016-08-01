@@ -40,6 +40,7 @@ public class MSEBlockFlow
 
 	static protected int blockRadius = 20;
 	static protected byte maxDistance = 15;
+	static protected double scaleFactor = 1;
 
 	final static protected int pingPong( final int a, final int mod )
 	{
@@ -92,7 +93,8 @@ public class MSEBlockFlow
 			final float[] ipRPixels,
 			final float[] ipPhiPixels,
 			final int[] ipColorPixels,
-			final double max )
+			final double max,
+			final double scale )
 	{
 		final int n = ipXPixels.length;
 		for ( int i = 0; i < n; ++i )
@@ -106,7 +108,7 @@ public class MSEBlockFlow
 //				phi = 0;
 //			}
 
-			ipRPixels[ i ] = ( float )r;
+			ipRPixels[ i ] = ( float ) ( r * max / scale );
 			ipPhiPixels[ i ] = ( float )phi;
 
 			if ( r == 0.0 )
@@ -266,7 +268,8 @@ public class MSEBlockFlow
 				( float[] )r.getPixels(),
 				( float[] )phi.getPixels(),
 				( int[] )of.getPixels(),
-				maxDistance );
+				maxDistance,
+				scaleFactor );
 	}
 
 	public Img< ARGBType > getColorCircle( final int width, final int height ) {
@@ -285,6 +288,7 @@ public class MSEBlockFlow
 
 		this.blockRadius = blockRadius;
 		this.maxDistance = maxDistance;
+		this.scaleFactor = scaleFactor;
 
 //		if ( IJ.versionLessThan( "1.41n" ) ) return null;
 
