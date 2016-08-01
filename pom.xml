@@ -92,6 +92,16 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/gurobi.jar</systemPath>
 		</dependency>
+		<dependency>
+			<groupId>mpicbg</groupId>
+			<artifactId>mpicbg</artifactId>
+			<version>1.1.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>mpicbg</groupId>
+			<artifactId>mpicbg_</artifactId>
+			<version>1.1.2-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<developers>
