@@ -175,13 +175,13 @@ public class FloatTypeImgLoader {
 	 * @return
 	 * @throws ImgIOException
 	 */
-	public static RandomAccessibleInterval< FloatType > loadTiffEnsureType( final File file )
+	public static Img< FloatType > loadTiffEnsureType( final File file )
 			throws ImgIOException {
 		final Img< FloatType > img = loadTiff( file );
 
 		final long dims[] = new long[ img.numDimensions() ];
 		img.dimensions( dims );
-		final RandomAccessibleInterval< FloatType > ret =
+		final Img< FloatType > ret =
 				new ArrayImgFactory< FloatType >().create( dims, new FloatType() );
 		final IterableInterval< FloatType > iterRet = Views.iterable( ret );
 		try {

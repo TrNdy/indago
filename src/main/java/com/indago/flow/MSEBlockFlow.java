@@ -17,7 +17,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 
 /**
@@ -102,10 +101,10 @@ public class MSEBlockFlow
 			final double y = ipYPixels[ i ] / max;
 
 			final double r = Math.sqrt( x * x + y * y );
-			double phi = Math.atan2( x / r, y / r );
-			if ( Double.isNaN( phi ) ) {
-				phi = 0;
-			}
+			final double phi = Math.atan2( x / r, y / r );
+//			if ( Double.isNaN( phi ) ) {
+//				phi = 0;
+//			}
 
 			ipRPixels[ i ] = ( float )r;
 			ipPhiPixels[ i ] = ( float )phi;
@@ -278,7 +277,8 @@ public class MSEBlockFlow
 	}
 
 	final public RandomAccessibleInterval< FloatType > computeAndStoreFlow(
-			final RandomAccessibleInterval< DoubleType > input,
+			final ImagePlus imp,
+			final double scaleFactor,
 			final int blockRadius,
 			final byte maxDistance,
 			final String filename ) {
@@ -288,10 +288,10 @@ public class MSEBlockFlow
 
 //		if ( IJ.versionLessThan( "1.41n" ) ) return null;
 
-		final ImagePlus imp = ImageJFunctions.wrap( input, "input" );
 		final ImageStack seq = imp.getImageStack();
-		final ImageStack seqOpticFlow = new ImageStack( imp.getWidth(), imp.getHeight(), seq.getSize() - 1 );
-		final ImageStack seqFlowVectors = new ImageStack( imp.getWidth(), imp.getHeight(), 2 * seq.getSize() - 2 );
+		final ImageStack seqOpticFlow = new ImageStack( imp.getWidth(), imp.getHeight(), imp.getImageStack().getSize() - 1 );
+		final ImageStack seqFlowVectors =
+				new ImageStack( imp.getWidth(), imp.getHeight(), 2 * imp.getImageStack().getSize() - 2 );
 
 		FloatProcessor ip1;
 		FloatProcessor ip2 = ( FloatProcessor )seq.getProcessor( 1 ).convertToFloat();
@@ -321,12 +321,13 @@ public class MSEBlockFlow
 			IJ.showProgress( i, seq.getSize() );
 		}
 
-		impOpticFlow = new ImagePlus( imp.getTitle() + " optic flow", seqOpticFlow );
+		impOpticFlow = new ImagePlus( imp.getTitle() + " scaled optic flow", seqOpticFlow );
 		impOpticFlow.setOpenAsHyperStack( true );
 		impOpticFlow.setCalibration( imp.getCalibration() );
 		impOpticFlow.setDimensions( 1, 1, seq.getSize() - 1 );
+//		impOpticFlow.show();
 
-		final ImagePlus notYetComposite = new ImagePlus( imp.getTitle() + " flow vectors", seqFlowVectors );
+		final ImagePlus notYetComposite = new ImagePlus( imp.getTitle() + " scaled flow vectors", seqFlowVectors );
 		notYetComposite.setOpenAsHyperStack( true );
 		notYetComposite.setCalibration( imp.getCalibration() );
 		notYetComposite.setDimensions( 2, 1, seq.getSize() - 1 );
@@ -339,8 +340,9 @@ public class MSEBlockFlow
 		impFlowVectors.setDisplayRange( 0, 1 );
 		impFlowVectors.setPosition( 2, 1, 1 );
 		impFlowVectors.setDisplayRange( -Math.PI, Math.PI );
+//		impFlowVectors.show();
 
-		System.out.println( "Save flow file to: " + filename );
+//		System.out.println( "Save flow file to: " + filename );
 		IJ.saveAsTiff( impFlowVectors, filename );
 		try {
 			return FloatTypeImgLoader.loadTiffEnsureType( new File( filename ) );
