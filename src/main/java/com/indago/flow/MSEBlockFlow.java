@@ -110,6 +110,7 @@ public class MSEBlockFlow
 //			}
 
 			ipRPixels[ i ] = ( float ) ( r * max / scale );
+			ipRPixels[ i ] = ( float ) Math.min( max, ipRPixels[ i ] );
 			ipPhiPixels[ i ] = ( float )phi;
 
 			if ( r == 0.0 )
