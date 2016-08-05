@@ -9,4 +9,8 @@ package com.indago.costs;
 public interface CostsFactory< T > {
 
 	public double getCost( final T segment );
+
+	public CostParams getParameters();
+
+	public void setParameters( CostParams p );
 }
