@@ -14,6 +14,8 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import com.indago.io.ImageSaver;
+
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -96,7 +98,9 @@ public class XmlIoLabelingPlus {
 		final Document doc = new Document( toXml( labelingData, xmlFileDirectory, indexImgFile ) );
 		final XMLOutputter xout = new XMLOutputter( Format.getPrettyFormat() );
 		xout.output( doc, new FileOutputStream( xmlFilename ) );
-		IO.saveImg( indexImgFilename, ImgView.wrap( labelingData.getLabeling().getIndexImg(), null ) );
+
+		final Img< IntType > img = ImgView.wrap( labelingData.getLabeling().getIndexImg(), null );
+		ImageSaver.saveAsTiff( indexImgFilename, img );
 	}
 
 	private void fromXml( final Element segmentLabeling, final LabelingPlus labelingPlus )
