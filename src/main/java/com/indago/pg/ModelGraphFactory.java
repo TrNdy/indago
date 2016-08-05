@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.indago.costs.CostsFactory;
+import com.indago.costs.CostFactory;
 import com.indago.data.segmentation.ConflictGraph;
 import com.indago.data.segmentation.LabelingSegment;
 import com.indago.fg.Assignment;
@@ -28,7 +28,7 @@ public class ModelGraphFactory {
 	public static Pair< SegmentationProblem, AssignmentMapper< SegmentNode, LabelingSegment > > createSegmentationProblem(
 			final Collection< LabelingSegment > segments,
 			final ConflictGraph< LabelingSegment > conflicts,
-			final CostsFactory< ? super LabelingSegment > segmentCosts ) {
+			final CostFactory< ? super LabelingSegment > segmentCosts ) {
 
 		final ArrayList< SegmentNode > segmentVars = new ArrayList< >();
 

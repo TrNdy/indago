@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.indago.costs.CostsFactory;
+import com.indago.costs.CostFactory;
 import com.indago.data.segmentation.ConflictGraph;
 import com.indago.data.segmentation.Segment;
 import com.indago.old_fg.DefaultFactorGraph;
@@ -27,7 +27,7 @@ public class OldFactorGraphFactory {
 	public static < T extends Segment > FactorGraphPlus< T > createFromConflictGraph(
 			final Collection< ? extends T > segments,
 			final ConflictGraph< T > conflicts,
-			final CostsFactory< Segment > segmentCosts ) {
+			final CostFactory< Segment > segmentCosts ) {
 		final Collection< ? extends Collection< T > > cliques = conflicts.getConflictGraphCliques();
 
 		int factorId = 0;

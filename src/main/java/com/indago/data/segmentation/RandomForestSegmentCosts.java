@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.indago.costs.CostParams;
 import com.indago.data.segmentation.features.FeatureSet;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
@@ -33,6 +34,8 @@ import weka.core.Instance;
 public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< L >, T extends RealType< T > & NativeType< T >>
 		implements
 		SegmentCosts {
+
+	private CostParams params;
 
 	private final HashMap< Segment, Double > segmentToCost = new HashMap< Segment, Double >();
 
@@ -144,5 +147,21 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 	 */
 	public ImgLabeling< LabelData, IntType > getLabeling() {
 		return labeling;
+	}
+
+	/**
+	 * @see com.indago.costs.CostFactory#getParameters()
+	 */
+	@Override
+	public CostParams getParameters() {
+		return params;
+	}
+
+	/**
+	 * @see com.indago.costs.CostFactory#setParameters(com.indago.costs.CostParams)
+	 */
+	@Override
+	public void setParameters( final CostParams p ) {
+		this.params = p;
 	}
 }

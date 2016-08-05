@@ -5,6 +5,7 @@ package com.indago.costs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import net.imglib2.util.ValuePair;
 /**
  * @author jug
  */
-public class CostParams {
+public class CostParams implements Iterable {
 
 	private final List< Pair< String, Double > > params = new ArrayList<>();
 	private final Map< String, Integer > name2index = new HashMap<>();
@@ -24,8 +25,16 @@ public class CostParams {
 		name2index.put( name, params.size() - 1 );
 	}
 
+	public int size() {
+		return params.size();
+	}
+
 	public double get( final int i ) {
 		return params.get( i ).getB();
+	}
+
+	public String getName( final int i ) {
+		return params.get( i ).getA();
 	}
 
 	public double get( final String name ) {
@@ -60,5 +69,13 @@ public class CostParams {
 			set( i, d );
 			i++;
 		}
+	}
+
+	/**
+	 * @see java.lang.Iterable#iterator()
+	 */
+	@Override
+	public Iterator iterator() {
+		return params.iterator();
 	}
 }

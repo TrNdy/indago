@@ -6,7 +6,11 @@ package com.indago.costs;
 /**
  * @author jug
  */
-public interface CostsFactory< T > {
+public interface CostFactory< T > {
+
+	public default String getName() {
+		return this.getClass().getName();
+	}
 
 	public double getCost( final T segment );
 
