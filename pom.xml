@@ -83,8 +83,7 @@
 			<groupId>nz.ac.waikato.cms.weka</groupId>
 			<artifactId>weka-dev</artifactId>
 			<version>3.7.12</version>
-		</dependency>
-		
+		</dependency>		
 		<dependency>
 			<groupId>gurobi.com</groupId>
 			<artifactId>gurobi.jar</artifactId>
