@@ -2,7 +2,7 @@ package com.indago.pg;
 
 public class IndicatorNode {
 
-	private final double cost;
+	private double cost;
 
 	public IndicatorNode( final double cost ) {
 		this.cost = cost;
@@ -10,5 +10,9 @@ public class IndicatorNode {
 
 	public double getCost() {
 		return cost;
+	}
+
+	public void setCost( final double cost ) {
+		this.cost = cost;
 	}
 }
