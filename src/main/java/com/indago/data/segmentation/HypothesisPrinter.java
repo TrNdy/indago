@@ -3,6 +3,8 @@ package com.indago.data.segmentation;
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.indago.log.Log;
+
 import net.imglib2.algorithm.tree.Forest;
 
 /**
@@ -51,7 +53,7 @@ public class HypothesisPrinter {
 		if ( id == null ) {
 			assignIds( node );
 		}
-		System.out.println( prefix + id );
+		Log.debug( prefix + id );
 		for ( final T child : node.getChildren() )
 			printHypothesisTreeNode( prefix + "  ", child );
 	}
@@ -59,10 +61,10 @@ public class HypothesisPrinter {
 	public void printConflictGraphCliques( final ConflictGraph< ? extends Segment > conflictGraph ) {
 		final Collection< ? extends Collection< ? extends Segment > > cliques = conflictGraph.getConflictGraphCliques();
 		for ( final Collection< ? extends Segment > clique : cliques ) {
-			System.out.print( "( " );
+			Log.debug( "( " );
 			for ( final Segment segment : clique )
-				System.out.print( segmentToId.get( segment ) + " " );
-			System.out.println( ")" );
+				Log.debug( segmentToId.get( segment ) + " " );
+			Log.debug( ")" );
 		}
 	}
 

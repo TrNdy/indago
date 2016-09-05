@@ -9,6 +9,8 @@ import org.scijava.Context;
 import org.scijava.app.StatusService;
 import org.scijava.io.IOService;
 
+import com.indago.log.Log;
+
 import io.scif.codec.CodecService;
 import io.scif.formats.qt.QTJavaService;
 import io.scif.formats.tiff.TiffService;
@@ -54,7 +56,7 @@ public class ImageSaver {
 //		IO.saveImg( filename, img );
 
 		// The only workaround I know works at the moment (2016-08-05)
-		if ( context == null ) System.err.println( "Static field 'context' was not set before using ImageSaver..." );
+		if ( context == null ) Log.error( "Static field 'context' was not set before using ImageSaver..." );
 		final DatasetService datasetService = context.getService( DatasetService.class );
 		final Dataset dataset = datasetService.create( rai );
 		final DatasetIOService service = context.getService( DatasetIOService.class );

@@ -9,6 +9,7 @@ import com.indago.data.segmentation.features.FeatureSet;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.MaxGrowthPerStep;
+import com.indago.log.Log;
 import com.indago.weka.ArffBuilder;
 import com.indago.weka.ArffWriterFactory;
 
@@ -106,7 +107,7 @@ public class RandomForestSegmentCosts< L extends IntegerType< L > & NativeType< 
 				final double[] distrib = forest.distributionForInstance( latestInstance );
 				segmentToCost.put( segment, -distrib[ 0 ] );
 			} catch ( final Exception e ) {
-				System.err.println( "Costs for segment " + segment.toString() + " could not be determined!" );
+				Log.warn( "Costs for segment " + segment.toString() + " could not be determined!" );
 				e.printStackTrace();
 			}
 		}

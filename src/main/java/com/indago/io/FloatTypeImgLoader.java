@@ -8,6 +8,8 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.indago.log.Log;
+
 import ij.IJ;
 import ij.Prefs;
 import io.scif.img.ImgIOException;
@@ -125,7 +127,7 @@ public class FloatTypeImgLoader {
 			try {
 				thread.join();
 			} catch ( final InterruptedException e ) {
-				System.out.println( "Thread.join was interrupted in FloatTypeImgLoader.loadTiffs - be aware of leaking Threads!" );
+				Log.warn( "Thread.join was interrupted in FloatTypeImgLoader.loadTiffs - be aware of leaking Threads!" );
 				e.printStackTrace();
 			}
 		}
@@ -157,7 +159,7 @@ public class FloatTypeImgLoader {
 //		final ImgFactory< FloatType > imgFactory = new ArrayImgFactory< FloatType >();
 //		final ImgOpener imageOpener = new ImgOpener();
 
-		System.out.print( "\n >> Loading file '" + file.getName() + "' ..." );
+		Log.info( "Loading file '" + file.getName() + "' ..." );
 //		final List< SCIFIOImgPlus< FloatType >> imgs = imageOpener.openImgs( file.getAbsolutePath(), imgFactory, new FloatType() );
 //		final Img< RealType > img = imgs.get( 0 ).getImg();
 		final Img< FloatType > img =

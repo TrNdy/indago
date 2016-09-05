@@ -3,6 +3,7 @@ package com.indago.flow;
 import java.io.File;
 
 import com.indago.io.FloatTypeImgLoader;
+import com.indago.log.Log;
 
 import ij.CompositeImage;
 import ij.IJ;
@@ -309,7 +310,7 @@ public class MSEBlockFlow
 			ip1 = ip2;
 			ip2 = ( FloatProcessor )seq.getProcessor( i + 1 ).convertToFloat();
 
-			System.out.println( "MSEBlockFlow: Processing slice " + i );
+			Log.info( "MSEBlockFlow: Processing slice " + i );
 
 			final FloatProcessor seqFlowVectorRSlice = new FloatProcessor( imp.getWidth(), imp.getHeight() );
 			final FloatProcessor seqFlowVectorPhiSlice = new FloatProcessor( imp.getWidth(), imp.getHeight() );
@@ -331,7 +332,6 @@ public class MSEBlockFlow
 		impOpticFlow.setOpenAsHyperStack( true );
 		impOpticFlow.setCalibration( imp.getCalibration() );
 		impOpticFlow.setDimensions( 1, 1, seq.getSize() - 1 );
-//		impOpticFlow.show();
 
 		final ImagePlus notYetComposite = new ImagePlus( imp.getTitle() + " scaled flow vectors", seqFlowVectors );
 		notYetComposite.setOpenAsHyperStack( true );
@@ -346,9 +346,7 @@ public class MSEBlockFlow
 		impFlowVectors.setDisplayRange( 0, 1 );
 		impFlowVectors.setPosition( 2, 1, 1 );
 		impFlowVectors.setDisplayRange( -Math.PI, Math.PI );
-//		impFlowVectors.show();
 
-//		System.out.println( "Save flow file to: " + filename );
 		IJ.saveAsTiff( impFlowVectors, filename );
 		try {
 			return FloatTypeImgLoader.loadTiffEnsureType( new File( filename ) );
