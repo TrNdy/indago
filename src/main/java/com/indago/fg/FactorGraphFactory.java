@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.indago.log.Log;
+import com.indago.IndagoLog;
 import com.indago.pg.IndicatorNode;
 import com.indago.pg.SegmentationProblem;
 import com.indago.pg.TrackingProblem;
@@ -50,13 +50,13 @@ public class FactorGraphFactory {
 
 		// FORCED AND AVOIDED SEGMENT NODES
 		for ( final SegmentNode forcedNode : segmentationModel.getForcedNodes() ) {
-			Log.info( "Consider forced node: " + forcedNode.toString() );
+			IndagoLog.log.info( "Consider forced node: " + forcedNode.toString() );
 			final ArrayList< Variable > vars = new ArrayList<>();
 			vars.add( varmap.get( forcedNode ) );
 			constraints.add( Factors.equalOneConstraint( vars ) );
 		}
 		for ( final SegmentNode avoidedNode : segmentationModel.getAvoidedNodes() ) {
-			Log.info( "Consider avoided node: " + avoidedNode.toString() );
+			IndagoLog.log.info( "Consider avoided node: " + avoidedNode.toString() );
 			final ArrayList< Variable > vars = new ArrayList<>();
 			vars.add( varmap.get( avoidedNode ) );
 			constraints.add( Factors.equalZeroConstraint( vars ) );
@@ -97,7 +97,7 @@ public class FactorGraphFactory {
 		for ( final SegmentationProblem frameModel : trackingModel.getTimepoints() ) {
 			final MappedFactorGraph frameMFG = FactorGraphFactory.createFactorGraph( frameModel );
 
-			Log.info(
+			IndagoLog.log.info(
 					"#vars/#unaries/#constraints = " +
 							frameMFG.getVarmap().keySet().size() + "/" +
 							frameMFG.getFg().getUnaries().size() + "/" +

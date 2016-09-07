@@ -5,7 +5,7 @@ package com.indago.io;
 
 import java.io.File;
 
-import com.indago.log.Log;
+import com.indago.IndagoLog;
 
 import ij.IJ;
 import ij.ImagePlus;
@@ -30,7 +30,7 @@ public class DoubleTypeImgLoader {
 //		final ImgFactory< DoubleType > imgFactory = new ArrayImgFactory< DoubleType >();
 //		final ImgOpener imageOpener = new ImgOpener();
 
-		Log.info( "Loading file '" + file.getName() + "' ..." );
+		IndagoLog.log.info( "Loading file '" + file.getName() + "' ..." );
 //		final List< SCIFIOImgPlus< FloatType >> imgs = imageOpener.openImgs( file.getAbsolutePath(), imgFactory, new DoubleType() );
 //		final Img< RealType > img = imgs.get( 0 ).getImg();
 		final Img< DoubleType > img =

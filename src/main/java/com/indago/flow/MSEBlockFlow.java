@@ -2,8 +2,8 @@ package com.indago.flow;
 
 import java.io.File;
 
+import com.indago.IndagoLog;
 import com.indago.io.FloatTypeImgLoader;
-import com.indago.log.Log;
 
 import ij.CompositeImage;
 import ij.IJ;
@@ -310,7 +310,7 @@ public class MSEBlockFlow
 			ip1 = ip2;
 			ip2 = ( FloatProcessor )seq.getProcessor( i + 1 ).convertToFloat();
 
-			Log.info( "MSEBlockFlow: Processing slice " + i );
+			IndagoLog.log.info( "MSEBlockFlow: Processing slice " + i );
 
 			final FloatProcessor seqFlowVectorRSlice = new FloatProcessor( imp.getWidth(), imp.getHeight() );
 			final FloatProcessor seqFlowVectorPhiSlice = new FloatProcessor( imp.getWidth(), imp.getHeight() );

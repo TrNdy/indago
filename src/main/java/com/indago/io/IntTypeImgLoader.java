@@ -5,7 +5,7 @@ package com.indago.io;
 
 import java.io.File;
 
-import com.indago.log.Log;
+import com.indago.IndagoLog;
 
 import ij.IJ;
 import io.scif.img.ImgIOException;
@@ -29,7 +29,7 @@ public class IntTypeImgLoader {
 //		final ImgFactory< IntType > imgFactory = new ArrayImgFactory< IntType >();
 //		final ImgOpener imageOpener = new ImgOpener();
 
-		Log.info( "Loading file '" + file.getName() + "' ..." );
+		IndagoLog.log.info( "Loading file '" + file.getName() + "' ..." );
 //		final List< SCIFIOImgPlus< IntType >> imgs = imageOpener.openImgs( file.getAbsolutePath(), imgFactory, new IntType() );
 //		final Img< IntType > img = imgs.get( 0 ).getImg();
 		final Img< IntType > img =
