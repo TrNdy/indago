@@ -18,6 +18,7 @@ import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import gurobi.GRB;
+import gurobi.GRBCallback;
 import gurobi.GRBEnv;
 import gurobi.GRBException;
 import gurobi.GRBLinExpr;
@@ -44,13 +45,29 @@ public class SolveGurobi {
 	}
 
 	public static Assignment< Variable > staticSolve( final UnaryCostConstraintGraph fg ) throws GRBException {
+		return staticSolve( fg, null );
+	}
+
+	public static Assignment staticSolve( final UnaryCostConstraintGraph fg, final GRBCallback callback ) throws GRBException {
 		final SolveGurobi solver = new SolveGurobi();
-		final Assignment< Variable > assignment = solver.solve( fg );
+		final Assignment< Variable > assignment = solver.solve( fg, callback );
 		solver.dispose();
 		return assignment;
 	}
 
-	public Assignment< Variable > solve( final UnaryCostConstraintGraph fg ) throws GRBException {
+	/**
+	 * Solves a given factor graph.
+	 *
+	 * @param fg
+	 *            the factor graph to be solved.
+	 * @param callback
+	 *            a Gurobi callback class (or <code>null</code> if you do not
+	 *            want to use a callback handler).
+	 * @return an <code>Assignment</code> containing the solution.
+	 * @throws GRBException
+	 */
+	@SuppressWarnings( "unchecked" )
+	public Assignment< Variable > solve( final UnaryCostConstraintGraph fg, final GRBCallback callback ) throws GRBException {
 		final Collection< Variable > variables = fg.getVariables();
 		final Collection< Factor > unaries = fg.getUnaries();
 		final Collection< Factor > constraints = fg.getConstraints();
@@ -62,6 +79,12 @@ public class SolveGurobi {
 
 		createEnvIfNecessary();
 		final GRBModel model = new GRBModel( env );
+
+		// Hook in callback
+		if ( callback != null ) {
+			model.setCallback( callback );
+			model.getEnv().set( "LogToConsole", "0" );
+		}
 
 		// Set model parameters
 		model.getEnv().set( GRB.IntParam.Presolve, GRB_PRESOLVE );

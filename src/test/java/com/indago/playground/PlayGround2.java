@@ -1,8 +1,5 @@
 package com.indago.playground;
 
-import ij.ImageJ;
-import io.scif.img.ImgOpener;
-
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -10,13 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
-
-import net.imglib2.Dimensions;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedIntType;
 
 import com.indago.data.segmentation.HypothesisPrinter;
 import com.indago.data.segmentation.LabelingBuilder;
@@ -34,6 +24,15 @@ import com.indago.ilp.SolveBooleanFGGurobi;
 import com.indago.old_fg.Assignment;
 import com.indago.old_fg.FactorGraph;
 import com.indago.old_fg.gui.FgPanel;
+
+import ij.ImageJ;
+import io.scif.img.ImgOpener;
+import net.imglib2.Dimensions;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedIntType;
 
 public class PlayGround2 {
 
@@ -116,7 +115,7 @@ public class PlayGround2 {
 		final FactorGraph fg = OldFactorGraphFactory.createFromConflictGraph( segments, conflictGraph, costs ).getFactorGraph();
 
 		final SolveBooleanFGGurobi solver = new SolveBooleanFGGurobi();
-		final Assignment assignment = solver.solve( fg );
+		final Assignment assignment = solver.solve( fg, null );
 
 		final JFrame guiFrame = new JFrame( "FG from SegmentMultiForest" );
 		// Set window-closing action...

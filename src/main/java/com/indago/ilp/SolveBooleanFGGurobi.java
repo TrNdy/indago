@@ -1,13 +1,5 @@
 package com.indago.ilp;
 
-import gurobi.GRB;
-import gurobi.GRB.DoubleAttr;
-import gurobi.GRBEnv;
-import gurobi.GRBException;
-import gurobi.GRBLinExpr;
-import gurobi.GRBModel;
-import gurobi.GRBVar;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +17,15 @@ import com.indago.old_fg.function.OldBooleanAssignmentConstraint;
 import com.indago.old_fg.value.BooleanValue;
 import com.indago.old_fg.variable.BooleanVariable;
 import com.indago.old_fg.variable.Variable;
+
+import gurobi.GRB;
+import gurobi.GRB.DoubleAttr;
+import gurobi.GRBCallback;
+import gurobi.GRBEnv;
+import gurobi.GRBException;
+import gurobi.GRBLinExpr;
+import gurobi.GRBModel;
+import gurobi.GRBVar;
 
 /**
  * A solver for boolean factor graphs that uses Gurobi for the optimization
@@ -51,14 +52,29 @@ public class SolveBooleanFGGurobi {
 	}
 
 	public static Assignment staticSolve( final FactorGraph fg ) throws GRBException {
+		return staticSolve( fg, null );
+	}
+
+	public static Assignment staticSolve( final FactorGraph fg, final GRBCallback callback ) throws GRBException {
 		final SolveBooleanFGGurobi solver = new SolveBooleanFGGurobi();
-		final Assignment assignment = solver.solve( fg );
+		final Assignment assignment = solver.solve( fg, callback );
 		solver.dispose();
 		return assignment;
 	}
 
+	/**
+	 * Solves a given factor graph.
+	 *
+	 * @param fg
+	 *            the factor graph to be solved.
+	 * @param callback
+	 *            a Gurobi callback class (or <code>null</code> if you do not
+	 *            want to use a callback handler).
+	 * @return an <code>Assignment</code> containing the solution.
+	 * @throws GRBException
+	 */
 	@SuppressWarnings( "unchecked" )
-	public Assignment solve( final FactorGraph fg ) throws GRBException {
+	public Assignment solve( final FactorGraph fg, final GRBCallback callback ) throws GRBException {
 		for ( final Variable< ? > variable : fg.getVariables() ) {
 			if ( !( variable instanceof BooleanVariable ) )
 				throw new IllegalArgumentException( "Only variables of type BooleanVariable are currently supported." );
@@ -91,6 +107,12 @@ public class SolveBooleanFGGurobi {
 
 		createEnvIfNecessary();
 		final GRBModel model = new GRBModel( env );
+
+		// Hook in callback
+		if ( callback != null ) {
+			model.setCallback( callback );
+			model.getEnv().set( "LogToConsole", "0" );
+		}
 
 		// Create variables
 		final GRBVar[] vars = model.addVars( variables.size(), GRB.BINARY );
@@ -146,14 +168,10 @@ public class SolveBooleanFGGurobi {
 	}
 
 	private void createEnvIfNecessary() throws GRBException {
-		if ( env == null ) env = new GRBEnv( getNewLogFilename() );
+		if ( env == null ) env = new GRBEnv( getLogFilename() );
 	}
 
-	private String getNewLogFilename() {
-		final String fnFormat = ( ( logFileDirectory != null && logFileDirectory.exists() ) ? logFileDirectory.getAbsolutePath() : "." ) + "/grb_%04d.log";
-		for ( int i = 1; true; ++i ) {
-			final String fn = String.format( fnFormat, i );
-			if ( !new File( fn ).exists() ) { return fn; }
-		}
+	private String getLogFilename() {
+		return ( ( logFileDirectory != null && logFileDirectory.exists() ) ? logFileDirectory.getAbsolutePath() : "." ) + "/gurobi_indago.log";
 	}
 }

@@ -17,8 +17,8 @@ import com.indago.data.segmentation.LabelingSegment;
 import com.indago.data.segmentation.RandomForestFactory;
 import com.indago.data.segmentation.RandomForestSegmentCosts;
 import com.indago.data.segmentation.features.FeatureSet;
-import com.indago.data.segmentation.fg.OldFactorGraphFactory;
 import com.indago.data.segmentation.fg.FactorGraphPlus;
+import com.indago.data.segmentation.fg.OldFactorGraphFactory;
 import com.indago.data.segmentation.fg.SegmentHypothesisVariable;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree;
 import com.indago.data.segmentation.filteredcomponents.FilteredComponentTree.Filter;
@@ -220,7 +220,7 @@ public class FeatureExampleOnRealSegments {
 			Assignment assignment = null;
 			try {
 				final SolveBooleanFGGurobi solver = new SolveBooleanFGGurobi();
-				assignment = solver.solve( fg );
+				assignment = solver.solve( fg, null );
 			} catch ( final GRBException e ) {
 				System.err.println( "Gurobi trouble... Boolean FactorGraph could not be solved!" );
 				e.printStackTrace();
