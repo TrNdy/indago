@@ -163,11 +163,12 @@ public class SolveGurobi {
 	}
 
 	private String getNewLogFilename() {
-		final String fnFormat = ( ( logFileDirectory != null && logFileDirectory.exists() ) ? logFileDirectory.getAbsolutePath() : "." ) + "/grb_%04d.log";
-		for ( int i = 1; true; ++i ) {
-			final String fn = String.format( fnFormat, i );
-			if ( !new File( fn ).exists() ) { return fn; }
-		}
+//		final String fnFormat = ( ( logFileDirectory != null && logFileDirectory.exists() ) ? logFileDirectory.getAbsolutePath() : "." ) + "/grb_%04d.log";
+//		for ( int i = 1; true; ++i ) {
+//			final String fn = String.format( fnFormat, i );
+//			if ( !new File( fn ).exists() ) { return fn; }
+//		}
+		return ( ( logFileDirectory != null && logFileDirectory.exists() ) ? logFileDirectory.getAbsolutePath() : "." ) + "/indago_gurobi.log";
 	}
 
 	private static class GurobiAssignment implements Assignment< Variable > {
