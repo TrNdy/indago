@@ -230,4 +230,31 @@ public class ProjectFolder {
 			this.addFile( file.getName() );
 		}
 	}
+
+	/**
+	 * Removes the given ProjectFile in case it is registered in this
+	 * ProjectFolder.
+	 *
+	 * @param id
+	 */
+	public void removeFile( final String id ) {
+		mapFiles.remove( id );
+	}
+
+	/**
+	 * Removes the given ProjectFile in case it is registered in this
+	 * ProjectFolder.
+	 *
+	 * @param pf
+	 * @return true, if the given ProjectFile was found and removed.
+	 */
+	public boolean removeFile( final ProjectFile pf ) {
+		for ( final String key : mapFiles.keySet() ) {
+			if ( pf.getFilename().equals( mapFiles.get( key ).getFilename() ) ) {
+				mapFiles.remove( key );
+				return true;
+			}
+		}
+		return false;
+	}
 }
