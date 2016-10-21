@@ -9,7 +9,6 @@ import com.indago.IndagoLog;
 
 import ij.IJ;
 import ij.ImagePlus;
-import io.scif.img.ImgIOException;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.ImagePlusAdapter;
@@ -24,8 +23,7 @@ import net.imglib2.view.Views;
  */
 public class DoubleTypeImgLoader {
 
-	public static Img< DoubleType > loadTiff( final File file )
-			throws ImgIOException {
+	public static Img< DoubleType > loadTiff( final File file ) {
 //	    ALERT: THOSE FOLLOWING TWO LINES CAUSE THREAD LEAK!!!!
 //		final ImgFactory< DoubleType > imgFactory = new ArrayImgFactory< DoubleType >();
 //		final ImgOpener imageOpener = new ImgOpener();
@@ -39,8 +37,7 @@ public class DoubleTypeImgLoader {
 		return img;
 	}
 
-	public static RandomAccessibleInterval< DoubleType > loadTiffEnsureType( final File file )
-			throws ImgIOException {
+	public static RandomAccessibleInterval< DoubleType > loadTiffEnsureType( final File file ) {
 		final Img< DoubleType > img = loadTiff( file );
 
 		final long dims[] = new long[ img.numDimensions() ];

@@ -10,7 +10,7 @@
 	</parent>
 
 	<properties>
-		<!-- <enforcer.skip>true</enforcer.skip> -->
+		<enforcer.skip>true</enforcer.skip> <!-- -->
 		<jung2.version>2.0.1</jung2.version>
 		<scijava.jvm.version>1.8</scijava.jvm.version>
 	</properties>

@@ -43,11 +43,15 @@ public class FloatTypeImgLoader {
 	 * @throws IncompatibleTypeException
 	 * @throws Exception
 	 */
-	public static List< Img< FloatType >> loadTiffsFromFolder( final String strFolder ) throws ImgIOException, IncompatibleTypeException, Exception {
+	public static List< Img< FloatType > > loadTiffsFromFolder( final String strFolder ) throws Exception {
 		return loadTiffsFromFolder( strFolder, -1, -1, ( String[] ) null );
 	}
 
-	public static List< Img< FloatType >> loadTiffsFromFolder( final String strFolder, final int minTime, final int maxTime, final String... filterStrings ) throws ImgIOException, IncompatibleTypeException, Exception {
+	public static List< Img< FloatType > > loadTiffsFromFolder(
+			final String strFolder,
+			final int minTime,
+			final int maxTime,
+			final String... filterStrings ) throws Exception {
 
 		final File folder = new File( strFolder );
 		final FilenameFilter filter = new FilenameFilter() {
@@ -80,7 +84,7 @@ public class FloatTypeImgLoader {
 	 * @return
 	 * @throws ImgIOException
 	 */
-	public static List< Img< FloatType >> loadTiffs( final File[] listOfFiles ) throws ImgIOException {
+	public static List< Img< FloatType > > loadTiffs( final File[] listOfFiles ) {
 		final List< Img< FloatType > > images = new ArrayList< Img< FloatType > >( listOfFiles.length );
 		for ( int i = 0; i < listOfFiles.length; i++ ) {
 			images.add( null );
