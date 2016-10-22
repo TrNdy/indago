@@ -1,6 +1,5 @@
 package com.indago.data.synthetic;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -8,21 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import com.indago.data.segmentation.RandomForestFactory;
-import com.indago.data.segmentation.RealDoubleNormalizeConverter;
-import com.indago.iddea.view.component.IddeaComponent;
 import com.indago.io.DataMover;
 
 import ij.IJ;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.converter.Converters;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
-import net.imglib2.type.numeric.real.DoubleType;
 
 public class TestImageGenerator {
 
@@ -75,19 +68,19 @@ public class TestImageGenerator {
 		}
 		final Img< UnsignedIntType > stack = DataMover.stackThemAsFrames( imgs );
 
-		final IddeaComponent iddeaComponent = new IddeaComponent( Converters.convert( ( RandomAccessibleInterval< UnsignedIntType > ) stack, new RealDoubleNormalizeConverter< UnsignedIntType >( maxIntensity ), new DoubleType() ) );
-		iddeaComponent.showMenu( true );
-		final JMenuItem menuItemSave = new JMenuItem( "Save images..." );
-		menuItemSave.addActionListener( new Actions() );
-		iddeaComponent.getMenuBar().getMenu( 0 ).add( menuItemSave );
-		iddeaComponent.installDefaultToolBar();
-		iddeaComponent.setToolBarLocation( BorderLayout.WEST );
-		iddeaComponent.setToolBarVisible( true );
+//		final IddeaComponent iddeaComponent = new IddeaComponent( Converters.convert( ( RandomAccessibleInterval< UnsignedIntType > ) stack, new RealDoubleNormalizeConverter< UnsignedIntType >( maxIntensity ), new DoubleType() ) );
+//		iddeaComponent.showMenu( true );
+//		final JMenuItem menuItemSave = new JMenuItem( "Save images..." );
+//		menuItemSave.addActionListener( new Actions() );
+//		iddeaComponent.getMenuBar().getMenu( 0 ).add( menuItemSave );
+//		iddeaComponent.installDefaultToolBar();
+//		iddeaComponent.setToolBarLocation( BorderLayout.WEST );
+//		iddeaComponent.setToolBarVisible( true );
 
 		frame = new JFrame();
 		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		frame.setBounds( 300, 300, width, height );
-		frame.getContentPane().add( iddeaComponent );
+//		frame.getContentPane().add( iddeaComponent );
 		frame.setVisible( true );
 	}
 }
