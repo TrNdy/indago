@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>net.imagej</groupId>
-		<artifactId>pom-imagej</artifactId>
-		<version>16.6.0</version>
+		<groupId>sc.fiji</groupId>
+		<artifactId>pom-indago</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -25,7 +25,6 @@
 		<dependency>
 			<groupId>com.indago</groupId>
 			<artifactId>IndagoLoggingWrapper</artifactId>
-			<version>0.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>io.scif</groupId>
@@ -53,7 +52,6 @@
 		<dependency>
 			<groupId>nz.ac.waikato.cms.weka</groupId>
 			<artifactId>weka-dev</artifactId>
-			<version>3.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>gurobi.com</groupId>
@@ -73,12 +71,10 @@
  		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
-			<version>1.0.0-beta-3</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-core</artifactId>
-			<version>2.4.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
