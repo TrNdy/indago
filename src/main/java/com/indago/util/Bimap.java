@@ -20,4 +20,8 @@ public class Bimap< A, B > {
 		ab.put( a, b );
 		ba.put( b, a );
 	}
+
+	public int size() {
+		return ab.size();
+	}
 }
