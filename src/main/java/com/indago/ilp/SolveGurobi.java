@@ -146,6 +146,26 @@ public class SolveGurobi {
 		for ( int i = 0; i < vals.length; ++i )
 			vals[ i ] = ( int ) Math.round( dvals[ i ] );
 
+		// Relaxation run-test for Paul and Bogdan
+		// - - - - - - - - - - - - - - - - - - - -
+//		System.out.println( ">> Relaxing problem..." );
+//		final GRBModel r = model.relax();
+//		System.out.println( ">> Solving relaxed problem..." );
+//		r.optimize();
+//		System.out.println( ">> Counting integral variables..." );
+//		int integral = 0;
+//		int matching = 0;
+//		final int numvars = r.getVars().length;
+//		for ( int idx = 0; idx < r.getVars().length; idx++ ) {
+//			final GRBVar var = model.getVars()[ idx ];
+//			final GRBVar varRelaxed = r.getVars()[ idx ];
+//			final double x = var.get( GRB.DoubleAttr.X );
+//			final double xRelaxed = varRelaxed.get( GRB.DoubleAttr.X );
+//			if ( xRelaxed == 0.0 || xRelaxed == 1.0 ) integral++;
+//			if ( x == xRelaxed ) matching++;
+//		}
+//		System.out.println( String.format( ">> %d, %d, %d", numvars, integral, matching ) );
+
 		// Dispose of model
 		model.dispose();
 
