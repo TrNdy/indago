@@ -181,6 +181,52 @@ public class FactorGraphFactory {
 			variables.add( var );
 		}
 
+		// ADD USER CONSTRAINTS (segments forced by specific assignment types)
+		for ( int frameId = 0; frameId < trackingModel.getTimepoints().size(); frameId++ ) {
+			final SegmentationProblem frameModel = trackingModel.getTimepoints().get( frameId );
+
+			for ( final SegmentNode forcedNode : frameModel.getForcedByAppearanceNodes() ) {
+				IndagoLog.log.info( "Consider appearance force for: " + forcedNode.toString() );
+				final ArrayList< Variable > vars = new ArrayList<>();
+				for ( final AppearanceHypothesis app : forcedNode.getInAssignments().getAppearances() ) {
+					vars.add( varmap.get( app ) );
+				}
+				if ( vars.size() > 0 ) constraints.add( Factors.equalOneConstraint( vars ) );
+				else
+					IndagoLog.log.warn( "Appearance cannot be forced. (Missing assignments in assignment pool?)" );
+			}
+			for ( final SegmentNode forcedNode : frameModel.getForcedByDisappearanceNodes() ) {
+				IndagoLog.log.info( "Consider disppearance force for: " + forcedNode.toString() );
+				final ArrayList< Variable > vars = new ArrayList<>();
+				for ( final DisappearanceHypothesis disapp : forcedNode.getOutAssignments().getDisappearances() ) {
+					vars.add( varmap.get( disapp ) );
+				}
+				if ( vars.size() > 0 ) constraints.add( Factors.equalOneConstraint( vars ) );
+				else
+					IndagoLog.log.warn( "Disappearance cannot be forced. (Missing assignments in assignment pool?)" );
+			}
+			for ( final SegmentNode forcedNode : frameModel.getForcedByMoveNodes() ) {
+				IndagoLog.log.info( "Consider movement force for: " + forcedNode.toString() );
+				final ArrayList< Variable > vars = new ArrayList<>();
+				for ( final MovementHypothesis move : forcedNode.getInAssignments().getMoves() ) {
+					vars.add( varmap.get( move ) );
+				}
+				if ( vars.size() > 0 ) constraints.add( Factors.equalOneConstraint( vars ) );
+				else
+					IndagoLog.log.warn( "Movement cannot be forced. (Missing assignments in assignment pool?)" );
+			}
+			for ( final SegmentNode forcedNode : frameModel.getForcedByDivisionNodes() ) {
+				IndagoLog.log.info( "Consider division force for: " + forcedNode.toString() );
+				final ArrayList< Variable > vars = new ArrayList<>();
+				for ( final DivisionHypothesis division : forcedNode.getInAssignments().getDivisions() ) {
+					vars.add( varmap.get( division ) );
+				}
+				if ( vars.size() > 0 ) constraints.add( Factors.equalOneConstraint( vars ) );
+				else
+					IndagoLog.log.warn( "Division cannot be forced. (Missing assignments in assignment pool?)" );
+			}
+		}
+
 		final UnaryCostConstraintGraph fg = new UnaryCostConstraintGraph( variables, unaries, constraints );
 		final AssignmentMapper< Variable, IndicatorNode > mapper = new AssignmentMapper< Variable, IndicatorNode >() {
 			@Override

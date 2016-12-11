@@ -20,6 +20,14 @@ public interface SegmentationProblem {
 
 	public Set< SegmentNode > getForcedNodes();
 
+	public Set< SegmentNode > getForcedByAppearanceNodes();
+
+	public Set< SegmentNode > getForcedByDisappearanceNodes();
+
+	public Set< SegmentNode > getForcedByMoveNodes();
+
+	public Set< SegmentNode > getForcedByDivisionNodes();
+
 	public Set< SegmentNode > getAvoidedNodes();
 
 }
