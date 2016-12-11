@@ -89,6 +89,30 @@ public class ModelGraphFactory {
 				return null;
 			}
 
+			@Override
+			public Set< SegmentNode > getForcedByAppearanceNodes() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Set< SegmentNode > getForcedByDisappearanceNodes() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Set< SegmentNode > getForcedByMoveNodes() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Set< SegmentNode > getForcedByDivisionNodes() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
 		};
 
 		final AssignmentMapper< SegmentNode, LabelingSegment > mapper =
