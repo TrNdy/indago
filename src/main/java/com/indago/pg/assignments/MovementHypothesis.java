@@ -2,10 +2,8 @@ package com.indago.pg.assignments;
 
 import com.indago.pg.segments.SegmentNode;
 
-public class MovementHypothesis extends AssignmentNode
-{
+public class MovementHypothesis extends AssignmentNode {
 
-	private double cost;
 	private final SegmentNode src;
 	private final SegmentNode dest;
 

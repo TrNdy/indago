@@ -4,7 +4,6 @@ import com.indago.pg.segments.SegmentNode;
 
 public class DivisionHypothesis extends AssignmentNode {
 
-	private double cost;
 	private final SegmentNode src;
 	private final SegmentNode dest1;
 	private final SegmentNode dest2;
