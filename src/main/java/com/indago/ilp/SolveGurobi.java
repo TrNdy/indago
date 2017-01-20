@@ -139,7 +139,15 @@ public class SolveGurobi {
 
 		// Optimize model
 		model.optimize();
-		env.message( "Obj: " + model.get( GRB.DoubleAttr.ObjVal ) );
+
+		final int optimstatus = model.get( GRB.IntAttr.Status );
+		double objval = -1;
+		if ( optimstatus == GRB.Status.OPTIMAL ) {
+			objval = model.get( GRB.DoubleAttr.ObjVal );
+			env.message( "Optimal objective value: " + objval );
+		} else if ( optimstatus == GRB.Status.INFEASIBLE ) {
+			throw new IllegalStateException( "Model is INFEASIBLE! (Did the latest Leveraged Edit cause this?)" );
+		}
 
 		final double[] dvals = model.get( GRB.DoubleAttr.X, vars );
 		final int[] vals = new int[ dvals.length ];
