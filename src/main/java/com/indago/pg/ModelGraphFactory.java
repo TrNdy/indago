@@ -94,22 +94,22 @@ public class ModelGraphFactory {
 			}
 
 			@Override
-			public Set< SegmentNode > getForcedByMoveNodesTo() {
+			public Set< SegmentNode > getForcedSegmentNodeMovesTo() {
 				return null;
 			}
 
 			@Override
-			public Set< SegmentNode > getForcedByDivisionNodesTo() {
+			public Set< SegmentNode > getForcedSegmentNodeDivisionsTo() {
 				return null;
 			}
 
 			@Override
-			public Set< SegmentNode > getForcedByMoveNodesFrom() {
+			public Set< SegmentNode > getForcedSegmentNodeMovesFrom() {
 				return null;
 			}
 
 			@Override
-			public Set< SegmentNode > getForcedByDivisionNodesFrom() {
+			public Set< SegmentNode > getForcedSegmentNodeDivisionsFrom() {
 				return null;
 			}
 

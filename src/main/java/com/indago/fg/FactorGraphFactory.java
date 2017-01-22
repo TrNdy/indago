@@ -205,8 +205,8 @@ public class FactorGraphFactory {
 				else
 					IndagoLog.log.warn( "Disappearance cannot be forced. (Missing assignments in assignment pool?)" );
 			}
-			for ( final SegmentNode forcedNode : frameModel.getForcedByMoveNodesTo() ) {
-				IndagoLog.log.info( "Consider incoming movement force for: " + forcedNode.toString() );
+			for ( final SegmentNode forcedNode : frameModel.getForcedSegmentNodeMovesTo() ) {
+				IndagoLog.log.info( "Consider incoming movement force for node: " + forcedNode.toString() );
 				final ArrayList< Variable > vars = new ArrayList<>();
 				for ( final MovementHypothesis move : forcedNode.getInAssignments().getMoves() ) {
 					vars.add( varmap.get( move ) );
@@ -217,8 +217,8 @@ public class FactorGraphFactory {
 					IndagoLog.log.warn( ">> Movement cannot be forced. (Missing assignments in assignment pool?)" );
 				}
 			}
-			for ( final SegmentNode forcedNode : frameModel.getForcedByDivisionNodesTo() ) {
-				IndagoLog.log.info( "Consider incoming division force for: " + forcedNode.toString() );
+			for ( final SegmentNode forcedNode : frameModel.getForcedSegmentNodeDivisionsTo() ) {
+				IndagoLog.log.info( "Consider incoming division force for node: " + forcedNode.toString() );
 				final ArrayList< Variable > vars = new ArrayList<>();
 				for ( final DivisionHypothesis division : forcedNode.getInAssignments().getDivisions() ) {
 					vars.add( varmap.get( division ) );
@@ -229,8 +229,8 @@ public class FactorGraphFactory {
 					IndagoLog.log.warn( ">> Division cannot be forced. (Missing assignments in assignment pool?)" );
 				}
 			}
-			for ( final SegmentNode forcedNode : frameModel.getForcedByMoveNodesFrom() ) {
-				IndagoLog.log.info( "Consider outgoing movement force for: " + forcedNode.toString() );
+			for ( final SegmentNode forcedNode : frameModel.getForcedSegmentNodeMovesFrom() ) {
+				IndagoLog.log.info( "Consider outgoing movement force for node: " + forcedNode.toString() );
 				final ArrayList< Variable > vars = new ArrayList<>();
 				for ( final MovementHypothesis move : forcedNode.getOutAssignments().getMoves() ) {
 					vars.add( varmap.get( move ) );
@@ -241,8 +241,8 @@ public class FactorGraphFactory {
 					IndagoLog.log.warn( ">> Movement cannot be forced. (Missing assignments in assignment pool?)" );
 				}
 			}
-			for ( final SegmentNode forcedNode : frameModel.getForcedByDivisionNodesFrom() ) {
-				IndagoLog.log.info( "Consider outgoing division force for: " + forcedNode.toString() );
+			for ( final SegmentNode forcedNode : frameModel.getForcedSegmentNodeDivisionsFrom() ) {
+				IndagoLog.log.info( "Consider outgoing division force for node: " + forcedNode.toString() );
 				final ArrayList< Variable > vars = new ArrayList<>();
 				for ( final DivisionHypothesis division : forcedNode.getOutAssignments().getDivisions() ) {
 					vars.add( varmap.get( division ) );
@@ -251,6 +251,62 @@ public class FactorGraphFactory {
 					constraints.add( Factors.equalOneConstraint( vars ) );
 				} else {
 					IndagoLog.log.warn( ">> Division cannot be forced. (Missing assignments in assignment pool?)" );
+				}
+			}
+			for ( final ConflictSet set : frameModel.getForcedConflictSetMovesTo() ) {
+				IndagoLog.log.info( "Consider incoming movement force for set: " + set.toString() );
+				final ArrayList< Variable > vars = new ArrayList<>();
+				for ( final SegmentNode node : set ) {
+					for ( final MovementHypothesis move : node.getInAssignments().getMoves() ) {
+						vars.add( varmap.get( move ) );
+					}
+				}
+				if ( vars.size() > 0 ) {
+					constraints.add( Factors.equalOneConstraint( vars ) );
+				} else {
+					IndagoLog.log.warn( ">> Movement for set cannot be forced. (Missing assignments in assignment pool?)" );
+				}
+			}
+			for ( final ConflictSet set : frameModel.getForcedConflictSetMovesFrom() ) {
+				IndagoLog.log.info( "Consider outgoing movement force for set: " + set.toString() );
+				final ArrayList< Variable > vars = new ArrayList<>();
+				for ( final SegmentNode node : set ) {
+					for ( final MovementHypothesis move : node.getOutAssignments().getMoves() ) {
+						vars.add( varmap.get( move ) );
+					}
+				}
+				if ( vars.size() > 0 ) {
+					constraints.add( Factors.equalOneConstraint( vars ) );
+				} else {
+					IndagoLog.log.warn( ">> Movement for set cannot be forced. (Missing assignments in assignment pool?)" );
+				}
+			}
+			for ( final ConflictSet set : frameModel.getForcedConflictSetDivisionsTo() ) {
+				IndagoLog.log.info( "Consider incoming division force for set: " + set.toString() );
+				final ArrayList< Variable > vars = new ArrayList<>();
+				for ( final SegmentNode node : set ) {
+					for ( final DivisionHypothesis div : node.getInAssignments().getDivisions() ) {
+						vars.add( varmap.get( div ) );
+					}
+				}
+				if ( vars.size() > 0 ) {
+					constraints.add( Factors.equalOneConstraint( vars ) );
+				} else {
+					IndagoLog.log.warn( ">> Movement for set cannot be forced. (Missing assignments in assignment pool?)" );
+				}
+			}
+			for ( final ConflictSet set : frameModel.getForcedConflictSetDivisionsFrom() ) {
+				IndagoLog.log.info( "Consider outgoing division force for set: " + set.toString() );
+				final ArrayList< Variable > vars = new ArrayList<>();
+				for ( final SegmentNode node : set ) {
+					for ( final DivisionHypothesis div : node.getOutAssignments().getDivisions() ) {
+						vars.add( varmap.get( div ) );
+					}
+				}
+				if ( vars.size() > 0 ) {
+					constraints.add( Factors.equalOneConstraint( vars ) );
+				} else {
+					IndagoLog.log.warn( ">> Movement for set cannot be forced. (Missing assignments in assignment pool?)" );
 				}
 			}
 		}
