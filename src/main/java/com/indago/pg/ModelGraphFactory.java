@@ -67,49 +67,49 @@ public class ModelGraphFactory {
 
 			@Override
 			public void force( final SegmentNode segVar ) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void avoid( final SegmentNode segVar ) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public Set< SegmentNode > getForcedNodes() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
 			public Set< SegmentNode > getAvoidedNodes() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
 			public Set< SegmentNode > getForcedByAppearanceNodes() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
 			public Set< SegmentNode > getForcedByDisappearanceNodes() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
-			public Set< SegmentNode > getForcedByMoveNodes() {
-				// TODO Auto-generated method stub
+			public Set< SegmentNode > getForcedByMoveNodesTo() {
 				return null;
 			}
 
 			@Override
-			public Set< SegmentNode > getForcedByDivisionNodes() {
-				// TODO Auto-generated method stub
+			public Set< SegmentNode > getForcedByDivisionNodesTo() {
+				return null;
+			}
+
+			@Override
+			public Set< SegmentNode > getForcedByMoveNodesFrom() {
+				return null;
+			}
+
+			@Override
+			public Set< SegmentNode > getForcedByDivisionNodesFrom() {
 				return null;
 			}
 
