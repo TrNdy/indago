@@ -113,6 +113,26 @@ public class ModelGraphFactory {
 				return null;
 			}
 
+			@Override
+			public Set< ConflictSet > getForcedConflictSetMovesTo() {
+				return null;
+			}
+
+			@Override
+			public Set< ConflictSet > getForcedConflictSetMovesFrom() {
+				return null;
+			}
+
+			@Override
+			public Set< ConflictSet > getForcedConflictSetDivisionsTo() {
+				return null;
+			}
+
+			@Override
+			public Set< ConflictSet > getForcedConflictSetDivisionsFrom() {
+				return null;
+			}
+
 		};
 
 		final AssignmentMapper< SegmentNode, LabelingSegment > mapper =
