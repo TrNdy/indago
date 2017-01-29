@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>sc.fiji</groupId>
 		<artifactId>pom-indago</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.2-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -22,6 +22,10 @@
 	<description>indigare (ital.) - investigate.</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.indago</groupId>
+			<artifactId>ui-elements</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.indago</groupId>
 			<artifactId>IndagoLoggingWrapper</artifactId>
