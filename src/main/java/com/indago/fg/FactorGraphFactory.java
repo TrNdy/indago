@@ -21,6 +21,8 @@ import com.indago.pg.assignments.MovementHypothesis;
 import com.indago.pg.segments.ConflictSet;
 import com.indago.pg.segments.SegmentNode;
 
+import indago.ui.progress.ProgressListener;
+
 /**
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  * @author Florian Jug &lt;jug@mpi-cbg.de&gt;
@@ -85,7 +87,11 @@ public class FactorGraphFactory {
 		return new MappedFactorGraph( fg, varmap, mapper );
 	}
 
-	public static MappedFactorGraph createFactorGraph( final TrackingProblem trackingModel ) {
+	public static MappedFactorGraph createFactorGraph( final TrackingProblem trackingModel, final List< ProgressListener > progressListeners ) {
+
+		for ( final ProgressListener progressListener : progressListeners ) {
+			progressListener.resetProgress( "Building tracking factor graph (FG)...", 4 * trackingModel.getTimepoints().size() );
+		}
 
 		final Map< IndicatorNode, Variable > varmap = new HashMap< >();
 
@@ -110,6 +116,10 @@ public class FactorGraphFactory {
 			}
 			unaries.addAll( frameMFG.getFg().getUnaries() );
 			constraints.addAll( frameMFG.getFg().getConstraints() );
+
+			for ( final ProgressListener progressListener : progressListeners ) {
+				progressListener.hasProgressed();
+			}
 		}
 
 		// Connect timepoints as described in given model graph
@@ -153,6 +163,10 @@ public class FactorGraphFactory {
 					constraints.add( Factors.firstImpliesAtLeastOneOtherConstraint( divvar, fromFgVar, toFgVar1, toFgVar2 ) );
 				}
 			}
+
+			for ( final ProgressListener progressListener : progressListeners ) {
+				progressListener.hasProgressed();
+			}
 		}
 
 		// Add continuation constraints (sum left NH = sum right NH = value segVar)
@@ -173,6 +187,10 @@ public class FactorGraphFactory {
 					varsToConnect2.add( varmap.get( assVar ) );
 				}
 				constraints.add( Factors.firstExactlyWithOneOtherOrNoneConstraint( varsToConnect2 ) );
+			}
+
+			for ( final ProgressListener progressListener : progressListeners ) {
+				progressListener.hasProgressed();
 			}
 		}
 
@@ -308,6 +326,10 @@ public class FactorGraphFactory {
 				} else {
 					IndagoLog.log.warn( ">> Movement for set cannot be forced. (Missing assignments in assignment pool?)" );
 				}
+			}
+
+			for ( final ProgressListener progressListener : progressListeners ) {
+				progressListener.hasProgressed();
 			}
 		}
 
