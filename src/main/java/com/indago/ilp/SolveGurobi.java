@@ -35,6 +35,8 @@ public class SolveGurobi {
 
 	private GRBEnv env;
 
+	private GRBModel model;
+
 	public SolveGurobi() throws GRBException {
 		this( defaultLogFileDirectory );
 	}
@@ -68,6 +70,15 @@ public class SolveGurobi {
 	 */
 	@SuppressWarnings( "unchecked" )
 	public Assignment< Variable > solve( final UnaryCostConstraintGraph fg, final GRBCallback callback ) throws GRBException {
+		createEnvIfNecessary();
+
+		if ( model != null ) {
+			// Dispose of model
+			model.dispose();
+		}
+
+		model = new GRBModel( env );
+
 		final Collection< Variable > variables = fg.getVariables();
 		final Collection< Factor > unaries = fg.getUnaries();
 		final Collection< Factor > constraints = fg.getConstraints();
@@ -76,9 +87,6 @@ public class SolveGurobi {
 		int variableIndex = 0;
 		for ( final Variable v : variables )
 			variableToIndex.put( v, variableIndex++ );
-
-		createEnvIfNecessary();
-		final GRBModel model = new GRBModel( env );
 
 		// Hook in callback
 		if ( callback != null ) {
@@ -174,10 +182,21 @@ public class SolveGurobi {
 //		}
 //		System.out.println( String.format( ">> %d, %d, %d", numvars, integral, matching ) );
 
-		// Dispose of model
-		model.dispose();
-
 		return new GurobiAssignment( variableToIndex, vals );
+	}
+
+	/**
+	 * Calls gurobi's write method with the given filename.
+	 * Note: you must have solved a model prior to calling this function.
+	 *
+	 * @param filename
+	 */
+	public void saveLatestModel( final String filename ) {
+		try {
+			if ( model != null ) model.write( filename );
+		} catch ( final GRBException e ) {
+			e.printStackTrace();
+		}
 	}
 
 	public void dispose() throws GRBException {
