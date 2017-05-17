@@ -1,5 +1,6 @@
 package com.indago.util;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,5 +24,13 @@ public class Bimap< A, B > {
 
 	public int size() {
 		return ab.size();
+	}
+
+	public Collection< A > valuesAs() {
+		return ba.values();
+	}
+
+	public Collection< B > valuesBs() {
+		return ab.values();
 	}
 }

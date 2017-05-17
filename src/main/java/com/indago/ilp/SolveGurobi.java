@@ -182,7 +182,7 @@ public class SolveGurobi {
 //		}
 //		System.out.println( String.format( ">> %d, %d, %d", numvars, integral, matching ) );
 
-		return new GurobiAssignment( variableToIndex, vals );
+		return new GurobiResult( variableToIndex, vals, model );
 	}
 
 	/**
@@ -192,10 +192,28 @@ public class SolveGurobi {
 	 * @param filename
 	 */
 	public void saveLatestModel( final String filename ) {
+		saveModel( model, filename );
+	}
+
+	public static void saveModel( final GRBModel model, final String filename ) {
 		try {
 			if ( model != null ) model.write( filename );
 		} catch ( final GRBException e ) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Retrieves the energy corresponding to the latest computed solution.
+	 *
+	 * @return returns latest computed energy, or <code>Double.NaN</code> if not
+	 *         applicable.
+	 */
+	public double getLatestEnergy() {
+		try {
+			return model.get( GRB.DoubleAttr.ObjVal );
+		} catch ( final GRBException e ) {
+			return Double.NaN;
 		}
 	}
 
@@ -218,17 +236,21 @@ public class SolveGurobi {
 		return ( ( logFileDirectory != null && logFileDirectory.exists() ) ? logFileDirectory.getAbsolutePath() : "." ) + "/indago_gurobi.log";
 	}
 
-	private static class GurobiAssignment implements Assignment< Variable > {
+	public static class GurobiResult implements Assignment< Variable > {
 
 		private final TObjectIntMap< Variable > variableToIndex;
 
 		private final int[] vals;
 
-		public GurobiAssignment(
+		private final GRBModel GRBModel;
+
+		public GurobiResult(
 				final TObjectIntMap< Variable > variableToIndex,
-				final int[] vals ) {
+				final int[] vals,
+				final GRBModel model ) {
 			this.variableToIndex = variableToIndex;
 			this.vals = vals;
+			this.GRBModel = model;
 		}
 
 		@Override
@@ -239,6 +261,20 @@ public class SolveGurobi {
 		@Override
 		public int getAssignment( final Variable var ) {
 			return vals[ variableToIndex.get( var ) ];
+		}
+
+		/**
+		 * @return
+		 */
+		public GRBModel getModel() {
+			return GRBModel;
+		}
+
+		/**
+		 * @return the variableToIndex
+		 */
+		public TObjectIntMap< Variable > getVariableToIndex() {
+			return variableToIndex;
 		}
 	}
 
