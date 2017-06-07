@@ -12,10 +12,7 @@ import com.indago.fg.UnaryCostConstraintGraph;
 import com.indago.fg.Variable;
 
 import gnu.trove.impl.Constants;
-import gnu.trove.iterator.TObjectDoubleIterator;
-import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import gurobi.GRB;
 import gurobi.GRBCallback;
@@ -83,7 +80,8 @@ public class SolveGurobi {
 		final Collection< Factor > unaries = fg.getUnaries();
 		final Collection< Factor > constraints = fg.getConstraints();
 
-		final TObjectIntMap< Variable > variableToIndex = new TObjectIntHashMap<>();
+		final int NO_VALUE = -1;
+		final TObjectIntMap< Variable > variableToIndex = new TObjectIntHashMap<>( variables.size(), Constants.DEFAULT_LOAD_FACTOR, NO_VALUE );
 		int variableIndex = 0;
 		for ( final Variable v : variables )
 			variableToIndex.put( v, variableIndex++ );
@@ -98,30 +96,27 @@ public class SolveGurobi {
 		model.getEnv().set( GRB.IntParam.Presolve, GRB_PRESOLVE );
 
 		// Create variables
-		final GRBVar[] vars = model.addVars( variables.size(), GRB.BINARY );
+		final GRBVar[] objectiveVars = model.addVars( variables.size(), GRB.BINARY );
 
 		// Integrate new variables
 		model.update();
 
 		// Set objective: minimize costs
 		double constantTerm = 0;
-		final TObjectDoubleMap< Variable > variableToCoeff = new TObjectDoubleHashMap<>(
-				variables.size(), Constants.DEFAULT_LOAD_FACTOR, 0 );
+		final double[] objectiveCoeffs = new double[ variables.size() ];
 		for ( final Factor factor : unaries ) {
 			final Variable variable = factor.getVariables().get( 0 );
 			final double cost0 = factor.getFunction().evaluate( 0 );
 			final double cost1 = factor.getFunction().evaluate( 1 );
 			constantTerm += cost0;
-			final double coeff = ( cost1 - cost0 ) + variableToCoeff.get( variable );
-			variableToCoeff.put( variable, coeff );
-		}
-		final double[] objectiveCoeffs = new double[ variableToCoeff.size() ];
-		final GRBVar[] objectiveVars = new GRBVar[ variableToCoeff.size() ];
-		final TObjectDoubleIterator< Variable > iterator = variableToCoeff.iterator();
-		for ( int i = 0; iterator.hasNext(); ++i ) {
-			iterator.advance();
-			objectiveVars[ i ] = vars[ variableToIndex.get( iterator.key() ) ];
-			objectiveCoeffs[ i ] = iterator.value();
+			if ( variableToIndex.get( variable ) == 0 ) {
+				System.out.println( "muh!" );
+			}
+			double coeff = 0;
+			if ( variableToIndex.get( variable ) != NO_VALUE ) {
+				coeff = ( cost1 - cost0 ) + objectiveCoeffs[ variableToIndex.get( variable ) ]; //variableToCoeff.get( variable );
+			}
+			objectiveCoeffs[ variableToIndex.get( variable ) ] = coeff;
 		}
 		final GRBLinExpr expr = new GRBLinExpr();
 		expr.addTerms( objectiveCoeffs, objectiveVars );
@@ -135,9 +130,11 @@ public class SolveGurobi {
 
 			final double[] constrCoeffs = constr.getCoefficients();
 			final GRBVar[] constrVars = new GRBVar[ arity ];
+			final String[] constrVarNames = new String[ arity ];
 			final List< Variable > fv = factor.getVariables();
 			for ( int i = 0; i < arity; ++i ) {
-				constrVars[ i ] = vars[ variableToIndex.get( fv.get( i ) ) ];
+				constrVars[ i ] = objectiveVars[ variableToIndex.get( fv.get( i ) ) ];
+				constrVarNames[ i ] = constrVars[ i ].get( GRB.StringAttr.VarName );
 			}
 
 			final GRBLinExpr lhsExprs = new GRBLinExpr();
@@ -157,7 +154,7 @@ public class SolveGurobi {
 			throw new IllegalStateException( "Model is INFEASIBLE! (Did the latest Leveraged Edit cause this?)" );
 		}
 
-		final double[] dvals = model.get( GRB.DoubleAttr.X, vars );
+		final double[] dvals = model.get( GRB.DoubleAttr.X, objectiveVars );
 		final int[] vals = new int[ dvals.length ];
 		for ( int i = 0; i < vals.length; ++i )
 			vals[ i ] = ( int ) Math.round( dvals[ i ] );
