@@ -132,7 +132,6 @@ public class FactorGraphFactory {
 					final Variable appvar = Variables.binary();
 					varmap.add( app, appvar );
 					unaries.add( Factors.unary( appvar, 0.0, app.getCost() ) );
-					constraints.add( Factors.firstImpliesAtLeastOneOtherConstraint( appvar, toFgVar ) );
 				}
 
 				for ( final DisappearanceHypothesis disapp : segVar.getOutAssignments().getDisappearances() ) {
@@ -140,26 +139,23 @@ public class FactorGraphFactory {
 					final Variable disappvar = Variables.binary();
 					varmap.add( disapp, disappvar );
 					unaries.add( Factors.unary( disappvar, 0.0, disapp.getCost() ) );
-					constraints.add( Factors.firstImpliesAtLeastOneOtherConstraint( disappvar, fromFgVar ) );
 				}
 
-				for ( final MovementHypothesis move : segVar.getInAssignments().getMoves() ) {
+				for ( final MovementHypothesis move : segVar.getOutAssignments().getMoves() ) {
 					final Variable fromFgVar = varmap.getB( move.getSrc() );
 					final Variable toFgVar = varmap.getB( move.getDest() );
 					final Variable movevar = Variables.binary();
 					varmap.add( move, movevar );
 					unaries.add( Factors.unary( movevar, 0.0, move.getCost() ) );
-					constraints.add( Factors.firstImpliesAtLeastOneOtherConstraint( movevar, fromFgVar, toFgVar ) );
 				}
 
-				for ( final DivisionHypothesis div : segVar.getInAssignments().getDivisions() ) {
+				for ( final DivisionHypothesis div : segVar.getOutAssignments().getDivisions() ) {
 					final Variable fromFgVar = varmap.getB( div.getSrc() );
 					final Variable toFgVar1 = varmap.getB( div.getDest1() );
 					final Variable toFgVar2 = varmap.getB( div.getDest2() );
 					final Variable divvar = Variables.binary();
 					varmap.add( div, divvar );
 					unaries.add( Factors.unary( divvar, 0.0, div.getCost() ) );
-					constraints.add( Factors.firstImpliesAtLeastOneOtherConstraint( divvar, fromFgVar, toFgVar1, toFgVar2 ) );
 				}
 			}
 
