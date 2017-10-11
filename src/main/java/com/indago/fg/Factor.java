@@ -10,7 +10,7 @@ public class Factor {
 
 	private final ArrayList< Variable > variables;
 
-	public Factor( final Function function, final List< Variable > variables ) {
+	public Factor( final Function function, final List< ? extends Variable > variables ) {
 		assert variables.size() > 0;
 		this.function = function;
 		this.variables = new ArrayList<>( variables );

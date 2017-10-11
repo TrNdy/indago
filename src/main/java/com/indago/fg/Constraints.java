@@ -15,6 +15,7 @@ public class Constraints {
 	private static final ArrayList< LinearConstraint > equalZeroConstraints = new ArrayList< >();
 	private static final ArrayList< LinearConstraint > firstExactlyWithOneOtherOrNoneConstraints = new ArrayList< >();
 	private static final ArrayList< LinearConstraint > firstImpliesAtLeastOneOtherConstraints = new ArrayList< >();
+	private static final ArrayList< LinearConstraint > firstEqualsSumOfOthersConstraint = new ArrayList<>();
 
 	public static LinearConstraint atMostOneConstraint( final int arity ) {
 		while ( arity > atMostOneConstraints.size() - 1 ) {
@@ -90,5 +91,18 @@ public class Constraints {
 			firstImpliesAtLeastOneOtherConstraints.add( c );
 		}
 		return firstImpliesAtLeastOneOtherConstraints.get( arity );
+	}
+
+	public static Function firstEqualsSumOfOthersConstraint( final int arity ) {
+		while ( arity > firstEqualsSumOfOthersConstraint.size() - 1 ) {
+			final double[] coefficients = new double[ firstEqualsSumOfOthersConstraint.size() ];
+			Arrays.fill( coefficients, -1 );
+			if ( coefficients.length > 0 ) {
+				coefficients[ 0 ] = 1;
+			}
+			final LinearConstraint c = new LinearConstraint( coefficients, EQ, 0, Domains.getDefaultBinaryArgumentDomains( arity ) );
+			firstEqualsSumOfOthersConstraint.add( c );
+		}
+		return firstEqualsSumOfOthersConstraint.get( arity );
 	}
 }

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.indago.data.segmentation.Segment;
-import com.indago.old_fg.FactorGraph;
+import com.indago.fg.FactorGraph;
 
 /**
  * A <code>FactorGraph</code> enriched by a dictionary that maps instances of

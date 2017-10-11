@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class Variable {
 
-	private final ArrayList< Factor > factors;
+	protected final ArrayList< Factor > factors;
 
-	private final Domain domain;
+	protected final Domain domain;
 
 	public Variable( final Domain domain ) {
 		this.domain = domain;

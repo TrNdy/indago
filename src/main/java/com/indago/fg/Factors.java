@@ -47,4 +47,12 @@ public class Factors {
 		return new Factor( Constraints
 				.firstImpliesAtLeastOneOtherConstraint( variables.size() ), variables );
 	}
+	// - - - - - - - - - - - - - - - - - - - - - - -
+	public static Factor firstEqualsSumOfOthersConstraint( final Variable... variables ) {
+		return new Factor( Constraints.firstEqualsSumOfOthersConstraint( variables.length ), variables );
+	}
+
+	public static Factor firstEqualsSumOfOthersConstraint( final List< ? extends Variable > variables ) {
+		return new Factor( Constraints.firstEqualsSumOfOthersConstraint( variables.size() ), variables );
+	}
 }
