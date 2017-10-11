@@ -19,10 +19,11 @@ import net.imglib2.Cursor;
 public class SegmentCostUtils {
 
 	/**
-	 * @param sourceImage
-	 * @param s2_1
-	 * @param s2_2
-	 * @return
+	 * Takes all pixel positions of given segments and fits a line to it.
+	 * 
+	 * @param segments
+	 *            A number of segments as vararg.
+	 * @return a <code>SimpleRegresion</code> instance containing the fit.
 	 */
 	public static SimpleRegression getSimpleRegressionOfSegmentPixels( final LabelingSegment... segments ) {
 		final SimpleRegression regression = new SimpleRegression( false );
