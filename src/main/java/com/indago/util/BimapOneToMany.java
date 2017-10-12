@@ -3,8 +3,10 @@ package com.indago.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Tobias Pietzsch
@@ -14,7 +16,8 @@ public class BimapOneToMany< A, B > {
 
 	private final Map< A, List< B > > ab = new HashMap<>();
 	private final Map< B, A > ba = new HashMap<>();
-	private final List< B > valuesBs = new ArrayList<>();
+	private final Set< A > valuesAs = new HashSet<>();
+	private final Set< B > valuesBs = new HashSet<>();
 
 	public A getA( final B b ) {
 		return ba.get( b );
@@ -33,14 +36,22 @@ public class BimapOneToMany< A, B > {
 	}
 
 	public void add( final A a, final B b ) {
-		ab.computeIfAbsent( a, k -> new ArrayList<>() ).add( b );
+		List< B > list = ab.computeIfAbsent( a, k -> new ArrayList<>() );
+		if ( !list.contains( b ) )
+			list.add( b );
 		ba.put( b, a );
+		valuesAs.add( a );
 		valuesBs.add( b );
 	}
 
 	public void addAll( final A a, final Collection< ? extends B > bs ) {
-		ab.computeIfAbsent( a, k -> new ArrayList<>() ).addAll( bs );
+		List< B > list = ab.computeIfAbsent( a, k -> new ArrayList<>() );
+		for ( B b : bs ) {
+			if ( !list.contains( b ) )
+				list.add( b );
+		}
 		bs.forEach( b -> ba.put( b, a ) );
+		valuesAs.add( a );
 		valuesBs.addAll( bs );
 	}
 
@@ -49,7 +60,7 @@ public class BimapOneToMany< A, B > {
 	}
 
 	public Collection< A > valuesAs() {
-		return ba.values();
+		return valuesAs;
 	}
 
 	public Collection< B > valuesBs() {
