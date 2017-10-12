@@ -1,17 +1,21 @@
 package com.indago.fg;
 
 import com.indago.pg.IndicatorNode;
-import com.indago.util.Bimap;
+import com.indago.util.BimapOneToMany;
 
+/**
+ * @author Tobias Pietzsch
+ * @author Florian Jug
+ */
 public class MappedFactorGraph {
 
 	private final UnaryCostConstraintGraph fg;
-	private final Bimap< IndicatorNode, Variable > varMap;
+	private final BimapOneToMany< IndicatorNode, Variable > varMap;
 	private final AssignmentMapper< Variable, IndicatorNode > assignmentMap;
 
 	public MappedFactorGraph(
 			final UnaryCostConstraintGraph fg,
-			final Bimap< IndicatorNode, Variable > varmap,
+			final BimapOneToMany< IndicatorNode, Variable > varmap,
 			final AssignmentMapper< Variable, IndicatorNode > mapper ) {
 		this.fg = fg;
 		this.varMap = varmap;
@@ -28,7 +32,7 @@ public class MappedFactorGraph {
 	/**
 	 * @return the varmap
 	 */
-	public Bimap< IndicatorNode, Variable > getVarmap() {
+	public BimapOneToMany< IndicatorNode, Variable > getVarmap() {
 		return varMap;
 	}
 

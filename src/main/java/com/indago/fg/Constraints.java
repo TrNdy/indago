@@ -7,13 +7,16 @@ import static com.indago.fg.Relation.LE;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * @author Tobias Pietzsch
+ * @author Florian Jug
+ */
 // TODO: not currently thread-safe
 public class Constraints {
 
 	private static final ArrayList< LinearConstraint > atMostOneConstraints = new ArrayList< >();
 	private static final ArrayList< LinearConstraint > equalOneConstraints = new ArrayList< >();
 	private static final ArrayList< LinearConstraint > equalZeroConstraints = new ArrayList< >();
-	private static final ArrayList< LinearConstraint > firstExactlyWithOneOtherOrNoneConstraints = new ArrayList< >();
 	private static final ArrayList< LinearConstraint > firstImpliesAtLeastOneOtherConstraints = new ArrayList< >();
 	private static final ArrayList< LinearConstraint > firstEqualsSumOfOthersConstraint = new ArrayList<>();
 
@@ -59,23 +62,6 @@ public class Constraints {
 		return equalZeroConstraints.get( arity );
 	}
 
-	public static LinearConstraint firstExactlyWithOneOtherOrNoneConstraint( final int arity ) {
-		while ( arity > firstExactlyWithOneOtherOrNoneConstraints.size() - 1 ) {
-			final double[] coefficients = new double[ firstExactlyWithOneOtherOrNoneConstraints.size() ];
-			Arrays.fill( coefficients, -1 );
-			if ( coefficients.length > 0 ) {
-				coefficients[ 0 ] = 1;
-			}
-			final LinearConstraint c = new LinearConstraint(
-					coefficients,
-					EQ,
-					0,
-					Domains.getDefaultBinaryArgumentDomains( arity ) );
-			firstExactlyWithOneOtherOrNoneConstraints.add( c );
-		}
-		return firstExactlyWithOneOtherOrNoneConstraints.get( arity );
-	}
-
 	public static Function firstImpliesAtLeastOneOtherConstraint( final int arity ) {
 		while ( arity > firstImpliesAtLeastOneOtherConstraints.size() - 1 ) {
 			final double[] coefficients = new double[ firstImpliesAtLeastOneOtherConstraints.size() ];
@@ -100,7 +86,11 @@ public class Constraints {
 			if ( coefficients.length > 0 ) {
 				coefficients[ 0 ] = 1;
 			}
-			final LinearConstraint c = new LinearConstraint( coefficients, EQ, 0, Domains.getDefaultBinaryArgumentDomains( arity ) );
+			final LinearConstraint c = new LinearConstraint(
+					coefficients,
+					EQ,
+					0,
+					Domains.getDefaultBinaryArgumentDomains( arity ) );
 			firstEqualsSumOfOthersConstraint.add( c );
 		}
 		return firstEqualsSumOfOthersConstraint.get( arity );

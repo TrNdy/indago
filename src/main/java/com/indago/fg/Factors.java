@@ -2,6 +2,10 @@ package com.indago.fg;
 
 import java.util.List;
 
+/**
+ * @author Tobias Pietzsch
+ * @author Florian Jug
+ */
 public class Factors {
 
 	public static Factor unary( final Variable variable, final double... costs ) {
@@ -30,15 +34,6 @@ public class Factors {
 		return new Factor( Constraints.equalZeroConstraint( variables.size() ), variables );
 	}
 	// - - - - - - - - - - - - - - - - - - - - - - -
-	public static Factor firstExactlyWithOneOtherOrNoneConstraint( final Variable... variables ) {
-		return new Factor( Constraints
-				.firstExactlyWithOneOtherOrNoneConstraint( variables.length ), variables );
-	}
-	public static Factor firstExactlyWithOneOtherOrNoneConstraint( final List< Variable > variables ) {
-		return new Factor( Constraints
-				.firstExactlyWithOneOtherOrNoneConstraint( variables.size() ), variables );
-	}
-	// - - - - - - - - - - - - - - - - - - - - - - -
 	public static Factor firstImpliesAtLeastOneOtherConstraint( final Variable... variables ) {
 		return new Factor( Constraints
 				.firstImpliesAtLeastOneOtherConstraint( variables.length ), variables );
@@ -49,10 +44,12 @@ public class Factors {
 	}
 	// - - - - - - - - - - - - - - - - - - - - - - -
 	public static Factor firstEqualsSumOfOthersConstraint( final Variable... variables ) {
-		return new Factor( Constraints.firstEqualsSumOfOthersConstraint( variables.length ), variables );
+		return new Factor( Constraints
+				.firstEqualsSumOfOthersConstraint( variables.length ), variables );
 	}
 
 	public static Factor firstEqualsSumOfOthersConstraint( final List< ? extends Variable > variables ) {
-		return new Factor( Constraints.firstEqualsSumOfOthersConstraint( variables.size() ), variables );
+		return new Factor( Constraints
+				.firstEqualsSumOfOthersConstraint( variables.size() ), variables );
 	}
 }
