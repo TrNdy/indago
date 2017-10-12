@@ -82,7 +82,6 @@ public class FloatTypeImgLoader {
 	/**
 	 * @param listOfFiles
 	 * @return
-	 * @throws ImgIOException
 	 */
 	public static List< Img< FloatType > > loadTiffs( final File[] listOfFiles ) {
 		final List< Img< FloatType > > images = new ArrayList< Img< FloatType > >( listOfFiles.length );
@@ -149,11 +148,8 @@ public class FloatTypeImgLoader {
 	}
 
 	/**
-	 * @param listOfFiles
-	 * @param imgFactory
-	 * @param images
-	 * @param imageOpener
-	 * @param i
+	 *
+	 * @param file
 	 * @return
 	 * @throws ImgIOException
 	 */
@@ -173,11 +169,8 @@ public class FloatTypeImgLoader {
 	}
 
 	/**
-	 * @param listOfFiles
-	 * @param imgFactory
-	 * @param images
-	 * @param imageOpener
-	 * @param i
+	 *
+	 * @param file
 	 * @return
 	 * @throws ImgIOException
 	 */
@@ -329,7 +322,7 @@ public class FloatTypeImgLoader {
 	 * @param strFolder
 	 * @param filterString
 	 * @return a <code>List</code> of multi-channel images of type
-	 *         <code>Img<FloatType></code>.
+	 *         <code>Img</code> of <code>FloatType</code>.
 	 * @throws Exception
 	 */
 	public static < T extends RealType< T > & NativeType< T > > List< Img< FloatType >> load2DTiffSequenceAsListOfMultiChannelImgs( final String strFolder, final String filterString ) throws Exception {
@@ -347,8 +340,8 @@ public class FloatTypeImgLoader {
 	 * Loads a tiff sequence from the given folder. Only those files that
 	 * contain <code>filterString</code> as substring in their filename will be
 	 * considered.
-	 * Naming convention: "<some_name>_t####_c####.tif", where # are digits and
-	 * <some_name> does NOT contain "_t" or "_c".
+	 * Naming convention: 'some_name_t####_c####.tif', where # are digits and
+	 * 'some_name' does NOT contain '_t' or '_c'.
 	 *
 	 * @param strFolder
 	 * @param filterString
@@ -364,7 +357,7 @@ public class FloatTypeImgLoader {
 	 *            the number of digits used to express the time and channel
 	 *            indices, e.g. 0013 would be 4.
 	 * @return a <code>List</code> of multi-channel images of type
-	 *         <code>Img<FloatType></code>.
+	 *         <code>Img</code> of <code>FloatType</code>.
 	 * @throws Exception
 	 */
 	public static < T extends RealType< T > & NativeType< T > > List< Img< FloatType >> load2DTiffSequenceAsListOfMultiChannelImgs( final String strFolder, final String filterString, final int tmin, final int tmax, final int cmin, final int cmax, final int numDigits ) throws ImgIOException, IncompatibleTypeException, Exception {
@@ -399,7 +392,8 @@ public class FloatTypeImgLoader {
 	}
 
 	/**
-	 * @param channelImgs
+	 *
+	 * @param imageList
 	 * @return
 	 * @throws ImgIOException
 	 */
@@ -434,6 +428,7 @@ public class FloatTypeImgLoader {
 	}
 
 	/**
+	 *
 	 * @param frameList
 	 * @return
 	 * @throws ImgIOException

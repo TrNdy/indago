@@ -27,10 +27,9 @@ public class ImageSaver {
 //			CodecService.class, JAIIIOService.class );
 
 	/**
+	 *
 	 * @param filename
 	 * @param rai
-	 * @param context
-	 *            Needed for current workaround... sorry!
 	 */
 	public static < T extends RealType< T > > void saveAsTiff(
 			final String filename,

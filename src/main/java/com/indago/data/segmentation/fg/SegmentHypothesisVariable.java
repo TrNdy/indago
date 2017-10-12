@@ -22,7 +22,8 @@ public class SegmentHypothesisVariable< T extends Segment >
 	private final List< BooleanVariable > rightNeighbors;
 
 	/**
-	 * @param value
+	 *
+	 * @param segment
 	 */
 	public SegmentHypothesisVariable( final T segment ) {
 		this.segment = segment;

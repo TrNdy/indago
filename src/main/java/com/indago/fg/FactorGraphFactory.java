@@ -23,8 +23,8 @@ import com.indago.util.Bimap;
 import indago.ui.progress.ProgressListener;
 
 /**
- * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
- * @author Florian Jug &lt;jug@mpi-cbg.de&gt;
+ * @author Tobias Pietzsch
+ * @author Florian Jug
  */
 public class FactorGraphFactory {
 

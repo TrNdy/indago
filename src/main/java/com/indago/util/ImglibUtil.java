@@ -19,8 +19,8 @@ public class ImglibUtil {
 	 * Compute the min and max for any {@link Iterable}, like an {@link Img}.
 	 *
 	 * The only functionality we need for that is to iterate. Therefore we need
-	 * no {@link Cursor} that can localize itself, neither do we need a
-	 * {@link RandomAccess}. So we simply use the
+	 * no {@link net.imglib2.Cursor} that can localize itself, neither do we
+	 * need a {@link net.imglib2.RandomAccess}. So we simply use the
 	 * most simple interface in the hierarchy.
 	 *
 	 * @param iterableInterval

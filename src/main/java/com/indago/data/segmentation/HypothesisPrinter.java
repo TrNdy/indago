@@ -12,7 +12,7 @@ import net.imglib2.algorithm.tree.Forest;
  * Assigns integer ids to nodes from one or more hypothesis forests and uses
  * these for printing.
  *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch
  */
 public class HypothesisPrinter {
 

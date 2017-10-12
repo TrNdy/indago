@@ -22,10 +22,8 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.real.FloatType;
 
 /**
- * <h1>Transfer an image sequence into an optic flow field
- * <h1>
+ * Transfer an image sequence into an optic flow field
  *
- * <p>
  * Flow fields are calculated for each pair <em>(t,t+1)</em> of the sequence
  * independently. The motion vector for each pixel in image t is estimated by
  * searching the most similar looking pixel in image <em>t+1</em>. The
@@ -33,9 +31,9 @@ import net.imglib2.type.numeric.real.FloatType;
  * vicinity. The local vicinity is defined by a block and is calculated using
  * an {@link IntegralImage}. Both the size of the block and the search radius
  * are parameters of the method.
- * </p>
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>, Florian Jug <jug@mpi-cbg.de>
+ * @author Stephan Saalfeld
+ * @author Florian Jug
  */
 public class MSEBlockFlow
 {

@@ -9,7 +9,7 @@ import net.imglib2.Localizable;
  * A node in a {@link LabelingForest}.
  * Links to the {@link LabelingSegment} and its {@link LabelData}.
  *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch
  */
 public class LabelingTreeNode extends HypothesisTreeNode< LabelingTreeNode, LabelingSegment > implements Iterable< Localizable > {
 

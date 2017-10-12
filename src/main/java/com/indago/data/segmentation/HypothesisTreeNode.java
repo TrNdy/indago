@@ -9,7 +9,7 @@ package com.indago.data.segmentation;
  * @param <S>
  *            type of segment associated with this node.
  *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch
  */
 public class HypothesisTreeNode< T extends HypothesisTreeNode< T, S >, S extends Segment > extends AbstractHypothesisTreeNode< T > {
 

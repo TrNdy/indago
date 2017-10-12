@@ -11,19 +11,18 @@ import net.imglib2.algorithm.tree.TreeNode;
  * {@link #getConflictingHypotheses()} to get conflicting hypothesis of a node
  * within the same tree (all ancestors and descendants of the node).
  *
- * @param <T>
- *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch
+ * @author Florian Jug
  */
 public abstract class AbstractHypothesisTreeNode< T extends AbstractHypothesisTreeNode< T > > implements TreeNode< T > {
 
 	/**
-	 * child nodes in the {@link Forest}.
+	 * child nodes in the forest.
 	 */
 	private final ArrayList< T > children;
 
 	/**
-	 * parent node in the {@link SegmentForest}.
+	 * parent node in the forest.
 	 */
 	protected T parent;
 

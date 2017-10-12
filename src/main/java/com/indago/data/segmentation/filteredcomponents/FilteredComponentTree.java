@@ -6,11 +6,8 @@ import java.util.Iterator;
 
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.componenttree.BuildComponentTree;
-import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.algorithm.componenttree.ComponentForest;
-import net.imglib2.algorithm.componenttree.ComponentTree;
 import net.imglib2.algorithm.componenttree.PartialComponent;
-import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.algorithm.tree.Forest;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -22,18 +19,22 @@ import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.util.Util;
 
 /**
- * Component tree of an image stored as a tree of {@link FilteredComponent}s.
+ * Component tree of an image stored as a tree of
+ * {@link com.indago.data.segmentation.filteredcomponents.FilteredComponent}s.
  * This class is used both to represent and build the tree. For building the
- * tree {@link Component.Handler} is implemented to gather
- * {@link FilteredPartialComponent} emitted by {@link ComponentTree}. Only
+ * tree Handler is implemented to gather
+ * {@link com.indago.data.segmentation.filteredcomponents.FilteredPartialComponent}
+ * emitted by {@link net.imglib2.algorithm.componenttree.ComponentTree}. Only
  * components in a specific size range are accepted. The tree contains only one
- * {@link FilteredComponent} per branch. This is the component with the highest
+ * {@link com.indago.data.segmentation.filteredcomponents.FilteredComponent} per
+ * branch. This is the component with the highest
  * threshold, i.e., right before the branch joins another.
  *
  * @param <T>
  *            value type of the input image.
  *
  * @author Tobias Pietzsch
+ * @author Florian Jug
  */
 public final class FilteredComponentTree< T extends Type< T > > implements ComponentForest< FilteredComponent< T > >, Forest< FilteredComponent< T > >, Iterable< FilteredComponent< T > >, PartialComponent.Handler< FilteredPartialComponent< T > > {
 
@@ -81,7 +82,7 @@ public final class FilteredComponentTree< T extends Type< T > > implements Compo
 
 	/**
 	 * Build a component tree from an input image. Calls
-	 * {@link #buildComponentTree(RandomAccessibleInterval, RealType, ImgFactory, boolean)}
+	 * {@link #buildComponentTree}
 	 * using an {@link ArrayImgFactory} or {@link CellImgFactory} depending on
 	 * input image size.
 	 *
@@ -118,8 +119,9 @@ public final class FilteredComponentTree< T extends Type< T > > implements Compo
 	 * @param type
 	 *            a variable of the input image type.
 	 * @param imgFactory
-	 *            used for creating the {@link PixelList} image {@see
-	 *            FilteredComponentGenerator}.
+	 *            used for creating the
+	 *            {@link net.imglib2.algorithm.componenttree.pixellist.PixelList}
+	 *            image.
 	 * @param minComponentSize
 	 *            minimum allowed size for an accepted component.
 	 * @param maxComponentSize

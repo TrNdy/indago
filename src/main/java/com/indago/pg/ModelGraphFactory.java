@@ -21,7 +21,7 @@ import net.imglib2.util.Pair;
 import net.imglib2.util.ValuePair;
 
 /**
- * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ * @author Tobias Pietzsch
  */
 public class ModelGraphFactory {
 

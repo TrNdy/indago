@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * hypothesis forest}. It may have an ordered list of indices of the
  * {@link LabelingFragment}s making up the segment.
  *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch
  * @author fjug
  */
 public class LabelData {

@@ -5,7 +5,7 @@ package com.indago.fg;
  *
  * @param <V>
  *
- * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ * @author Tobias Pietzsch
  */
 public interface Assignment< V > {
 

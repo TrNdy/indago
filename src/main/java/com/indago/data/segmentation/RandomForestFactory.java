@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.indago.data.segmentation;
 
@@ -47,15 +47,18 @@ public class RandomForestFactory {
 	}
 
 	/**
+	 *
 	 * @param width
 	 * @param height
 	 * @param numSeedPixels
-	 * @param minRadius
+	 * @param maxRadius
 	 * @param minDeltaR
+	 * @param maxDeltaR
 	 * @param meanDeltaR
 	 * @param sdDeltaR
 	 * @param minIntensity
 	 * @param maxIntensity
+	 * @param seed
 	 * @return
 	 */
 	public static Img< UnsignedIntType > getForestImg( final int width, final int height, final int numSeedPixels, final double maxRadius, final double minDeltaR, final double maxDeltaR, final double meanDeltaR, final double sdDeltaR, final int minIntensity, final int maxIntensity, final int seed ) {

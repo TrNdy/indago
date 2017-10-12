@@ -142,22 +142,21 @@ public class DataMover {
 	 * will simply call <code>copy</code>.
 	 *
 	 * <b>General assumptions and rules:</b>
-	 * <li>User takes care that
+	 * User takes care that
 	 * <code>source</code> is defines on all interval locations of
 	 * <code>target</code>. (The source <i>exists</i> on all places the target
 	 * has to be filled.)
 	 *
 	 * <b>Supported conversions are:</b>
-	 * <li>From <code>FloatType</code>...
-	 * <li>
-	 * ...to <code>ARGBType</code>; source range is expected to be subset or
-	 * equal to <code>[0,1]</code>. If values <0 or >1 are found the source
+	 * From <code>FloatType</code> to <code>ARGBType</code>; source range is
+	 * expected to be subset or
+	 * equal to <code>[0,1]</code>. If values smaller 0 or larger than 1 are
+	 * found the source
 	 * image will be scanned for maximal and minimal values and the converted
 	 * image will be normalized, filling the entire target range
 	 * <code>[0,255]</code> in all 3 color channels.
-	 * <li>From
-	 * <code>ARGBType</code>...
-	 * <li>...to <code>FloatType</code>; conversion
+	 *
+	 * From <code>ARGBType</code> to <code>FloatType</code>; conversion
 	 * ignores A, and computed double value like this:
 	 * <code>v = ( 0.2989R + 0.5870G + 0.1140B ) / 255</code>, which leads to a
 	 * target <code>Img</code> that lies within <code>[0,1]</code>.

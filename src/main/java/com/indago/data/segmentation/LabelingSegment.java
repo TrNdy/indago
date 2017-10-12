@@ -12,7 +12,7 @@ import net.imglib2.util.Intervals;
  * A {@link Segment} that is backed by a {@link LabelRegion} providing the
  * segment pixels.
  *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch
  */
 public class LabelingSegment implements Segment {
 

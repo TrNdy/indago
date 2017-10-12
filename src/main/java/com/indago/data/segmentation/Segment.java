@@ -7,7 +7,7 @@ import net.imglib2.roi.IterableRegion;
 /**
  * A segment (hypothesis).
  *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch
  */
 public interface Segment extends EuclideanSpace {
 

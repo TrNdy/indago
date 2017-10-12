@@ -9,7 +9,7 @@ import net.imglib2.roi.labeling.LabelingMapping;
  * A fragment is a set of pixels that share the same set of {@link LabelData labels}.
  * A {@link LabelingFragment} does not store those pixels, only the set of labels.
  *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch
  */
 public class LabelingFragment {
 

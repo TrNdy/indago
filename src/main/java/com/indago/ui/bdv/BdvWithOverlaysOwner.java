@@ -30,14 +30,19 @@ public interface BdvWithOverlaysOwner extends BdvOwner {
 	}
 
 	/**
-	 * @param img
+	 *
+	 * @param overlay
+	 * @param title
 	 */
 	public default void bdvAdd( final BdvOverlay overlay, final String title ) {
 		bdvAdd( overlay, title, true );
 	}
 
 	/**
-	 * @param img
+	 *
+	 * @param overlay
+	 * @param title
+	 * @param isActive
 	 */
 	public default void bdvAdd( final BdvOverlay overlay, final String title, final boolean isActive ) {
 		final BdvSource source = BdvFunctions.showOverlay(
@@ -50,7 +55,8 @@ public interface BdvWithOverlaysOwner extends BdvOwner {
 	}
 
 	/**
-	 * @param img
+	 *
+	 * @param overlay
 	 */
 	public default void bdvRemove( final BdvOverlay overlay ) {
 		final BdvSource source = bdvGetSourceFor( overlay );
@@ -59,7 +65,7 @@ public interface BdvWithOverlaysOwner extends BdvOwner {
 		bdvGetOverlays().remove( overlay );
 	}
 
-	/*
+	/**
 	 *
 	 */
 	public default void bdvRemoveAllOverlays() {

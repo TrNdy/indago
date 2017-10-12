@@ -9,7 +9,7 @@ import com.indago.ilp.SolveGurobi;
  * constraints. This is the type of FactorGraph that we can currently solve with
  * {@link SolveGurobi}.
  *
- * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ * @author Tobias Pietzsch
  */
 public class UnaryCostConstraintGraph {
 
