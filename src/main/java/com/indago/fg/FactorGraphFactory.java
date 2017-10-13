@@ -3,10 +3,6 @@
  */
 package com.indago.fg;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.indago.IndagoLog;
 import com.indago.pg.IndicatorNode;
 import com.indago.pg.SegmentationProblem;
@@ -19,8 +15,11 @@ import com.indago.pg.assignments.MovementHypothesis;
 import com.indago.pg.segments.ConflictSet;
 import com.indago.pg.segments.SegmentNode;
 import com.indago.util.BimapOneToMany;
-
 import indago.ui.progress.ProgressListener;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Tobias Pietzsch
@@ -29,10 +28,6 @@ import indago.ui.progress.ProgressListener;
 public class FactorGraphFactory {
 
 	public static MappedFactorGraph createFactorGraph( final SegmentationProblem segmentationModel ) {
-		return createFactorGraph( segmentationModel, 0 );
-	}
-
-	public static MappedFactorGraph createFactorGraph( final SegmentationProblem segmentationModel, final int maxDelta ) {
 
 		final BimapOneToMany< IndicatorNode, Variable > varmap = new BimapOneToMany<>();
 
@@ -40,7 +35,7 @@ public class FactorGraphFactory {
 		final ArrayList< Factor > constraints = new ArrayList<>();
 
 		for ( final SegmentNode segNode : segmentationModel.getSegments() ) {
-			for ( int delta = 0; delta <= maxDelta; ++delta ) {
+			for ( int delta = 0; delta <= segNode.getMaxDelta(); ++delta ) {
 				final Variable var = Variables.binary();
 				varmap.add( segNode, var );
 				unaries.add( Factors.unary( var, 0.0, segNode.getCost() ) );
@@ -98,10 +93,6 @@ public class FactorGraphFactory {
 	}
 
 	public static MappedFactorGraph createFactorGraph( final TrackingProblem trackingModel, final List< ProgressListener > progressListeners ) {
-		return createFactorGraph( trackingModel, 0, progressListeners );
-	}
-
-	public static MappedFactorGraph createFactorGraph( final TrackingProblem trackingModel, final int maxDelta, final List< ProgressListener > progressListeners ) {
 
 		for ( final ProgressListener progressListener : progressListeners ) {
 			progressListener.resetProgress( "Building tracking factor graph (FG)...", 4 * trackingModel.getTimepoints().size() );
@@ -115,7 +106,7 @@ public class FactorGraphFactory {
 
 		// Create FGs for SegmentationModels (timepoints)
 		for ( final SegmentationProblem frameModel : trackingModel.getTimepoints() ) {
-			final MappedFactorGraph frameMFG = FactorGraphFactory.createFactorGraph( frameModel, maxDelta );
+			final MappedFactorGraph frameMFG = FactorGraphFactory.createFactorGraph( frameModel );
 
 			IndagoLog.log.info(
 					"#vars/#unaries/#constraints = " +
@@ -149,7 +140,7 @@ public class FactorGraphFactory {
 				}
 
 				for ( final MovementHypothesis move : segNode.getOutAssignments().getMoves() ) {
-					for ( int delta = 0; delta <= maxDelta; ++delta ) {
+					for ( int delta = 0; delta <= segNode.getMaxDelta(); ++delta ) {
 						final Variable movevar = Variables.binary();
 						varmap.add( move, movevar );
 						unaries.add( Factors.unary( movevar, 0.0, move.getCost() ) );
@@ -163,7 +154,7 @@ public class FactorGraphFactory {
 				}
 
 				for ( final DisappearanceHypothesis disapp : segNode.getOutAssignments().getDisappearances() ) {
-					for ( int delta = 0; delta <= maxDelta; ++delta ) {
+					for ( int delta = 0; delta <= segNode.getMaxDelta(); ++delta ) {
 						final Variable disappvar = Variables.binary();
 						varmap.add( disapp, disappvar );
 						unaries.add( Factors.unary( disappvar, 0.0, disapp.getCost() ) );
@@ -181,6 +172,7 @@ public class FactorGraphFactory {
 			final SegmentationProblem frameModel = trackingModel.getTimepoints().get( frameId );
 
 			for ( final SegmentNode segNode : frameModel.getSegments() ) {
+				int maxDelta = segNode.getMaxDelta();
 
 				// -- left neighborhood --
 				for ( int delta = 0; delta <= maxDelta; ++delta ) {
@@ -195,14 +187,19 @@ public class FactorGraphFactory {
 					}
 
 					// -- Move --
-					if ( delta > 0 ) {
-						for ( final AssignmentNode assNode : segNode.getInAssignments().getMoves() ) {
-							varsLeft.add( varmap.getB( assNode, delta - 1 ) );
+					if ( delta > 0 && delta < maxDelta ) {
+						for ( MovementHypothesis move : segNode.getInAssignments().getMoves() ) {
+							int fromMaxDelta = move.getSrc().getMaxDelta();
+							if ( delta - 1 < fromMaxDelta )
+								varsLeft.add( varmap.getB( move, delta - 1 ) );
 						}
 					}
 					if ( delta == maxDelta ) {
-						for ( final AssignmentNode assNode : segNode.getInAssignments().getMoves() ) {
-							varsLeft.add( varmap.getB( assNode, maxDelta ) );
+						for ( MovementHypothesis move : segNode.getInAssignments().getMoves() ) {
+							int fromMaxDelta = move.getSrc().getMaxDelta();
+							int fromMinDelta = Math.min( Math.max( 0, delta - 1 ), fromMaxDelta );
+							for ( int fromDelta = fromMinDelta; fromDelta <= fromMaxDelta; ++fromDelta )
+								varsLeft.add( varmap.getB( move, fromDelta ) );
 						}
 					}
 
