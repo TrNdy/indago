@@ -56,6 +56,7 @@ public interface Assignment< V > {
 	 * @return the label assigned to {@code variables}.
 	 */
 	default int getAssignment( final List< ? extends V > variables ) {
+		if ( variables == null ) return 0;
 		for ( final V v : variables )
 			if ( getAssignment( v ) != 0 )
 				return getAssignment( v );
