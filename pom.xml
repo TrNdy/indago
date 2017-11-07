@@ -44,17 +44,16 @@
 			<version>0.1.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.indago</groupId>
-			<artifactId>IndagoLoggingWrapper</artifactId>
-			<version>0.1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>io.scif</groupId>
 			<artifactId>scifio</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-ij</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-ops</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jung</groupId>
@@ -93,6 +92,15 @@
  		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-common</artifactId>
+			<version>2.66.1</version>
+		</dependency>
+		<dependency><!-- TODO: remove this dependency when LoggingPanel is part of scijava-ui-swing maven package -->
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-ui-swing</artifactId>
 		</dependency>
 	</dependencies>
 
