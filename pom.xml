@@ -22,7 +22,7 @@
 
 	<groupId>com.indago</groupId>
 	<artifactId>Indago</artifactId>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.1.2</version>
 
 	<name>indago</name>
 	<description>indigare (ital.) - investigate.</description>
@@ -140,7 +140,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/TrNdy/indago</connection>
 		<developerConnection>scm:git:git@github.com:TrNdy/indago</developerConnection>
-		<tag>HEAD</tag>
+		<tag>Indago-0.1.2</tag>
 		<url>https://github.com/TrNdy/indago</url>
 	</scm>
 	<issueManagement>
