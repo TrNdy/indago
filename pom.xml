@@ -5,14 +5,10 @@
 	<parent>
 		<groupId>sc.fiji</groupId>
 		<artifactId>pom-indago</artifactId>
-		<version>2.2.1</version>
+		<version>2.2.2</version>
 	</parent>
 
 	<properties>
-		<!-- <enforcer.skip>true</enforcer.skip> -->
-		<jung2.version>2.0.1</jung2.version>
-		<scijava.jvm.version>1.8</scijava.jvm.version>
-
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>TrNdy developers</license.copyrightOwners>
 
@@ -44,12 +40,6 @@
 		<dependency>
 			<groupId>com.indago</groupId>
 			<artifactId>indago-ui-elements</artifactId>
-			<version>0.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.indago</groupId>
-			<artifactId>IndagoLoggingWrapper</artifactId>
-			<version>0.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.scif</groupId>
@@ -60,42 +50,35 @@
 			<artifactId>imglib2-ij</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.jung</groupId>
-			<artifactId>jung-visualization</artifactId>
-			<version>${jung2.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.jung</groupId>
-			<artifactId>jung-graph-impl</artifactId>
-			<version>${jung2.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>nz.ac.waikato.cms.weka</groupId>
 			<artifactId>weka-dev</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>gurobi.com</groupId>
-			<artifactId>gurobi.jar</artifactId>
-			<version>6.5.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/gurobi.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>mpicbg</groupId>
-			<artifactId>mpicbg_</artifactId>
+			<groupId>com.gurobi</groupId>
+			<artifactId>gurobi-jar</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>mpicbg</groupId>
 			<artifactId>mpicbg</artifactId>
 		</dependency>
- 		<dependency>
+		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-ops</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-log-slf4j</artifactId>
+		</dependency>
+
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
