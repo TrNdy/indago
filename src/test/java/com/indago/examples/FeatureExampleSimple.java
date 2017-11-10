@@ -39,6 +39,9 @@ public class FeatureExampleSimple {
 		final Context c = new Context();
 		final OpService ops = c.getService( OpService.class );
 
+		if ( true )
+			throw new IllegalArgumentException();
+
 		/*
 		 * Call a single feature.
 		 */
@@ -47,9 +50,9 @@ public class FeatureExampleSimple {
 		final UnaryComputerOp< Img< FloatType >, DoubleType > meanOp = Computers.unary( ops, Mean.class, DoubleType.class, rndImgA );
 
 		// 2. Calculate and print results
-		meanOp.compute1( rndImgA, mean );
+		meanOp.compute( rndImgA, mean );
 		System.out.println( "Mean: " + mean.get() );
-		meanOp.compute1( rndImgB, mean );
+		meanOp.compute( rndImgB, mean );
 		System.out.println( "Mean: " + mean.get() );
 	}
 }

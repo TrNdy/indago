@@ -50,7 +50,7 @@ public class FeatureSet< I, O extends Type< O > >
 	public void compute( final I input )
 	{
 		for ( final UnaryComputerOp< I, O > computer : computers.values() )
-			computer.compute1( input, computer.out() );
+			computer.compute( input, computer.out() );
 	}
 
 	public List< O > getOutputs()
