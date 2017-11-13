@@ -18,7 +18,7 @@
 
 	<groupId>com.indago</groupId>
 	<artifactId>Indago</artifactId>
-	<version>0.1.5-SNAPSHOT</version>
+	<version>0.1.6-SNAPSHOT</version>
 
 	<name>indago</name>
 	<description>indigare (ital.) - investigate.</description>
