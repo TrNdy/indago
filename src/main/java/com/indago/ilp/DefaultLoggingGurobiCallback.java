@@ -1,6 +1,6 @@
 package com.indago.ilp;
 
-import org.slf4j.Logger;
+import org.scijava.log.Logger;
 
 import gurobi.GRB;
 import gurobi.GRBCallback;
