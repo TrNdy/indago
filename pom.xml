@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>sc.fiji</groupId>
 		<artifactId>pom-indago</artifactId>
-		<version>2.2.2</version>
+		<version>2.2.4</version>
 	</parent>
 
 	<properties>
@@ -70,8 +70,8 @@
 			<artifactId>imagej-ops</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.scijava</groupId>
-			<artifactId>scijava-log-slf4j</artifactId>
+			<groupId>com.miglayout</groupId>
+			<artifactId>miglayout</artifactId>
 		</dependency>
 
 		<!-- Test dependencies -->
