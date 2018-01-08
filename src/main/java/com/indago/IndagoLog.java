@@ -13,9 +13,14 @@ import org.scijava.log.Logger;
 public class IndagoLog {
 
 	// NB: Tr2d replaces this logger during runtime, when it sets up it's logging panel.
-	public static Logger log = stderrLogger().subLogger("Indago");
+	public static Logger log = stdLogger().subLogger("Indago");
 
+	@Deprecated
 	public static Logger stderrLogger() {
-		return new DefaultLogger(System.err::println, LogSource.newRoot(), LogLevel.INFO);
+		return stdLogger();
+	}
+
+	public static Logger stdLogger() {
+		return new DefaultLogger(System.out::print, LogSource.newRoot(), LogLevel.INFO);
 	}
 }
