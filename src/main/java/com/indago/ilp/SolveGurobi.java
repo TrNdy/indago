@@ -109,9 +109,6 @@ public class SolveGurobi {
 			final double cost0 = factor.getFunction().evaluate( 0 );
 			final double cost1 = factor.getFunction().evaluate( 1 );
 			constantTerm += cost0;
-			if ( variableToIndex.get( variable ) == 0 ) {
-				System.out.println( "muh!" );
-			}
 			double coeff = 0;
 			if ( variableToIndex.get( variable ) != NO_VALUE ) {
 				coeff = ( cost1 - cost0 ) + objectiveCoeffs[ variableToIndex.get( variable ) ]; //variableToCoeff.get( variable );
