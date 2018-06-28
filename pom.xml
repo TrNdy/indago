@@ -72,6 +72,7 @@
 		<dependency>
 			<groupId>com.miglayout</groupId>
 			<artifactId>miglayout</artifactId>
+			<classifier>swing</classifier>
 		</dependency>
 
 		<!-- Test dependencies -->
