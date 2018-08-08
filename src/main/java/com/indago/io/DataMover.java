@@ -3,6 +3,7 @@
  */
 package com.indago.io;
 
+import java.util.Arrays;
 import java.util.List;
 
 import io.scif.img.ImgIOException;
@@ -15,13 +16,13 @@ import net.imglib2.converter.Converter;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.loops.ClassCopyProvider;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
@@ -31,6 +32,9 @@ import net.imglib2.view.Views;
  *
  */
 public class DataMover {
+
+	private static final ClassCopyProvider<CopyLoopInterface> copyLoopFactory =
+			new ClassCopyProvider<>(CopyLoopClass.class, CopyLoopInterface.class);
 
 	/**
 	 * FROM: imglib Example 2c :)
@@ -49,44 +53,23 @@ public class DataMover {
 	 *            - an IterableInterval as target
 	 */
 	public static < T extends Type< T >> void copy( final RandomAccessible< T > source, final IterableInterval< T > target ) {
-		// create a cursor that automatically localizes itself on every move
-		final Cursor< T > targetCursor = target.localizingCursor();
-		final RandomAccess< T > sourceRandomAccess = source.randomAccess();
-
-		// iterate over the input cursor
-		while ( targetCursor.hasNext() ) {
-			// move input cursor forward
-			targetCursor.fwd();
-
-			// set the output cursor to the position of the input cursor
-			sourceRandomAccess.setPosition( targetCursor );
-
-			// set the value of this pixel of the output image, every Type
-			// supports T.set( T type )
-			targetCursor.get().set( sourceRandomAccess.get() );
-		}
-	}
-
-	public static < T1 extends Type< T1 >, T2 extends Type< T2 >> void copy( final RandomAccessible< T1 > source, final IterableInterval< T2 > target, final Converter< T1, T2 > converter ) {
-		// create a cursor that automatically localizes itself on every move
-		final Cursor< T2 > targetCursor = target.localizingCursor();
-		final RandomAccess< T1 > sourceRandomAccess = source.randomAccess();
-
-		// iterate over the input cursor
-		while ( targetCursor.hasNext() ) {
-			// move input cursor forward
-			targetCursor.fwd();
-
-			// set the output cursor to the position of the input cursor
-			sourceRandomAccess.setPosition( targetCursor );
-
-			// set converted value
-			converter.convert( sourceRandomAccess.get(), targetCursor.get() );
-		}
+		copy(source, target, (in, out) -> out.set(in));
 	}
 
 	public static < T extends Type< T >> void copy( final RandomAccessible< T > source, final RandomAccessibleInterval< T > target ) {
 		copy( source, Views.iterable( target ) );
+	}
+
+	public static < T extends Type< T >> void copy( final RandomAccessible< T > source, final Img< T > target ) {
+		copy( source, (IterableInterval<T>) target );
+	}
+
+	public static < S, T > void copy( final RandomAccessible< S > source, final IterableInterval< T > target, final Converter< S, T > converter ) {
+		RandomAccess< S > sourceRandomAccess = source.randomAccess();
+		Cursor< T > targetCursor = target.localizingCursor();
+		Object key = Arrays.asList(sourceRandomAccess.getClass(), sourceRandomAccess
+				.get().getClass(), targetCursor.getClass(), targetCursor.get().getClass(), converter.getClass());
+		copyLoopFactory.newInstanceForKey(key).copy(sourceRandomAccess, targetCursor, converter);
 	}
 
 	public static < T extends NativeType< T >> Img< T > createEmptyArrayImgLike( final RandomAccessibleInterval< ? > blueprint, final T type ) {
@@ -113,28 +96,19 @@ public class DataMover {
 	public static < T extends RealType< T > > void add(
 			final RandomAccessible< T > source,
 			final IterableInterval< T > target ) {
-		// create a cursor that automatically localizes itself on every move
-		final Cursor< T > targetCursor = target.localizingCursor();
-		final RandomAccess< T > sourceRandomAccess = source.randomAccess();
-
-		// iterate over the input cursor
-		while ( targetCursor.hasNext() ) {
-			// move input cursor forward
-			targetCursor.fwd();
-
-			// set the output cursor to the position of the input cursor
-			sourceRandomAccess.setPosition( targetCursor );
-
-			// add the value of this pixel of the output image, every Type
-			// supports T.set( T type )
-			targetCursor.get().add( sourceRandomAccess.get() );
-		}
+		copy(source, target, (in, out) -> out.add(in));
 	}
 
 	public static < T extends RealType< T > > void add(
 			final RandomAccessible< T > source,
 			final RandomAccessibleInterval< T > target ) {
 		add( source, Views.iterable( target ) );
+	}
+
+	public static < T extends RealType< T > > void add(
+			final RandomAccessible< T > source,
+			final Img< T > target ) {
+		add( source, (IterableInterval< T >) target );
 	}
 
 	/**
@@ -258,5 +232,31 @@ public class DataMover {
 		}
 
 		return stack;
+	}
+
+	// -- Helper classes --
+
+	public static class CopyLoopClass implements CopyLoopInterface {
+		// NB: This class needs to be public for ClassCopyProvider to work
+
+		@Override
+		public  < S, T > void copy(
+				RandomAccess< S > source, Cursor< T > target,
+				Converter< S, T > converter)
+		{
+			while ( target.hasNext() ) {
+				target.fwd();
+				source.setPosition(target);
+				converter.convert( source.get(), target.get() );
+			}
+		}
+	}
+
+	public interface CopyLoopInterface {
+		// NB: This class needs to be public for ClassCopyProvider to work
+
+		< S, T > void copy(
+				RandomAccess< S > source, Cursor< T > target,
+				Converter< S, T > converter);
 	}
 }

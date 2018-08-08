@@ -22,17 +22,26 @@ public class DataMoverBenchmark {
 	private final long[] dimensions = {1000, 1000};
 
 	Img<FloatType> floats = ArrayImgs.floats(dimensions);
+	Img<FloatType> floats2 = ArrayImgs.floats(dimensions);
 	Img<DoubleType > doubles = ArrayImgs.doubles(dimensions);
+	Img<DoubleType > doubles2 = ArrayImgs.doubles(dimensions);
 	Img<UnsignedShortType > shorts = ArrayImgs.unsignedShorts(dimensions);
+	Img<UnsignedShortType > shorts2 = ArrayImgs.unsignedShorts(dimensions);
 	Img<IntType > ints = ArrayImgs.ints(dimensions);
 
 	@Benchmark
-	public void testFloatToDouble() throws Exception {
+	public void benchmarkConvertAndCopy() throws Exception {
 		DataMover.convertAndCopy(floats, doubles);
 		DataMover.convertAndCopy(shorts, ints);
 		DataMover.convertAndCopy(shorts, floats);
 	}
 
+	@Benchmark
+	public void benchmarkCopy() {
+		DataMover.copy(floats, floats2);
+		DataMover.copy(doubles, doubles2);
+		DataMover.copy(shorts, shorts2);
+	}
 	public static void main( final String... args ) throws RunnerException
 	{
 		final Options opt = new OptionsBuilder()
