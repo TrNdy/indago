@@ -64,9 +64,9 @@ public class DataMover {
 		copy( source, (IterableInterval<T>) target );
 	}
 
-	public static < S, T > void copy( final RandomAccessible< S > source, final IterableInterval< T > target, final Converter< S, T > converter ) {
-		RandomAccess< S > sourceRandomAccess = source.randomAccess();
-		Cursor< T > targetCursor = target.localizingCursor();
+	public static < S, T > void copy( final RandomAccessible< ? extends S > source, final IterableInterval< ? extends T > target, final Converter< S, T > converter ) {
+		RandomAccess< ? extends S > sourceRandomAccess = source.randomAccess();
+		Cursor< ? extends T > targetCursor = target.localizingCursor();
 		Object key = Arrays.asList(sourceRandomAccess.getClass(), sourceRandomAccess
 				.get().getClass(), targetCursor.getClass(), targetCursor.get().getClass(), converter.getClass());
 		copyLoopFactory.newInstanceForKey(key).copy(sourceRandomAccess, targetCursor, converter);
@@ -148,38 +148,31 @@ public class DataMover {
 		final ST sourceType = source.randomAccess().get();
 		final TT targetType = target.firstElement();
 
-		// if source and target are of same type -> use copy since convert is not needed...
-		if ( sourceType.getClass().isInstance( targetType ) ) {
-			DataMover.copy( source, ( IterableInterval ) target );
-			return;
-		}
+		Converter<RealType<?>, NativeType<?>> converter = getConverter(sourceType, targetType);
 
-		// implemented conversion cases follow here...
+		DataMover.copy( source, target, converter );
+	}
 
-		if ( targetType instanceof DoubleType ) {
-			// RealType --> DoubleType
-			DataMover.copy( source, target, (in, out) -> ((DoubleType) out).set( in.getRealDouble() ) );
-			return;
-		}
+	private static < ST extends RealType< ST >, TT extends NativeType< TT > > Converter<RealType<?>,NativeType<?>> getConverter(ST sourceType, TT targetType) {
 
-		if ( targetType instanceof FloatType ) {
-			// RealType -> FloatType
-			DataMover.copy( source, target, (in, out) -> ((FloatType) out).set( in.getRealFloat() ) );
-			return;
-		}
+		if ( sourceType.getClass().isInstance( targetType ) )
+			return (in, out) -> ((Type) out).set(in);
+
+		if ( targetType instanceof DoubleType )
+			return (in, out) -> ((DoubleType) out).set( in.getRealDouble() );
+
+		if ( targetType instanceof FloatType )
+			return (in, out) -> ((FloatType) out).set(in.getRealFloat());
 
 		if ( targetType instanceof IntType ) {
-			if ( sourceType instanceof IntegerType ) {
-				DataMover.copy( source, target, (in, out) -> ((IntType) out).set( ((IntegerType) in).getInteger()));
-			}
-			else {
-				DataMover.copy( source, target, (in, out) -> ((IntType) out).set( Math.round(in.getRealFloat())));
-			}
-			return;
+			if ( sourceType instanceof IntegerType )
+				return (in, out) -> ((IntType) out).set( ((IntegerType) in).getInteger());
+			else
+				return (in, out) -> ((IntType) out).set( Math.round(in.getRealFloat()));
 		}
 
 		if ( sourceType instanceof FloatType && targetType instanceof ARGBType ) {
-			DataMover.copy( source, target, (in, out) -> {
+			return (in, out) -> {
 				int v;
 				try {
 					v = Math.round(((FloatType) in).get() * 255);
@@ -193,8 +186,7 @@ public class DataMover {
 					v = 0;
 				}
 				((ARGBType) out).set(ARGBType.rgba(v, v, v, 255));
-			});
-			return;
+			};
 		}
 
 		throw new RuntimeException( "Convertion from " + sourceType.getClass().toString() + " to " + targetType.getClass() + " not implemented!" );
@@ -241,7 +233,7 @@ public class DataMover {
 
 		@Override
 		public  < S, T > void copy(
-				RandomAccess< S > source, Cursor< T > target,
+				RandomAccess< ? extends S > source, Cursor< ? extends T > target,
 				Converter< S, T > converter)
 		{
 			while ( target.hasNext() ) {
@@ -256,7 +248,7 @@ public class DataMover {
 		// NB: This class needs to be public for ClassCopyProvider to work
 
 		< S, T > void copy(
-				RandomAccess< S > source, Cursor< T > target,
+				RandomAccess< ? extends S > source, Cursor< ? extends T > target,
 				Converter< S, T > converter);
 	}
 }
