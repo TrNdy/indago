@@ -165,13 +165,6 @@ public class DataMover {
 	 * @param target
 	 * @throws Exception
 	 */
-//    public static <ST extends NativeType<ST>, TT extends NativeType<TT>> void convertAndCopy(final Img<ST> source, final Img<TT> target) throws Exception {
-//	convertAndCopy( source, Views.iterable(target) );
-//    }
-//
-//    public static <ST extends NativeType<ST>, TT extends NativeType<TT>> void convertAndCopy(final RandomAccessible<ST> source, final RandomAccessibleInterval<TT> target) throws Exception {
-//	convertAndCopy( source, Views.iterable(target) );
-//    }
 
 	@SuppressWarnings( "unchecked" )
 	public static < ST extends RealType< ST >, TT extends NativeType< TT > > void convertAndCopy(
@@ -267,46 +260,7 @@ public class DataMover {
 
 					( ( IntType ) targetCursor.get() ).set( ( ( UnsignedShortType ) sourceRandomAccess.get() ).get() );
 				}
-//			} else
-//			if ( targetType instanceof ARGBType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				int v;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//					try {
-//						v =
-//								Math.round( ( ( UnsignedShortType ) sourceRandomAccess.get() ).getRealFloat() * 255 );
-//					} catch ( final ArrayIndexOutOfBoundsException e ) {
-//						v = 255; // If image-sizes do not match we pad with white pixels...
-//					}
-//					if ( v > 255 ) { throw new Exception( "TODO: in this case (source in not within [0,1]) I did not finish the code!!! Now would likely be a good time... ;)" ); }
-//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-//				}
-//			} else {
-//				throwException = true;
 			}
-//		} else if ( sourceType instanceof ARGBType ) {
-//
-//			// ARGBType --> FloatType
-//			if ( targetType instanceof ARGBType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				double v;
-//				int intRGB;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//					intRGB = ( ( ARGBType ) sourceRandomAccess.get() ).get();
-//					v =
-//							0.2989 * ARGBType.red( intRGB ) + 0.5870 * ARGBType.green( intRGB ) + 0.1140 * ARGBType.blue( intRGB );
-//					v /= 255;
-//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-//				}
-//			} else {
-//				throwException = true;
-//			}
 		} else {
 			throwException = true;
 		}
@@ -314,104 +268,6 @@ public class DataMover {
 		if ( throwException )
 			throw new Exception( "Convertion from " + sourceType.getClass().toString() + " to " + targetType.getClass() + " not implemented!" );
 	}
-//	@SuppressWarnings( "unchecked" )
-//	public static < ST extends NativeType< ST >, TT extends NativeType< TT > > void convertAndCopy(
-//			final RandomAccessible< ST > source,
-//			final IterableInterval< TT > target ) throws Exception {
-//		final ST sourceType = source.randomAccess().get();
-//		final TT targetType = target.firstElement();
-//
-//		// if source and target are of same type -> use copy since convert is not needed...
-//		if ( sourceType.getClass().isInstance( targetType ) ) {
-//			DataMover.copy( source, ( IterableInterval< ST > ) target );
-//		}
-//
-//		// implemented conversion cases follow here...
-//
-//		boolean throwException = false;
-//		if ( sourceType instanceof FloatType ) {
-//
-//			// FloatType --> ARGBType
-//			if ( targetType instanceof ARGBType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				int v;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//					try {
-//						v = Math.round( ( ( FloatType ) sourceRandomAccess.get() ).get() * 255 );
-//					} catch ( final ArrayIndexOutOfBoundsException e ) {
-//						v = 255; // If image-sizes do not match we pad with white pixels...
-//					}
-//					if ( v > 255 ) { throw new Exception( "TODO: in this case (source in not within [0,1]) I did not finish the code!!! Now would likely be a good time... ;)" ); }
-//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-//				}
-//			} else {
-//				throwException = true;
-//			}
-//
-//		} else if ( sourceType instanceof UnsignedShortType ) {
-//
-//			// RealType --> FloatType
-//			if ( targetType instanceof FloatType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				final int v;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//
-//					( ( FloatType ) targetCursor.get() ).set( ( ( UnsignedShortType ) sourceRandomAccess.get() ).getRealFloat() );
-//				}
-//			} else
-//			// RealType --> ARGBType
-//			if ( targetType instanceof ARGBType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				int v;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//					try {
-//						v =
-//								Math.round( ( ( UnsignedShortType ) sourceRandomAccess.get() ).getRealFloat() * 255 );
-//					} catch ( final ArrayIndexOutOfBoundsException e ) {
-//						v = 255; // If image-sizes do not match we pad with white pixels...
-//					}
-//					if ( v > 255 ) { throw new Exception( "TODO: in this case (source in not within [0,1]) I did not finish the code!!! Now would likely be a good time... ;)" ); }
-//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-//				}
-//			} else {
-//				throwException = true;
-//			}
-//		} else if ( sourceType instanceof ARGBType ) {
-//
-//			// ARGBType --> FloatType
-//			if ( targetType instanceof ARGBType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				double v;
-//				int intRGB;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//					intRGB = ( ( ARGBType ) sourceRandomAccess.get() ).get();
-//					v =
-//							0.2989 * ARGBType.red( intRGB ) + 0.5870 * ARGBType.green( intRGB ) + 0.1140 * ARGBType.blue( intRGB );
-//					v /= 255;
-//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-//				}
-//			} else {
-//				throwException = true;
-//			}
-//		} else {
-//			throwException = true;
-//		}
-//
-//		if ( throwException )
-//			throw new Exception( "Convertion between the given NativeTypes not implemented!" );
-//	}
 
 	public static < T extends RealType< T > & NativeType< T > > Img< T > stackThemAsFrames( final List< Img< T > > imageList )
 			throws ImgIOException, IncompatibleTypeException, Exception {
