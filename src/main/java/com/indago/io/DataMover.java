@@ -170,7 +170,7 @@ public class DataMover {
 	@SuppressWarnings( "unchecked" )
 	public static < ST extends RealType< ST >, TT extends NativeType< TT > > void convertAndCopy(
 			final RandomAccessible< ST > source,
-			final IterableInterval< TT > target ) throws Exception {
+			final IterableInterval< TT > target ) {
 		final ST sourceType = source.randomAccess().get();
 		final TT targetType = target.firstElement();
 
@@ -184,65 +184,31 @@ public class DataMover {
 
 		if ( targetType instanceof DoubleType ) {
 			// RealType --> DoubleType
-			final Cursor< TT > targetCursor = target.localizingCursor();
-			final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-			while ( targetCursor.hasNext() ) {
-				targetCursor.fwd();
-				sourceRandomAccess.setPosition( targetCursor );
-
-				( ( DoubleType ) targetCursor.get() ).set( sourceRandomAccess.get().getRealDouble() );
-			}
+			DataMover.copy( source, target, (in, out) -> ((DoubleType) out).set( in.getRealDouble() ) );
 			return;
 		}
 
 		if ( targetType instanceof FloatType ) {
 			// RealType -> FloatType
-			final Cursor< TT > targetCursor = target.localizingCursor();
-			final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-			while ( targetCursor.hasNext() ) {
-				targetCursor.fwd();
-				sourceRandomAccess.setPosition( targetCursor );
-
-				( ( FloatType ) targetCursor.get() ).set( sourceRandomAccess.get().getRealFloat() );
-			}
+			DataMover.copy( source, target, (in, out) -> ((FloatType) out).set( in.getRealFloat() ) );
 			return;
 		}
 
 		if ( targetType instanceof IntType ) {
 			if ( sourceType instanceof IntegerType ) {
-				final Cursor< TT > targetCursor = target.localizingCursor();
-				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-				while ( targetCursor.hasNext() ) {
-					targetCursor.fwd();
-					sourceRandomAccess.setPosition( targetCursor );
-
-					( ( IntType ) targetCursor.get() ).set( ( ( IntegerType<?> ) sourceRandomAccess.get() ).getInteger() );
-				}
+				DataMover.copy( source, target, (in, out) -> ((IntType) out).set( ((IntegerType) in).getInteger()));
 			}
 			else {
-				final Cursor< TT > targetCursor = target.localizingCursor();
-				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-				while ( targetCursor.hasNext() ) {
-					targetCursor.fwd();
-					sourceRandomAccess.setPosition( targetCursor );
-
-					( ( IntType ) targetCursor.get() ).set( Math.round( sourceRandomAccess.get()
-							.getRealFloat() ) );
-				}
+				DataMover.copy( source, target, (in, out) -> ((IntType) out).set( Math.round(in.getRealFloat())));
 			}
 			return;
 		}
 
 		if ( sourceType instanceof FloatType && targetType instanceof ARGBType ) {
-			final Cursor< TT > targetCursor = target.localizingCursor();
-			final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-			int v;
-			while (targetCursor.hasNext()) {
-				targetCursor.fwd();
-				sourceRandomAccess.setPosition(targetCursor);
+			DataMover.copy( source, target, (in, out) -> {
+				int v;
 				try {
-					v = Math.round(((FloatType) sourceRandomAccess.get()).get() *
-							255);
+					v = Math.round(((FloatType) in).get() * 255);
 				}
 				catch (final ArrayIndexOutOfBoundsException e) {
 					v = 255; // If image-sizes do not match we pad with white pixels...
@@ -252,13 +218,12 @@ public class DataMover {
 				} else if (v < 0) {
 					v = 0;
 				}
-				((ARGBType) targetCursor.get())
-						.set(ARGBType.rgba(v, v, v, 255));
-			}
+				((ARGBType) out).set(ARGBType.rgba(v, v, v, 255));
+			});
 			return;
 		}
 
-		throw new Exception( "Convertion from " + sourceType.getClass().toString() + " to " + targetType.getClass() + " not implemented!" );
+		throw new RuntimeException( "Convertion from " + sourceType.getClass().toString() + " to " + targetType.getClass() + " not implemented!" );
 	}
 
 	public static < T extends RealType< T > & NativeType< T > > Img< T > stackThemAsFrames( final List< Img< T > > imageList )
