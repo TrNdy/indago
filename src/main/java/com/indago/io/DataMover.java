@@ -3,6 +3,7 @@
  */
 package com.indago.io;
 
+import java.util.Arrays;
 import java.util.List;
 
 import io.scif.img.ImgIOException;
@@ -15,12 +16,13 @@ import net.imglib2.converter.Converter;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.loops.ClassCopyProvider;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
@@ -30,6 +32,9 @@ import net.imglib2.view.Views;
  *
  */
 public class DataMover {
+
+	private static final ClassCopyProvider<CopyLoopInterface> copyLoopFactory =
+			new ClassCopyProvider<>(CopyLoopClass.class, CopyLoopInterface.class);
 
 	/**
 	 * FROM: imglib Example 2c :)
@@ -48,44 +53,23 @@ public class DataMover {
 	 *            - an IterableInterval as target
 	 */
 	public static < T extends Type< T >> void copy( final RandomAccessible< T > source, final IterableInterval< T > target ) {
-		// create a cursor that automatically localizes itself on every move
-		final Cursor< T > targetCursor = target.localizingCursor();
-		final RandomAccess< T > sourceRandomAccess = source.randomAccess();
-
-		// iterate over the input cursor
-		while ( targetCursor.hasNext() ) {
-			// move input cursor forward
-			targetCursor.fwd();
-
-			// set the output cursor to the position of the input cursor
-			sourceRandomAccess.setPosition( targetCursor );
-
-			// set the value of this pixel of the output image, every Type
-			// supports T.set( T type )
-			targetCursor.get().set( sourceRandomAccess.get() );
-		}
-	}
-
-	public static < T1 extends Type< T1 >, T2 extends Type< T2 >> void copy( final RandomAccessible< T1 > source, final IterableInterval< T2 > target, final Converter< T1, T2 > converter ) {
-		// create a cursor that automatically localizes itself on every move
-		final Cursor< T2 > targetCursor = target.localizingCursor();
-		final RandomAccess< T1 > sourceRandomAccess = source.randomAccess();
-
-		// iterate over the input cursor
-		while ( targetCursor.hasNext() ) {
-			// move input cursor forward
-			targetCursor.fwd();
-
-			// set the output cursor to the position of the input cursor
-			sourceRandomAccess.setPosition( targetCursor );
-
-			// set converted value
-			converter.convert( sourceRandomAccess.get(), targetCursor.get() );
-		}
+		copy(source, target, (in, out) -> out.set(in));
 	}
 
 	public static < T extends Type< T >> void copy( final RandomAccessible< T > source, final RandomAccessibleInterval< T > target ) {
 		copy( source, Views.iterable( target ) );
+	}
+
+	public static < T extends Type< T >> void copy( final RandomAccessible< T > source, final Img< T > target ) {
+		copy( source, (IterableInterval<T>) target );
+	}
+
+	public static < S, T > void copy( final RandomAccessible< ? extends S > source, final IterableInterval< ? extends T > target, final Converter< S, T > converter ) {
+		RandomAccess< ? extends S > sourceRandomAccess = source.randomAccess();
+		Cursor< ? extends T > targetCursor = target.localizingCursor();
+		Object key = Arrays.asList(sourceRandomAccess.getClass(), sourceRandomAccess
+				.get().getClass(), targetCursor.getClass(), targetCursor.get().getClass(), converter.getClass());
+		copyLoopFactory.newInstanceForKey(key).copy(sourceRandomAccess, targetCursor, converter);
 	}
 
 	public static < T extends NativeType< T >> Img< T > createEmptyArrayImgLike( final RandomAccessibleInterval< ? > blueprint, final T type ) {
@@ -112,28 +96,19 @@ public class DataMover {
 	public static < T extends RealType< T > > void add(
 			final RandomAccessible< T > source,
 			final IterableInterval< T > target ) {
-		// create a cursor that automatically localizes itself on every move
-		final Cursor< T > targetCursor = target.localizingCursor();
-		final RandomAccess< T > sourceRandomAccess = source.randomAccess();
-
-		// iterate over the input cursor
-		while ( targetCursor.hasNext() ) {
-			// move input cursor forward
-			targetCursor.fwd();
-
-			// set the output cursor to the position of the input cursor
-			sourceRandomAccess.setPosition( targetCursor );
-
-			// add the value of this pixel of the output image, every Type
-			// supports T.set( T type )
-			targetCursor.get().add( sourceRandomAccess.get() );
-		}
+		copy(source, target, (in, out) -> out.add(in));
 	}
 
 	public static < T extends RealType< T > > void add(
 			final RandomAccessible< T > source,
 			final RandomAccessibleInterval< T > target ) {
 		add( source, Views.iterable( target ) );
+	}
+
+	public static < T extends RealType< T > > void add(
+			final RandomAccessible< T > source,
+			final Img< T > target ) {
+		add( source, (IterableInterval< T >) target );
 	}
 
 	/**
@@ -163,255 +138,58 @@ public class DataMover {
 	 *
 	 * @param source
 	 * @param target
-	 * @throws Exception
 	 */
-//    public static <ST extends NativeType<ST>, TT extends NativeType<TT>> void convertAndCopy(final Img<ST> source, final Img<TT> target) throws Exception {
-//	convertAndCopy( source, Views.iterable(target) );
-//    }
-//
-//    public static <ST extends NativeType<ST>, TT extends NativeType<TT>> void convertAndCopy(final RandomAccessible<ST> source, final RandomAccessibleInterval<TT> target) throws Exception {
-//	convertAndCopy( source, Views.iterable(target) );
-//    }
 
 	@SuppressWarnings( "unchecked" )
 	public static < ST extends RealType< ST >, TT extends NativeType< TT > > void convertAndCopy(
 			final RandomAccessible< ST > source,
-			final IterableInterval< TT > target ) throws Exception {
+			final IterableInterval< TT > target ) {
 		final ST sourceType = source.randomAccess().get();
 		final TT targetType = target.firstElement();
 
-		// if source and target are of same type -> use copy since convert is not needed...
-		if ( sourceType.getClass().isInstance( targetType ) ) {
-			DataMover.copy( source, ( IterableInterval< ST > ) target );
-			return;
-		}
+		Converter<RealType<?>, NativeType<?>> converter = getConverter(sourceType, targetType);
 
-		// implemented conversion cases follow here...
-
-		boolean throwException = false;
-		if ( sourceType instanceof FloatType ) {
-
-			if ( targetType instanceof DoubleType ) { // FloatType --> DoubleType
-				final Cursor< TT > targetCursor = target.localizingCursor();
-				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-				final int v;
-				while ( targetCursor.hasNext() ) {
-					targetCursor.fwd();
-					sourceRandomAccess.setPosition( targetCursor );
-
-					( ( DoubleType ) targetCursor.get() ).set( ( ( FloatType ) sourceRandomAccess.get() ).getRealDouble() );
-				}
-			} else // FloatType --> IntType
-			if ( targetType instanceof IntType ) {
-				final Cursor< TT > targetCursor = target.localizingCursor();
-				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-				final int v;
-				while ( targetCursor.hasNext() ) {
-					targetCursor.fwd();
-					sourceRandomAccess.setPosition( targetCursor );
-
-					( ( IntType ) targetCursor.get() ).set( Math.round( ( ( FloatType ) sourceRandomAccess.get() ).getRealFloat() ) );
-				}
-			} else // FloatType --> ARGBType
-			if ( targetType instanceof ARGBType ) {
-				final Cursor< TT > targetCursor = target.localizingCursor();
-				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-				int v;
-				while ( targetCursor.hasNext() ) {
-					targetCursor.fwd();
-					sourceRandomAccess.setPosition( targetCursor );
-					try {
-						v = Math.round( ( ( FloatType ) sourceRandomAccess.get() ).get() * 255 );
-					} catch ( final ArrayIndexOutOfBoundsException e ) {
-						v = 255; // If image-sizes do not match we pad with white pixels...
-					}
-					if ( v > 255 ) { throw new Exception( "TODO: in this case (source in not within [0,1]) I did not finish the code!!! Now would likely be a good time... ;)" ); }
-					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-				}
-			} else {
-				throwException = true;
-			}
-
-		} else if ( sourceType instanceof UnsignedShortType ) {
-
-			// UnsignedShortType --> FloatType
-			if ( targetType instanceof FloatType ) {
-				final Cursor< TT > targetCursor = target.localizingCursor();
-				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-				final int v;
-				while ( targetCursor.hasNext() ) {
-					targetCursor.fwd();
-					sourceRandomAccess.setPosition( targetCursor );
-
-					( ( FloatType ) targetCursor.get() ).set( ( ( UnsignedShortType ) sourceRandomAccess.get() ).getRealFloat() );
-				}
-			} else
-			if ( targetType instanceof DoubleType ) {
-				final Cursor< TT > targetCursor = target.localizingCursor();
-				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-				final int v;
-				while ( targetCursor.hasNext() ) {
-					targetCursor.fwd();
-					sourceRandomAccess.setPosition( targetCursor );
-
-					( ( DoubleType ) targetCursor.get() ).set( ( ( UnsignedShortType ) sourceRandomAccess.get() ).getRealDouble() );
-				}
-			} else // UnsignedShortType --> IntType
-			if ( targetType instanceof IntType ) {
-				final Cursor< TT > targetCursor = target.localizingCursor();
-				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-				final int v;
-				while ( targetCursor.hasNext() ) {
-					targetCursor.fwd();
-					sourceRandomAccess.setPosition( targetCursor );
-
-					( ( IntType ) targetCursor.get() ).set( ( ( UnsignedShortType ) sourceRandomAccess.get() ).get() );
-				}
-//			} else
-//			if ( targetType instanceof ARGBType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				int v;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//					try {
-//						v =
-//								Math.round( ( ( UnsignedShortType ) sourceRandomAccess.get() ).getRealFloat() * 255 );
-//					} catch ( final ArrayIndexOutOfBoundsException e ) {
-//						v = 255; // If image-sizes do not match we pad with white pixels...
-//					}
-//					if ( v > 255 ) { throw new Exception( "TODO: in this case (source in not within [0,1]) I did not finish the code!!! Now would likely be a good time... ;)" ); }
-//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-//				}
-//			} else {
-//				throwException = true;
-			}
-//		} else if ( sourceType instanceof ARGBType ) {
-//
-//			// ARGBType --> FloatType
-//			if ( targetType instanceof ARGBType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				double v;
-//				int intRGB;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//					intRGB = ( ( ARGBType ) sourceRandomAccess.get() ).get();
-//					v =
-//							0.2989 * ARGBType.red( intRGB ) + 0.5870 * ARGBType.green( intRGB ) + 0.1140 * ARGBType.blue( intRGB );
-//					v /= 255;
-//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-//				}
-//			} else {
-//				throwException = true;
-//			}
-		} else {
-			throwException = true;
-		}
-
-		if ( throwException )
-			throw new Exception( "Convertion from " + sourceType.getClass().toString() + " to " + targetType.getClass() + " not implemented!" );
+		DataMover.copy( source, target, converter );
 	}
-//	@SuppressWarnings( "unchecked" )
-//	public static < ST extends NativeType< ST >, TT extends NativeType< TT > > void convertAndCopy(
-//			final RandomAccessible< ST > source,
-//			final IterableInterval< TT > target ) throws Exception {
-//		final ST sourceType = source.randomAccess().get();
-//		final TT targetType = target.firstElement();
-//
-//		// if source and target are of same type -> use copy since convert is not needed...
-//		if ( sourceType.getClass().isInstance( targetType ) ) {
-//			DataMover.copy( source, ( IterableInterval< ST > ) target );
-//		}
-//
-//		// implemented conversion cases follow here...
-//
-//		boolean throwException = false;
-//		if ( sourceType instanceof FloatType ) {
-//
-//			// FloatType --> ARGBType
-//			if ( targetType instanceof ARGBType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				int v;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//					try {
-//						v = Math.round( ( ( FloatType ) sourceRandomAccess.get() ).get() * 255 );
-//					} catch ( final ArrayIndexOutOfBoundsException e ) {
-//						v = 255; // If image-sizes do not match we pad with white pixels...
-//					}
-//					if ( v > 255 ) { throw new Exception( "TODO: in this case (source in not within [0,1]) I did not finish the code!!! Now would likely be a good time... ;)" ); }
-//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-//				}
-//			} else {
-//				throwException = true;
-//			}
-//
-//		} else if ( sourceType instanceof UnsignedShortType ) {
-//
-//			// RealType --> FloatType
-//			if ( targetType instanceof FloatType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				final int v;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//
-//					( ( FloatType ) targetCursor.get() ).set( ( ( UnsignedShortType ) sourceRandomAccess.get() ).getRealFloat() );
-//				}
-//			} else
-//			// RealType --> ARGBType
-//			if ( targetType instanceof ARGBType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				int v;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//					try {
-//						v =
-//								Math.round( ( ( UnsignedShortType ) sourceRandomAccess.get() ).getRealFloat() * 255 );
-//					} catch ( final ArrayIndexOutOfBoundsException e ) {
-//						v = 255; // If image-sizes do not match we pad with white pixels...
-//					}
-//					if ( v > 255 ) { throw new Exception( "TODO: in this case (source in not within [0,1]) I did not finish the code!!! Now would likely be a good time... ;)" ); }
-//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-//				}
-//			} else {
-//				throwException = true;
-//			}
-//		} else if ( sourceType instanceof ARGBType ) {
-//
-//			// ARGBType --> FloatType
-//			if ( targetType instanceof ARGBType ) {
-//				final Cursor< TT > targetCursor = target.localizingCursor();
-//				final RandomAccess< ST > sourceRandomAccess = source.randomAccess();
-//				double v;
-//				int intRGB;
-//				while ( targetCursor.hasNext() ) {
-//					targetCursor.fwd();
-//					sourceRandomAccess.setPosition( targetCursor );
-//					intRGB = ( ( ARGBType ) sourceRandomAccess.get() ).get();
-//					v =
-//							0.2989 * ARGBType.red( intRGB ) + 0.5870 * ARGBType.green( intRGB ) + 0.1140 * ARGBType.blue( intRGB );
-//					v /= 255;
-//					( ( ARGBType ) targetCursor.get() ).set( ARGBType.rgba( v, v, v, 255 ) );
-//				}
-//			} else {
-//				throwException = true;
-//			}
-//		} else {
-//			throwException = true;
-//		}
-//
-//		if ( throwException )
-//			throw new Exception( "Convertion between the given NativeTypes not implemented!" );
-//	}
+
+	private static < ST extends RealType< ST >, TT extends NativeType< TT > > Converter<RealType<?>,NativeType<?>> getConverter(ST sourceType, TT targetType) {
+
+		if ( sourceType.getClass().isInstance( targetType ) )
+			return (in, out) -> ((Type) out).set(in);
+
+		if ( targetType instanceof DoubleType )
+			return (in, out) -> ((DoubleType) out).set( in.getRealDouble() );
+
+		if ( targetType instanceof FloatType )
+			return (in, out) -> ((FloatType) out).set(in.getRealFloat());
+
+		if ( targetType instanceof IntType ) {
+			if ( sourceType instanceof IntegerType )
+				return (in, out) -> ((IntType) out).set( ((IntegerType) in).getInteger());
+			else
+				return (in, out) -> ((IntType) out).set( Math.round(in.getRealFloat()));
+		}
+
+		if ( sourceType instanceof FloatType && targetType instanceof ARGBType ) {
+			return (in, out) -> {
+				int v;
+				try {
+					v = Math.round(((FloatType) in).get() * 255);
+				}
+				catch (final ArrayIndexOutOfBoundsException e) {
+					v = 255; // If image-sizes do not match we pad with white pixels...
+				}
+				if (v > 255) {
+					v = 255;
+				} else if (v < 0) {
+					v = 0;
+				}
+				((ARGBType) out).set(ARGBType.rgba(v, v, v, 255));
+			};
+		}
+
+		throw new RuntimeException( "Convertion from " + sourceType.getClass().toString() + " to " + targetType.getClass() + " not implemented!" );
+	}
 
 	public static < T extends RealType< T > & NativeType< T > > Img< T > stackThemAsFrames( final List< Img< T > > imageList )
 			throws ImgIOException, IncompatibleTypeException, Exception {
@@ -445,5 +223,31 @@ public class DataMover {
 		}
 
 		return stack;
+	}
+
+	// -- Helper classes --
+
+	public static class CopyLoopClass implements CopyLoopInterface {
+		// NB: This class needs to be public for ClassCopyProvider to work
+
+		@Override
+		public  < S, T > void copy(
+				RandomAccess< ? extends S > source, Cursor< ? extends T > target,
+				Converter< S, T > converter)
+		{
+			while ( target.hasNext() ) {
+				target.fwd();
+				source.setPosition(target);
+				converter.convert( source.get(), target.get() );
+			}
+		}
+	}
+
+	public interface CopyLoopInterface {
+		// NB: This class needs to be public for ClassCopyProvider to work
+
+		< S, T > void copy(
+				RandomAccess< ? extends S > source, Cursor< ? extends T > target,
+				Converter< S, T > converter);
 	}
 }
