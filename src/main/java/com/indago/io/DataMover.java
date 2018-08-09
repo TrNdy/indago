@@ -138,7 +138,6 @@ public class DataMover {
 	 *
 	 * @param source
 	 * @param target
-	 * @throws Exception
 	 */
 
 	@SuppressWarnings( "unchecked" )
