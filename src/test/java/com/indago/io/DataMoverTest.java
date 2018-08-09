@@ -14,7 +14,6 @@ import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -58,7 +57,6 @@ public class DataMoverTest {
 		testConvertAndCopy(new FloatType(42), new DoubleType(42));
 	}
 
-	@Ignore
 	@Test
 	public void testConvertAndCopyIntegerTypeToIntType() {
 		testConvertAndCopy(new ByteType((byte) 42), new IntType(42));
@@ -69,13 +67,11 @@ public class DataMoverTest {
 		testConvertAndCopy(new FloatType(42), new IntType(42));
 	}
 
-	@Ignore
 	@Test
 	public void testConvertAndCopyRealTypeToFloatType() {
 		testConvertAndCopy(new IntType(42), new FloatType(42));
 	}
 
-	@Ignore
 	@Test
 	public void testConvertAndCopyRealTypeToDoubleType() {
 		testConvertAndCopy(new IntType(42), new DoubleType(42));
