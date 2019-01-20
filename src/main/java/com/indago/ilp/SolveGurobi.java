@@ -47,7 +47,7 @@ public class SolveGurobi {
 		return staticSolve( fg, null );
 	}
 
-	public static Assignment staticSolve( final UnaryCostConstraintGraph fg, final GRBCallback callback ) throws GRBException {
+	public static Assignment< Variable > staticSolve( final UnaryCostConstraintGraph fg, final GRBCallback callback ) throws GRBException {
 		final SolveGurobi solver = new SolveGurobi();
 		final Assignment< Variable > assignment = solver.solve( fg, callback );
 		solver.dispose();
@@ -65,7 +65,6 @@ public class SolveGurobi {
 	 * @return an <code>Assignment</code> containing the solution.
 	 * @throws GRBException
 	 */
-	@SuppressWarnings( "unchecked" )
 	public Assignment< Variable > solve( final UnaryCostConstraintGraph fg, final GRBCallback callback ) throws GRBException {
 		createEnvIfNecessary();
 
@@ -146,7 +145,7 @@ public class SolveGurobi {
 		double objval = -1;
 		if ( optimstatus == GRB.Status.OPTIMAL ) {
 			objval = model.get( GRB.DoubleAttr.ObjVal );
-			env.message( "Optimal objective value: " + objval );
+			env.message( String.format( "Optimal objective value: %f\n", objval ) );
 		} else if ( optimstatus == GRB.Status.INFEASIBLE ) {
 			throw new IllegalStateException( "Model is INFEASIBLE! (Did the latest Leveraged Edit cause this?)" );
 		}
