@@ -118,7 +118,11 @@ public class ProjectFolder {
 	 *         given id exists.
 	 */
 	public ProjectFile getFile( final String id ) {
-		return mapFiles.get( id );
+		ProjectFile ret = mapFiles.get( id );
+		if ( ret == null ) {
+			ret = addFile( id );
+		}
+		return ret;
 	}
 
 	/**
