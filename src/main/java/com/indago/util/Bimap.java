@@ -1,13 +1,13 @@
 package com.indago.util;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Bimap< A, B > {
 
-	private final Map< A, B > ab = new HashMap< A, B >();
-	private final Map< B, A > ba = new HashMap< B, A >();
+	private final Map< A, B > ab = new LinkedHashMap< A, B >();
+	private final Map< B, A > ba = new LinkedHashMap< B, A >();
 
 	public A getA( final B b ) {
 		return ba.get( b );
