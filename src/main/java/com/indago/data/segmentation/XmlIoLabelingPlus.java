@@ -82,8 +82,7 @@ public class XmlIoLabelingPlus {
 				? openIntImageFastButDangerous( indexImgFile.getAbsolutePath() )
 				: IO.openImgs(
 						indexImgFile.getAbsolutePath(),
-						new ArrayImgFactory< IntType >(),
-						new IntType() ).get( 0 ).getImg();
+						new ArrayImgFactory<>( new IntType() ) ).get( 0 ).getImg();
 		final LabelingPlus labelingPlus = new LabelingPlus( indexImg );
 		fromXml( root, labelingPlus );
 		return labelingPlus;
@@ -112,11 +111,11 @@ public class XmlIoLabelingPlus {
 		if ( mapping == null )
 			throw new IOException( "no <" + MAPPING_TAG + "> element found." );
 
-		final ArrayList< Set< LabelData > > labelSets = new ArrayList< Set< LabelData > >();
+		final ArrayList< Set< LabelData > > labelSets = new ArrayList<>();
 		for ( final Element entry : mapping.getChildren( MAPPING_ENTRY_TAG ) ) {
 			final int i = XmlHelpers.getInt( entry, MAPPING_ENTRY_INDEX_TAG );
 			final int[] ids = XmlHelpers.getIntArray( entry, MAPPING_ENTRY_LABELS_TAG );
-			final HashSet< LabelData > labelSet = new HashSet< LabelData >( ids.length );
+			final HashSet< LabelData > labelSet = new HashSet<>( ids.length );
 			for ( final int id : ids )
 				labelSet.add( idToLabelMap.get( id ) );
 
@@ -146,7 +145,7 @@ public class XmlIoLabelingPlus {
 
 		for ( final Element forest : labelingtree.getChildren( LABELINGTREE_FOREST_TAG ) ) {
 			final int[] rootIds = XmlHelpers.getIntArray( forest, LABELINGTREE_FOREST_ROOTS_TAG );
-			final HashSet< LabelingTreeNode > roots = new HashSet< LabelingTreeNode >();
+			final HashSet< LabelingTreeNode > roots = new HashSet<>();
 			for ( final int id : rootIds )
 				roots.add( idToLabelMap.get( id ).getLabelingTreeNode() );
 			labelingPlus.labelingForests.add( new LabelingForest( roots ) );
@@ -156,7 +155,7 @@ public class XmlIoLabelingPlus {
 	private Element toXml(
 			final LabelingPlus labelingPlus,
 			final File xmlFileDirectory,
-			final File indexImgFile ) throws IOException {
+			final File indexImgFile ) {
 		final LabelingMapping< LabelData > mapping = labelingPlus.getLabeling().getMapping();
 
 		final Element segmentLabeling = new Element( SEGMENTLABELING_TAG );
@@ -207,7 +206,7 @@ public class XmlIoLabelingPlus {
 			final String name ) {
 		final int[] ids = XmlHelpers.getIntArray( parent, name );
 		final TIntObjectHashMap< LabelData > map =
-				new TIntObjectHashMap< LabelData >( Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1 );
+				new TIntObjectHashMap<>( Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1 );
 		for ( final int id : ids )
 			map.put( id, new LabelData( id ) );
 		return map;

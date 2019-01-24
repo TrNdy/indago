@@ -5,11 +5,11 @@ import java.util.Collection;
 
 public class AssignmentNodes {
 
-	private final Collection< AssignmentNode > all = new ArrayList< AssignmentNode >();
-	private final Collection< MovementHypothesis > moves = new ArrayList< MovementHypothesis >();
-	private final Collection< DivisionHypothesis > divisions = new ArrayList< DivisionHypothesis >();
-	private final Collection< AppearanceHypothesis > apps = new ArrayList< AppearanceHypothesis >();
-	private final Collection< DisappearanceHypothesis > disapps = new ArrayList< DisappearanceHypothesis >();
+	private final Collection< AssignmentNode > all = new ArrayList<>();
+	private final Collection< MovementHypothesis > moves = new ArrayList<>();
+	private final Collection< DivisionHypothesis > divisions = new ArrayList<>();
+	private final Collection< AppearanceHypothesis > apps = new ArrayList<>();
+	private final Collection< DisappearanceHypothesis > disapps = new ArrayList<>();
 
 	public Collection< AssignmentNode > getAllAssignments() {
 		return all;
