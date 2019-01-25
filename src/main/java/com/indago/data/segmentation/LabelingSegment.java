@@ -27,7 +27,7 @@ public class LabelingSegment implements Segment {
 	 * this is the unique serialization id that is assigned to the label of the
 	 * backing {@link LabelRegion}.
 	 *
-	 * @returns unique serialization id of the backing {@code LabelRegion}.
+	 * @return unique serialization id of the backing {@code LabelRegion}.
 	 */
 	public int getId() {
 		return region.getLabel().getId();
