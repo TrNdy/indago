@@ -16,10 +16,21 @@ import net.imglib2.util.Intervals;
  */
 public class LabelingSegment implements Segment {
 
-	private final LabelRegion< ? > region;
+	private final LabelRegion< LabelData > region;
 
-	protected LabelingSegment( final LabelRegion< ? > region ) {
+	protected LabelingSegment( final LabelRegion< LabelData > region ) {
 		this.region = region;
+	}
+
+	/**
+	 * Returns a unique id that can be used for serialization. Specifically,
+	 * this is the unique serialization id that is assigned to the label of the
+	 * backing {@link LabelRegion}.
+	 *
+	 * @returns unique serialization id of the backing {@code LabelRegion}.
+	 */
+	public int getId() {
+		return region.getLabel().getId();
 	}
 
 	@Override
