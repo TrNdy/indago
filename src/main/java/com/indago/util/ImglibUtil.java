@@ -24,11 +24,13 @@ public class ImglibUtil {
 	 * most simple interface in the hierarchy.
 	 *
 	 * @param iterableInterval
-	 *            - the input that has to just be {@link Iterable}
+	 *            the input that has to just be {@link Iterable}
 	 * @param min
-	 *            - the type that will have min
+	 *            the type that will have min
 	 * @param max
-	 *            - the type that will have max
+	 *            the type that will have max
+	 * @param <T>
+	 *            pixel type
 	 */
 	public static < T extends RealType< T > & NativeType< T > > void computeMinMax(
 			final IterableInterval< T > iterableInterval,

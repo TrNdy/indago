@@ -19,31 +19,16 @@ public interface BdvWithOverlaysOwner extends BdvOwner {
 
 	public List< BdvOverlay > bdvGetOverlays();
 
-	/**
-	 * @param overlay
-	 * @return
-	 */
 	public default BdvSource bdvGetSourceFor( final BdvOverlay overlay ) {
 		final int idx = bdvGetOverlays().indexOf( overlay );
 		if ( idx == -1 ) return null;
 		return bdvGetOverlaySources().get( idx );
 	}
 
-	/**
-	 *
-	 * @param overlay
-	 * @param title
-	 */
 	public default void bdvAdd( final BdvOverlay overlay, final String title ) {
 		bdvAdd( overlay, title, true );
 	}
 
-	/**
-	 *
-	 * @param overlay
-	 * @param title
-	 * @param isActive
-	 */
 	public default void bdvAdd( final BdvOverlay overlay, final String title, final boolean isActive ) {
 		final BdvSource source = BdvFunctions.showOverlay(
 				overlay,
@@ -54,10 +39,6 @@ public interface BdvWithOverlaysOwner extends BdvOwner {
 		source.setActive( isActive );
 	}
 
-	/**
-	 *
-	 * @param overlay
-	 */
 	public default void bdvRemove( final BdvOverlay overlay ) {
 		final BdvSource source = bdvGetSourceFor( overlay );
 		source.removeFromBdv();
@@ -65,9 +46,6 @@ public interface BdvWithOverlaysOwner extends BdvOwner {
 		bdvGetOverlays().remove( overlay );
 	}
 
-	/**
-	 *
-	 */
 	public default void bdvRemoveAllOverlays() {
 		for ( final BdvSource overlay : bdvGetOverlaySources() ) {
 			overlay.removeFromBdv();

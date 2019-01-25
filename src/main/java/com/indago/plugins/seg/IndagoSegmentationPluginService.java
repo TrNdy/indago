@@ -10,7 +10,6 @@ import org.scijava.plugin.PluginInfo;
 import org.scijava.service.Service;
 
 import com.indago.io.ProjectFolder;
-import com.indago.log.LoggingPanel;
 
 import net.imagej.ImageJService;
 import net.imglib2.RandomAccessibleInterval;
@@ -25,7 +24,7 @@ public class IndagoSegmentationPluginService extends AbstractPTService< IndagoSe
 	/**
 	 * Gets the list of available plugin types.
 	 * The names on this list can be passed to
-	 * {@link #createPlugin(String, Tr2dModel, LoggingPanel)}}
+	 * {@link #createPlugin(String, ProjectFolder, RandomAccessibleInterval, Logger)}
 	 * to create instances of that animal.
 	 *
 	 * @return a set of plugin names

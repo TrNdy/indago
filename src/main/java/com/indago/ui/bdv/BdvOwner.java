@@ -32,18 +32,10 @@ public interface BdvOwner {
 
 	public < T extends RealType< T > & NativeType< T > > BdvSource bdvGetSourceFor( final RandomAccessibleInterval< T > img );
 
-	/**
-	 * @param img
-	 * @param title
-	 */
 	public default < T extends RealType< T > & NativeType< T > > void bdvAdd( final RandomAccessibleInterval< T > img, final String title ) {
 		bdvAdd( img, title, true );
 	}
 
-	/**
-	 * @param img
-	 * @param title
-	 */
 	public default < T extends RealType< T > & NativeType< T > > void bdvAdd(
 			final RandomAccessibleInterval< T > img,
 			final String title,
@@ -62,10 +54,6 @@ public interface BdvOwner {
 		source.setActive( isActive );
 	}
 
-	/**
-	 * @param img
-	 * @param title
-	 */
 	public default < T extends RealType< T > & NativeType< T > > void bdvAdd(
 			final RandomAccessibleInterval< T > img,
 			final String title,
@@ -87,13 +75,6 @@ public interface BdvOwner {
 		source.setActive( isActive );
 	}
 
-	/**
-	 * @param img
-	 * @param title
-	 * @param minVal
-	 * @param maxVal
-	 * @param color
-	 */
 	public default < T extends RealType< T > & NativeType< T > > void bdvAdd(
 			final RandomAccessibleInterval< T > img,
 			final String title,
@@ -113,18 +94,12 @@ public interface BdvOwner {
 		source.setActive( isActive );
 	}
 
-	/**
-	 * @param img
-	 */
 	public default < T extends RealType< T > & NativeType< T > > void bdvRemove( final RandomAccessibleInterval< T > img ) {
 		final BdvSource source = bdvGetSourceFor( img );
 		source.removeFromBdv();
 		bdvGetSources().remove( source );
 	}
 
-	/*
-	 *
-	 */
 	public default void bdvRemoveAll() {
 		for ( final BdvSource source : bdvGetSources()) {
 			source.removeFromBdv();
@@ -132,9 +107,6 @@ public interface BdvOwner {
 		bdvGetSources().clear();
 	}
 
-	/**
-	 * @param img
-	 */
 	public default < T extends RealType< T > & NativeType< T > > void bdvShowOnly( final RandomAccessibleInterval< T > img ) {
 		final VisibilityAndGrouping vg = bdvGetHandlePanel().getViewerPanel().getVisibilityAndGrouping();
 		vg.setDisplayMode( DisplayMode.SINGLE );
@@ -142,9 +114,6 @@ public interface BdvOwner {
 		if ( source != null ) source.setCurrent();
 	}
 
-	/**
-	 * @param img
-	 */
 	public default < T extends RealType< T > & NativeType< T > > void bdvShowAll( final RandomAccessibleInterval< T > img ) {
 		final VisibilityAndGrouping vg = bdvGetHandlePanel().getViewerPanel().getVisibilityAndGrouping();
 		vg.setDisplayMode( DisplayMode.FUSED );
