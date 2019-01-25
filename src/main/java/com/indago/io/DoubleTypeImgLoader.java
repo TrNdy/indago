@@ -9,11 +9,13 @@ import com.indago.IndagoLog;
 
 import ij.IJ;
 import ij.ImagePlus;
+import net.imagej.ImgPlus;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.view.Views;
 
@@ -40,26 +42,34 @@ public class DoubleTypeImgLoader {
 	public static RandomAccessibleInterval< DoubleType > loadTiffEnsureType( final File file ) {
 		final Img< DoubleType > img = loadTiff( file );
 
-		final long dims[] = new long[ img.numDimensions() ];
-		img.dimensions( dims );
-		final RandomAccessibleInterval< DoubleType > ret =
-				new ArrayImgFactory< DoubleType >().create( dims, new DoubleType() );
-		final IterableInterval< DoubleType > iterRet = Views.iterable( ret );
-		try {
-			DataMover.convertAndCopy( Views.extendZero( img ), iterRet );
-		} catch ( final Exception e ) {
-			e.printStackTrace();
-		}
+		final RandomAccessibleInterval< DoubleType > ret = copyToDouble( img );
 		return ret;
+	}
+
+	public static ImgPlus< DoubleType > wrapEnsureType( final ImgPlus< ? extends RealType > imgPlus ) {
+		final Img< DoubleType > newImg = copyToDouble( imgPlus.getImg() );
+		final ImgPlus< DoubleType > result = new ImgPlus<>( newImg, imgPlus.getName() );
+		for ( int i = 0; i < result.numDimensions(); i++ )
+			result.setAxis( imgPlus.axis( i ), i );
+		return result;
 	}
 
 	public static RandomAccessibleInterval< DoubleType > wrapEnsureType( final ImagePlus imagePlus ) {
 		final Img< DoubleType > img =
 				ImagePlusAdapter.wrapReal( imagePlus );
 
+		final RandomAccessibleInterval< DoubleType > ret = copyToDouble( img );
+		return ret;
+	}
+
+	/**
+	 * @param img
+	 * @return
+	 */
+	private static Img< DoubleType > copyToDouble( final Img< ? extends RealType > img ) {
 		final long dims[] = new long[ img.numDimensions() ];
 		img.dimensions( dims );
-		final RandomAccessibleInterval< DoubleType > ret =
+		final Img< DoubleType > ret =
 				new ArrayImgFactory< DoubleType >().create( dims, new DoubleType() );
 		final IterableInterval< DoubleType > iterRet = Views.iterable( ret );
 		try {

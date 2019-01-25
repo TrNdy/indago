@@ -12,7 +12,7 @@ import org.scijava.service.Service;
 import com.indago.io.ProjectFolder;
 
 import net.imagej.ImageJService;
-import net.imglib2.RandomAccessibleInterval;
+import net.imagej.ImgPlus;
 import net.imglib2.type.numeric.real.DoubleType;
 
 @Plugin(type = Service.class)
@@ -24,7 +24,7 @@ public class IndagoSegmentationPluginService extends AbstractPTService< IndagoSe
 	/**
 	 * Gets the list of available plugin types.
 	 * The names on this list can be passed to
-	 * {@link #createPlugin(String, ProjectFolder, RandomAccessibleInterval, Logger)}
+	 * {@link #createPlugin(String, ProjectFolder, ImgPlus, Logger)}
 	 * to create instances of that animal.
 	 *
 	 * @return a set of plugin names
@@ -36,7 +36,7 @@ public class IndagoSegmentationPluginService extends AbstractPTService< IndagoSe
 	public IndagoSegmentationPlugin createPlugin(
 			final String name,
 			final ProjectFolder projectFolder,
-			final RandomAccessibleInterval< DoubleType > raiData,
+			final ImgPlus< DoubleType > imgPlus,
 			final Logger logger ) {
 		// First, we get the animal plugin with the given name.
 		final PluginInfo< IndagoSegmentationPlugin > info = plugins.get( name );
@@ -46,7 +46,7 @@ public class IndagoSegmentationPluginService extends AbstractPTService< IndagoSe
 		// Next, we use the plugin service to create an animal of that kind.
 		final IndagoSegmentationPlugin segPlugin = getPluginService().createInstance( info );
 		segPlugin.setLogger( logger );
-		segPlugin.setProjectFolderAndData( projectFolder, raiData );
+		segPlugin.setProjectFolderAndData( projectFolder, imgPlus );
 
 		return segPlugin;
 	}

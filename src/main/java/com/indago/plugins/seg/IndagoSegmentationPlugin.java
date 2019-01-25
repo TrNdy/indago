@@ -12,6 +12,7 @@ import org.scijava.log.Logger;
 import com.indago.io.ProjectFolder;
 
 import net.imagej.ImageJPlugin;
+import net.imagej.ImgPlus;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -25,7 +26,7 @@ public interface IndagoSegmentationPlugin extends ImageJPlugin, AutoCloseable {
 
 	List< RandomAccessibleInterval< IntType > > getOutputs();
 
-	void setProjectFolderAndData( ProjectFolder projectFolder, RandomAccessibleInterval< DoubleType > rawData );
+	void setProjectFolderAndData( ProjectFolder projectFolder, ImgPlus< DoubleType > rawData );
 
 	String getUiName();
 
