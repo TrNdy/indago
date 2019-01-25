@@ -22,6 +22,12 @@ public class Bimap< A, B > {
 		ba.put( b, a );
 	}
 
+	public void clear()
+	{
+		ab.clear();
+		ba.clear();
+	}
+
 	public int size() {
 		return ab.size();
 	}
