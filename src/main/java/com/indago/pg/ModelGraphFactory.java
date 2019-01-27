@@ -25,7 +25,7 @@ import net.imglib2.util.ValuePair;
  */
 public class ModelGraphFactory {
 
-	public static Pair< SegmentationProblem, AssignmentMapper< SegmentNode, LabelingSegment > > createSegmentationProblem(
+	public static Pair< TrackingSegmentationProblem, AssignmentMapper< SegmentNode, LabelingSegment > > createSegmentationProblem(
 			final Collection< LabelingSegment > segments,
 			final ConflictGraph< LabelingSegment > conflicts,
 			final CostFactory< ? super LabelingSegment > segmentCosts ) {
@@ -48,7 +48,7 @@ public class ModelGraphFactory {
 			conflictSets.add( cs );
 		}
 
-		final SegmentationProblem problem = new SegmentationProblem() {
+		final TrackingSegmentationProblem problem = new TrackingSegmentationProblem() {
 
 			@Override
 			public Collection< SegmentNode > getSegments() {

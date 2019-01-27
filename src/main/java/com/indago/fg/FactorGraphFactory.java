@@ -11,6 +11,7 @@ import com.indago.IndagoLog;
 import com.indago.pg.IndicatorNode;
 import com.indago.pg.SegmentationProblem;
 import com.indago.pg.TrackingProblem;
+import com.indago.pg.TrackingSegmentationProblem;
 import com.indago.pg.assignments.AppearanceHypothesis;
 import com.indago.pg.assignments.AssignmentNode;
 import com.indago.pg.assignments.DisappearanceHypothesis;
@@ -196,7 +197,7 @@ public class FactorGraphFactory {
 
 		// ADD USER CONSTRAINTS (segments forced by specific assignment types)
 		for ( int frameId = 0; frameId < trackingModel.getTimepoints().size(); frameId++ ) {
-			final SegmentationProblem frameModel = trackingModel.getTimepoints().get( frameId );
+			final TrackingSegmentationProblem frameModel = trackingModel.getTimepoints().get( frameId );
 
 			for ( final SegmentNode forcedNode : frameModel.getForcedByAppearanceNodes() ) {
 				IndagoLog.log.info( "Consider appearance force for: " + forcedNode.toString() );
