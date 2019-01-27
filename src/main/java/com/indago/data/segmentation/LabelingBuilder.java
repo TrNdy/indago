@@ -22,7 +22,7 @@ public class LabelingBuilder extends LabelingPlus {
 		super( dimensions );
 	}
 
-	public LabelingBuilder( final Img< IntType > indexImg ) { // TODO: maybe remove this. It's unused and it unintentionally hides the (Dimensions) constructor.
+	public LabelingBuilder( final Img< IntType > indexImg ) {
 		super( indexImg );
 	}
 
