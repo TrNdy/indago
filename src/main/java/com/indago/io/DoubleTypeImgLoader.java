@@ -15,7 +15,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.view.Views;
 
@@ -46,7 +46,7 @@ public class DoubleTypeImgLoader {
 		return ret;
 	}
 
-	public static ImgPlus< DoubleType > wrapEnsureType( final ImgPlus< ? extends RealType > imgPlus ) {
+	public static < T extends NumericType< T > > ImgPlus< DoubleType > wrapEnsureType( final ImgPlus< T > imgPlus ) {
 		final Img< DoubleType > newImg = copyToDouble( imgPlus.getImg() );
 		final ImgPlus< DoubleType > result = new ImgPlus<>( newImg, imgPlus.getName() );
 		for ( int i = 0; i < result.numDimensions(); i++ )
@@ -66,7 +66,7 @@ public class DoubleTypeImgLoader {
 	 * @param img
 	 * @return
 	 */
-	private static Img< DoubleType > copyToDouble( final Img< ? extends RealType > img ) {
+	private static < T extends NumericType< T > > Img< DoubleType > copyToDouble( final Img< T > img ) {
 		final long dims[] = new long[ img.numDimensions() ];
 		img.dimensions( dims );
 		final Img< DoubleType > ret =

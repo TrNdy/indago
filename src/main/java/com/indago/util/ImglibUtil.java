@@ -5,9 +5,13 @@ package com.indago.util;
 
 import java.util.Iterator;
 
+import org.scijava.log.Logger;
+
+import net.imagej.ImgPlus;
 import net.imglib2.IterableInterval;
 import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -57,4 +61,36 @@ public class ImglibUtil {
 			if ( type.compareTo( max ) > 0 ) max.set( type );
 		}
 	}
+
+	/**
+	 * Determines and outputs some metadata-info about a given ImgPlus.
+	 * 
+	 * @param log
+	 *            the Logger to use to output the information about the giben
+	 *            ImgPlus
+	 * @param imgPlus
+	 *            the ImgPlus you want to know more about
+	 */
+	public static < T extends Type< T > > void logImgPlusFacts( final Logger log, final ImgPlus< T > imgPlus ) {
+		log.info( String.format( "Image name:      %s", imgPlus.getName() ) );
+		log.info( String.format( "Pixel type:      %s", imgPlus.firstElement().getClass().getName() ) );
+
+		log.info( String.format( "Num dimesnsions: %s", imgPlus.numDimensions() ) );
+		final long[] dims = new long[ imgPlus.numDimensions() ];
+		imgPlus.dimensions( dims );
+		String dimsString = "[";
+		for ( int i = 0; i < imgPlus.numDimensions() - 1; i++ )
+			dimsString += dims[ i ] + ",";
+		dimsString += dims[ dims.length - 1 ] + "]";
+		log.info( String.format( "Total size:      %s", dimsString ) );
+		for ( int i = 0; i < imgPlus.numDimensions(); i++ ) {
+			log.info( String.format( "Dimension %d is: %s", i, ( imgPlus.axis( i ).type().isSpatial() ) ? "spatial" : "other" ) );
+			log.info( String.format( "            in: %s", imgPlus.axis( i ).unit() ) );
+			log.info( String.format( "       labeled: %s", imgPlus.axis( i ).type().getLabel() ) );
+			log.info( String.format( "        length: %d", dims[ i ] ) );
+			log.info( String.format( "       min_idx: %d", imgPlus.min( i ) ) );
+			log.info( String.format( "       max_idx: %d", imgPlus.max( i ) ) );
+		}
+	}
+
 }

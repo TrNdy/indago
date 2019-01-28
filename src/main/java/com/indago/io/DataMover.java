@@ -18,6 +18,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -174,7 +175,7 @@ public class DataMover {
 //    }
 
 	@SuppressWarnings( "unchecked" )
-	public static < ST extends RealType< ST >, TT extends NativeType< TT > > void convertAndCopy(
+	public static < ST extends NumericType< ST >, TT extends NativeType< TT > > void convertAndCopy(
 			final RandomAccessible< ST > source,
 			final IterableInterval< TT > target ) throws Exception {
 		final ST sourceType = source.randomAccess().get();
