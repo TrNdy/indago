@@ -64,7 +64,7 @@ public class ImglibUtil {
 
 	/**
 	 * Determines and outputs some metadata-info about a given ImgPlus.
-	 * 
+	 *
 	 * @param log
 	 *            the Logger to use to output the information about the giben
 	 *            ImgPlus
@@ -90,6 +90,51 @@ public class ImglibUtil {
 			log.info( String.format( "        length: %d", dims[ i ] ) );
 			log.info( String.format( "       min_idx: %d", imgPlus.min( i ) ) );
 			log.info( String.format( "       max_idx: %d", imgPlus.max( i ) ) );
+		}
+	}
+
+	public static < T extends Type< T > > int getNumberOfSpatialDimensions( final ImgPlus< T > imgPlus ) {
+		int spatialDims = 0;
+		for ( int i = 0; i < imgPlus.numDimensions(); i++ ) {
+			spatialDims += imgPlus.axis( i ).type().isSpatial() ? 1 : 0;
+		}
+		return spatialDims;
+	}
+
+	public static < T extends Type< T > > int getTimeDimensionIndex( final ImgPlus< T > imgPlus ) {
+		for ( int i = 0; i < imgPlus.numDimensions(); i++ ) {
+			if ( imgPlus.axis( i ).type().getLabel().equals( "Time" ) ) { return i; }
+		}
+		return -1;
+	}
+
+	public static < T extends Type< T > > boolean hasTimeDimension( final ImgPlus< T > imgPlus ) {
+		return ( getTimeDimensionIndex( imgPlus ) == -1 ) ? false : true;
+	}
+
+	public static < T extends Type< T > > long getNumFrames( final ImgPlus< T > imgPlus ) {
+		if ( hasTimeDimension( imgPlus ) ) {
+			return imgPlus.dimension( getTimeDimensionIndex( imgPlus ) );
+		} else {
+			return -1;
+		}
+	}
+	public static < T extends Type< T > > int getChannelDimensionIndex( final ImgPlus< T > imgPlus ) {
+		for ( int i = 0; i < imgPlus.numDimensions(); i++ ) {
+			if ( imgPlus.axis( i ).type().getLabel().equals( "Channel" ) ) { return i; }
+		}
+		return -1;
+	}
+
+	public static < T extends Type< T > > boolean hasChannelDimension( final ImgPlus< T > imgPlus ) {
+		return ( getTimeDimensionIndex( imgPlus ) == -1 ) ? false : true;
+	}
+
+	public static < T extends Type< T > > long getNumChannels( final ImgPlus< T > imgPlus ) {
+		if ( hasChannelDimension( imgPlus ) ) {
+			return imgPlus.dimension( getChannelDimensionIndex( imgPlus ) );
+		} else {
+			return -1;
 		}
 	}
 
