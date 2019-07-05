@@ -5,15 +5,16 @@
 	<parent>
 		<groupId>sc.fiji</groupId>
 		<artifactId>pom-indago</artifactId>
-		<version>2.2.16</version>
+		<version>2.2.18</version>
 	</parent>
 
 	<properties>
+		<package-name>com.indago</package-name>
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>TrNdy developers</license.copyrightOwners>
 
 		<!-- NB: Deploy releases to the ImageJ Maven repository. -->
-		<releaseProfiles>deploy-to-imagej</releaseProfiles>
+		<releaseProfiles>deploy-to-scijava</releaseProfiles>
 	</properties>
 
 	<groupId>com.indago</groupId>
@@ -140,7 +141,7 @@
 	<repositories>
 		<repository>
 			<id>imagej.public</id>
-			<url>http://maven.imagej.net/content/groups/public</url>
+			<url>http://maven.scijava.org/content/groups/public</url>
 		</repository>
 		<repository>
 			<id>erichseifert.de</id>

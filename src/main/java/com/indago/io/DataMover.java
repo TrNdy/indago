@@ -183,7 +183,7 @@ public class DataMover {
 
 		// if source and target are of same type -> use copy since convert is not needed...
 		if ( sourceType.getClass().isInstance( targetType ) ) {
-			DataMover.copy( source, ( IterableInterval< ST > ) target );
+			DataMover.copy( source, ( IterableInterval ) target );
 			return;
 		}
 
