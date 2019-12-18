@@ -24,6 +24,8 @@ public class LabelData {
 
 	private final ArrayList< Integer > fragmentIndices;
 
+	private String segmentSource;
+
 	LabelData() {
 		this( createId() );
 	}
@@ -34,6 +36,7 @@ public class LabelData {
 		segment = null;
 		labelingTreeNode = null;
 		fragmentIndices = new ArrayList<>();
+		segmentSource = null;
 	}
 
 	void setSegment( final LabelingSegment segment ) {
@@ -70,4 +73,14 @@ public class LabelData {
 		if ( nextId < id + 1 )
 			nextId = id + 1;
 	}
+
+	public void setSegmentSource( String source ) {
+		this.segmentSource = source;
+		
+	}
+
+	public String getSegmentSource() {
+		return segmentSource;
+	}
+
 }

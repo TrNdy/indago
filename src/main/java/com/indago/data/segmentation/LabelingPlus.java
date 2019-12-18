@@ -99,11 +99,12 @@ public class LabelingPlus
 		return segments;
 	}
 
-	void createSegmentAndTreeNode( final LabelData label )
+	void createSegmentAndTreeNode( final LabelData label, final String source )
 	{
 		final LabelRegion< LabelData > labelRegion = labelRegions.getLabelRegion( label );
 		final LabelingSegment segment = new LabelingSegment( labelRegion );
 		label.setSegment( segment );
+		label.setSegmentSource( source );
 		final LabelingTreeNode ltn = new LabelingTreeNode( segment, label );
 		label.setLabelingTreeNode( ltn );
 	}

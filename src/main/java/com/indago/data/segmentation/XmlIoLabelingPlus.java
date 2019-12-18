@@ -133,12 +133,12 @@ public class XmlIoLabelingPlus {
 			final int id = XmlHelpers.getInt( node, LABELINGTREE_NODE_ID_TAG );
 			final LabelData label = idToLabelMap.get( id );
 			if ( label.getLabelingTreeNode() == null )
-				labelingPlus.createSegmentAndTreeNode( label );
+				labelingPlus.createSegmentAndTreeNode( label, "" );
 			final LabelingTreeNode ltn = label.getLabelingTreeNode();
 			for ( final int childId : XmlHelpers.getIntArray( node, LABELINGTREE_NODE_CHILDREN_TAG ) ) {
 				final LabelData childLabel = idToLabelMap.get( childId );
 				if ( childLabel.getLabelingTreeNode() == null )
-					labelingPlus.createSegmentAndTreeNode( childLabel );
+					labelingPlus.createSegmentAndTreeNode( childLabel, "" );
 				ltn.addChild( childLabel.getLabelingTreeNode() );
 			}
 		}
