@@ -85,4 +85,9 @@ public class LabelingSegment implements Segment {
 		return ret;
 	}
 
+	public String getSegmentationSource() {
+		return region.getLabel().getSegmentSource();
+
+	}
+
 }
