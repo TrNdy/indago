@@ -123,7 +123,7 @@ public class XmlIoLabelingPlus {
 				labelSets.add( null );
 			labelSets.set( i, labelSet );
 		}
-		new SegmentLabelingSerialisation( labelingPlus.getLabeling().getMapping() ).setLabelSets( labelSets );
+		labelingPlus.getLabeling().getMapping().setLabelSets( labelSets );
 
 		final Element labelingtree = segmentLabeling.getChild( LABELINGTREE_TAG );
 		if ( labelingtree == null )
@@ -171,7 +171,7 @@ public class XmlIoLabelingPlus {
 
 		final Element indexMap = new Element( MAPPING_TAG );
 		int i = 0;
-		for ( final Set< LabelData > labelSet : new SegmentLabelingSerialisation( mapping ).getLabelSets() ) {
+		for ( final Set< LabelData > labelSet : mapping.getLabelSets() ) {
 			final Element entry = new Element( MAPPING_ENTRY_TAG );
 			entry.addContent( XmlHelpers.intElement( MAPPING_ENTRY_INDEX_TAG, i++ ) );
 			entry.addContent( labelIdsElement( MAPPING_ENTRY_LABELS_TAG, labelSet ) );
@@ -269,24 +269,5 @@ public class XmlIoLabelingPlus {
 		while( out.hasNext() )
 			out.next().set( ( int ) in.next().get() );
 		return img;
-	}
-
-	private static class SegmentLabelingSerialisation
-			extends
-			LabelingMapping.SerialisationAccess< LabelData > {
-
-		public SegmentLabelingSerialisation( final LabelingMapping< LabelData > mapping ) {
-			super( mapping );
-		}
-
-		@Override
-		protected List< Set< LabelData > > getLabelSets() {
-			return super.getLabelSets();
-		}
-
-		@Override
-		protected void setLabelSets( final List< Set< LabelData > > labelSets ) {
-			super.setLabelSets( labelSets );
-		}
 	}
 }
