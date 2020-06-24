@@ -118,7 +118,6 @@ public class XmlIoLabelingPlus {
 		final TIntObjectMap< LabelData > idToLabelMap =
 				getIdToLabelMap( segmentLabeling, LABELS_TAG );
 		final long t1 = System.currentTimeMillis();
-		System.out.println( "        getIdToLabelMap  : " + (t1-t0) + " ms" );
 
 		final Element mapping = segmentLabeling.getChild( MAPPING_TAG );
 		if ( mapping == null )
@@ -137,9 +136,9 @@ public class XmlIoLabelingPlus {
 			labelSets.set( i, labelSet );
 		}
 		final long t2 = System.currentTimeMillis();
-		System.out.println( "        build labelSets  : " + (t2-t1) + " ms" );
+		System.out.println( "        build labelSets  : " + (t2-t0) + " ms" );
 		totalNumLabelSets += labelSets.size();
-		System.out.println( "totalNumLabelSets = " + totalNumLabelSets );
+		System.out.println( "        totalNumLabelSets = " + totalNumLabelSets );
 		labelingPlus.getLabeling().getMapping().setLabelSets( labelSets );
 		final long t3 = System.currentTimeMillis();
 		System.out.println( "        setLabelSets     : " + (t3-t2) + " ms" );
