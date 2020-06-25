@@ -1,5 +1,6 @@
 package com.indago.data.segmentation;
 
+import gnu.trove.list.TIntList;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -36,7 +37,10 @@ public class PairwiseConflictGraph implements ConflictGraph< LabelingSegment > {
 			final LabelData sli = segmentLabels.get( i );
 			for ( int j = i + 1; j < numSegments; ++j ) {
 				final LabelData slj = segmentLabels.get( j );
-				for ( final Integer fj : slj.getFragmentIndices() ) {
+				final TIntList fragmentIndices = slj.getFragmentIndices();
+				for ( int k = 0; k < fragmentIndices.size(); k++ )
+				{
+					int fj = fragmentIndices.get( k );
 					if ( sli.getFragmentIndices().contains( fj ) ) {
 						final ArrayList< LabelingSegment > clique = new ArrayList<>();
 						clique.add( sli.getSegment() );

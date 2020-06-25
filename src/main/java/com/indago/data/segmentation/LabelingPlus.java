@@ -3,6 +3,7 @@ package com.indago.data.segmentation;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Set;
 import net.imglib2.Dimensions;
 import net.imglib2.img.Img;
 import net.imglib2.roi.labeling.ImgLabeling;
@@ -69,7 +70,8 @@ public class LabelingPlus
 		if ( fragments == null ) {
 			fragments = new ArrayList<>();
 			final LabelingMapping< LabelData > mapping = labeling.getMapping();
-			for ( final LabelData label : mapping.getLabels() )
+			final Set< LabelData > labels = mapping.getLabels();
+			for ( final LabelData label : labels )
 				label.getFragmentIndices().clear();
 			final int numLabelSets = mapping.numSets();
 			final boolean[] flags = new boolean[ numLabelSets ];

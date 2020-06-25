@@ -1,5 +1,6 @@
 package com.indago.data.segmentation;
 
+import gnu.trove.list.TIntList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -68,8 +69,8 @@ public class MinimalOverlapConflictGraph implements ConflictGraph< LabelingSegme
 					Arrays.fill( heads, 1, numLists, 0 );
 				heads[ 0 ] = -1;
 				int currListIndex, firstListElem, currListElem;
-				ArrayList< Integer > currList;
-				final ArrayList< Integer > firstList = intersect.get( 0 ).getFragmentIndices();
+				TIntList currList;
+				final TIntList firstList = intersect.get( 0 ).getFragmentIndices();
 				A2: while ( true ) {
 					if ( ++heads[ 0 ] >= firstList.size() ) {
 						// done. we found all elements of the intersection.
