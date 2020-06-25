@@ -1,9 +1,11 @@
 package com.indago.data.segmentation;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import java.util.Set;
+import net.imglib2.Cursor;
 import net.imglib2.Dimensions;
 import net.imglib2.img.Img;
 import net.imglib2.roi.labeling.ImgLabeling;
@@ -109,5 +111,47 @@ public class LabelingPlus
 		label.setSegmentSource( source );
 		final LabelingTreeNode ltn = new LabelingTreeNode( segment, label );
 		label.setLabelingTreeNode( ltn );
+	}
+
+	/**
+	 * "Compress" labeling by removing (from mapping and index image) label sets that don't occur in the index image.
+	 * <p>
+	 * TODO:
+	 *  - move to imglib2-roi ImgLabeling
+	 *  - parallelize indexImg remapping using Parallelization/LoopBuilder
+	 *  - increment modcount
+	 */
+	public synchronized void pack()
+	{
+		final LabelingMapping< LabelData > mapping = labeling.getMapping();
+
+		// indexMap[ oldIndex ] == newIndex
+		final int[] indexMap = new int[ mapping.numSets() ];
+
+		int nextIndex = 1;
+		final Cursor< IntType > c = indexImg.cursor();
+		while ( c.hasNext() )
+		{
+			final IntType type = c.next();
+			final int oldIndex = type.get();
+			if ( oldIndex != 0 )
+			{
+				int newIndex = indexMap[ oldIndex ];
+				if ( newIndex == 0 )
+				{
+					newIndex = nextIndex++;
+					indexMap[ oldIndex ] = newIndex;
+				}
+				type.set( newIndex );
+			}
+		}
+		final int numLabelSets = nextIndex;
+
+		final List< Set< LabelData > > labelSets = new ArrayList<>( numLabelSets );
+		labelSets.add( new HashSet<>() );
+		for ( int i = 1; i < indexMap.length; i++ )
+			if ( indexMap[ i ] != 0 )
+				labelSets.add( new HashSet<>( mapping.labelsAtIndex( i ) ) );
+		mapping.setLabelSets( labelSets );
 	}
 }
