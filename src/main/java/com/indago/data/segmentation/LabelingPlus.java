@@ -35,15 +35,15 @@ public class LabelingPlus
 	public LabelingPlus( final Dimensions dimensions ) {
 		indexImg = Util.getArrayOrCellImgFactory( dimensions, intType ).create( dimensions, intType );
 		labeling = new ImgLabeling<>( indexImg );
-		labelRegions = new LabelRegions< LabelData >( labeling );
-		labelingForests = new ArrayList< LabelingForest >();
+		labelRegions = new LabelRegions<>( labeling );
+		labelingForests = new ArrayList<>();
 	}
 
 	public LabelingPlus( final Img< IntType > indexImg ) {
 		this.indexImg = indexImg;
 		labeling = new ImgLabeling<>( indexImg );
-		labelRegions = new LabelRegions< LabelData >( labeling );
-		labelingForests = new ArrayList< LabelingForest >();
+		labelRegions = new LabelRegions<>( labeling );
+		labelingForests = new ArrayList<>();
 	}
 
 	/**
