@@ -47,8 +47,6 @@ import net.imglib2.view.Views;
  */
 public class XmlIoLabelingPlus {
 
-	static int totalNumLabelSets = 0;
-
 	public static final String SEGMENTLABELING_TAG = "SegmentLabeling";
 	public static final String SEGMENTLABELING_VERSION_ATTRIBUTE_NAME = "version";
 	public static final String SEGMENTLABELING_VERSION_ATTRIBUTE_CURRENT = "0.2";
@@ -79,7 +77,6 @@ public class XmlIoLabelingPlus {
 	}
 
 	public LabelingPlus load( final File xmlFile ) throws IOException {
-		final long t0 = System.currentTimeMillis();
 		final SAXBuilder sax = new SAXBuilder();
 		Document doc;
 		try {
@@ -88,9 +85,6 @@ public class XmlIoLabelingPlus {
 			throw new IOException( e );
 		}
 		final Element root = doc.getRootElement();
-		final long t1 = System.currentTimeMillis();
-		System.out.println( "    sax.build(...) : " + (t1-t0) + " ms" );
-
 
 		final File basePath = loadBasePath( root, xmlFile );
 		final File indexImgFile = XmlHelpers.loadPath( root, INDEXIMG_TAG, basePath );
@@ -100,11 +94,7 @@ public class XmlIoLabelingPlus {
 						indexImgFile.getAbsolutePath(),
 						new ArrayImgFactory<>( new IntType() ) ).get( 0 ).getImg();
 		final LabelingPlus labelingPlus = new LabelingPlus( indexImg );
-		final long t2 = System.currentTimeMillis();
-		System.out.println( "    open IndexImg  : " + (t2-t1) + " ms" );
 		fromXml( root, labelingPlus, basePath );
-		final long t3 = System.currentTimeMillis();
-		System.out.println( "    fromXml        : " + (t3-t2) + " ms" );
 		return labelingPlus;
 	}
 
@@ -131,7 +121,6 @@ public class XmlIoLabelingPlus {
 			throws IOException {
 		final String version = segmentLabeling.getAttributeValue( SEGMENTLABELING_VERSION_ATTRIBUTE_NAME, "0" );
 
-		final long t0 = System.currentTimeMillis();
 		final TIntObjectMap< LabelData > idToLabelMap =
 				getIdToLabelMap( segmentLabeling, LABELS_TAG );
 
@@ -162,13 +151,7 @@ public class XmlIoLabelingPlus {
 				labelSets.set( i, labelSet );
 			}
 		}
-		final long t2 = System.currentTimeMillis();
-		System.out.println( "        build labelSets  : " + (t2-t0) + " ms" );
-		totalNumLabelSets += labelSets.size();
-		System.out.println( "        totalNumLabelSets = " + totalNumLabelSets );
 		labelingPlus.getLabeling().getMapping().setLabelSets( labelSets );
-		final long t3 = System.currentTimeMillis();
-		System.out.println( "        setLabelSets     : " + (t3-t2) + " ms" );
 
 		final Element labelingtree = segmentLabeling.getChild( LABELINGTREE_TAG );
 		if ( labelingtree == null )
@@ -195,8 +178,6 @@ public class XmlIoLabelingPlus {
 				roots.add( idToLabelMap.get( id ).getLabelingTreeNode() );
 			labelingPlus.labelingForests.add( new LabelingForest( roots ) );
 		}
-		final long t4 = System.currentTimeMillis();
-		System.out.println( "        labelingForests  : " + (t4-t3) + " ms" );
 	}
 
 	private Element toXml(
