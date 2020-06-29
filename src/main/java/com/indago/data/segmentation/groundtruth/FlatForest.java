@@ -1,5 +1,6 @@
 package com.indago.data.segmentation.groundtruth;
 
+import com.indago.data.segmentation.groundtruth.ImageRegions.ImageRegion;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,15 +29,20 @@ public class FlatForest implements Forest< FlatForest.Node > {
 
 		private static final ArrayList< Node > emptyChildren = new ArrayList< Node >();
 
-		private final Iterable< Localizable > pixels;
+		private final ImageRegion pixels;
 
-		private Node( final Iterable< Localizable > pixels ) {
+		private Node( final ImageRegion pixels ) {
 			this.pixels = pixels;
 		}
 
 		@Override
 		public Iterator< Localizable > iterator() {
 			return pixels.iterator();
+		}
+
+		public long size()
+		{
+			return pixels.size();
 		}
 
 		@Override
