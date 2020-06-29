@@ -12,6 +12,7 @@ import net.imglib2.roi.labeling.ImgLabeling;
 import net.imglib2.roi.labeling.LabelRegion;
 import net.imglib2.roi.labeling.LabelRegions;
 import net.imglib2.roi.labeling.LabelingMapping;
+import net.imglib2.roi.labeling.LabelingType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.Util;
 
@@ -127,6 +128,7 @@ public class LabelingPlus
 
 		// indexMap[ oldIndex ] == newIndex
 		final int[] indexMap = new int[ mapping.numSets() ];
+		final int[] inverseIndexMap = new int[ mapping.numSets() ];
 
 		int nextIndex = 1;
 		final Cursor< IntType > c = indexImg.cursor();
@@ -141,6 +143,7 @@ public class LabelingPlus
 				{
 					newIndex = nextIndex++;
 					indexMap[ oldIndex ] = newIndex;
+					inverseIndexMap[ newIndex ] = oldIndex;
 				}
 				type.set( newIndex );
 			}
@@ -149,9 +152,11 @@ public class LabelingPlus
 
 		final List< Set< LabelData > > labelSets = new ArrayList<>( numLabelSets );
 		labelSets.add( new HashSet<>() );
-		for ( int i = 1; i < indexMap.length; i++ )
-			if ( indexMap[ i ] != 0 )
-				labelSets.add( new HashSet<>( mapping.labelsAtIndex( i ) ) );
+		for ( int i = 1; i < numLabelSets; i++ )
+			labelSets.add( new HashSet<>( mapping.labelsAtIndex( inverseIndexMap[ i ] ) ) );
 		mapping.setLabelSets( labelSets );
+
+		LabelingType< LabelData > t = labeling.firstElement();
+		t.set( t );
 	}
 }
