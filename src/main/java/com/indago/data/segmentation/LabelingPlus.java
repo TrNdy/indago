@@ -106,8 +106,7 @@ public class LabelingPlus
 
 	void createSegmentAndTreeNode( final LabelData label, final String source )
 	{
-		final LabelRegion< LabelData > labelRegion = labelRegions.getLabelRegion( label );
-		final LabelingSegment segment = new LabelingSegment( labelRegion );
+		final LabelingSegment segment = new LabelingSegment( () -> labelRegions.getLabelRegion( label ) );
 		label.setSegment( segment );
 		label.setSegmentSource( source );
 		final LabelingTreeNode ltn = new LabelingTreeNode( segment, label );
