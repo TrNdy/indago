@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.imglib2.roi.io.labeling.LabelingIOService;
+import net.imglib2.roi.labeling.ImgLabeling;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -35,6 +37,7 @@ import net.imglib2.roi.labeling.LabelingMapping;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
+import org.scijava.plugin.Parameter;
 
 /**
  * @author tpietzsch, jug
@@ -61,6 +64,19 @@ public class XmlIoLabelingPlus {
 	public static final String LABELINGTREE_FOREST_ROOTS_TAG = "Roots";
 
 	public static boolean openIndexImageWithIJ = true;
+
+	@Parameter
+	public LabelingIOService labelingIOService;
+
+	public LabelingPlus loadFromBson( final String bsonFilename ) {
+		ImgLabeling imgLabeling = labelingIOService.open(bsonFilename);
+		LabelingPlus labelingPlus = new LabelingPlus(ImgView.wrap( imgLabeling.getIndexImg(), null ), imgLabeling);
+		return labelingPlus;
+	}
+
+	public void saveAsBson( final LabelingPlus labelingPlus, final String bsonFilename ) {
+		labelingIOService.save(labelingPlus.labeling, bsonFilename);
+	}
 
 	public LabelingPlus load( final String xmlFilename ) throws IOException {
 		return load( new File( xmlFilename ) );

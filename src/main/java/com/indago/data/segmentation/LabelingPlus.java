@@ -45,6 +45,13 @@ public class LabelingPlus
 		labelingForests = new ArrayList< LabelingForest >();
 	}
 
+	public LabelingPlus( final Img< IntType > indexImg, final ImgLabeling labeling ) {
+		this.indexImg = indexImg;
+		this.labeling = labeling;
+		labelRegions = new LabelRegions< LabelData >( labeling );
+		labelingForests = new ArrayList< LabelingForest >();
+	}
+
 	/**
 	 * @param labelingPlus
 	 */
