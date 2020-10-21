@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.LongFunction;
 
 import net.imglib2.roi.io.labeling.LabelingIOService;
 import net.imglib2.roi.labeling.ImgLabeling;
@@ -70,6 +71,12 @@ public class XmlIoLabelingPlus {
 
 	public LabelingPlus loadFromBson( final String bsonFilename ) {
 		ImgLabeling imgLabeling = labelingIOService.open(bsonFilename);
+		LabelingPlus labelingPlus = new LabelingPlus(ImgView.wrap( imgLabeling.getIndexImg(), null ), imgLabeling);
+		return labelingPlus;
+	}
+
+	public LabelingPlus loadFromBson( final String bsonFilename, final LongFunction<LabelData> idToLabel) {
+		ImgLabeling imgLabeling = labelingIOService.open(bsonFilename, idToLabel);
 		LabelingPlus labelingPlus = new LabelingPlus(ImgView.wrap( imgLabeling.getIndexImg(), null ), imgLabeling);
 		return labelingPlus;
 	}

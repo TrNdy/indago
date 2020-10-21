@@ -20,7 +20,15 @@ public class XmlIoLabelingPlusTest {
         XmlIoLabelingPlus plus = new XmlIoLabelingPlus();
         plus.labelingIOService = context.getService(LabelingIOService.class);
         LabelingPlus p = plus.loadFromBson("src/test/resources/bson/example1.bson");
-        System.out.println(p.getFragments().toString());
+    }
+
+    @Test
+    public void testLoadFromBson2() {
+        XmlIoLabelingPlus plus = new XmlIoLabelingPlus();
+        plus.labelingIOService = context.getService(LabelingIOService.class);
+        LabelingPlus p = plus.loadFromBson("src/test/resources/bson/example1.bson", id -> {
+            return new LabelData((int) id);
+        });
     }
 
     @Test

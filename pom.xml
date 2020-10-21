@@ -16,6 +16,7 @@
 		<!-- NB: Deploy releases to the ImageJ Maven repository. -->
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
 		<imglib2-roi.version>0.10.4</imglib2-roi.version>
+		<imglib2-roi-io.version>0.1.1-SNAPSHOT</imglib2-roi-io.version>
 	</properties>
 
 	<groupId>com.indago</groupId>
@@ -54,12 +55,11 @@
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-roi</artifactId>
-			<version>${imglib2-roi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-roi-io</artifactId>
-			<version>0.1.0</version>
+			<version>${imglib2-roi-io.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>nz.ac.waikato.cms.weka</groupId>
