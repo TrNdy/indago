@@ -56,6 +56,11 @@ public class ImageRegions< T extends Type< T > > extends AbstractEuclideanSpace 
 			this.itcode = itcode;
 		}
 
+		public long size()
+		{
+			return itcode.getSize();
+		}
+
 		@Override
 		public Iterator< Localizable > iterator() {
 			final long[] offset = new long[ itcode.numDimensions() ];

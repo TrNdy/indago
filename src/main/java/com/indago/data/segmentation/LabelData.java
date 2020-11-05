@@ -1,5 +1,7 @@
 package com.indago.data.segmentation;
 
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
 import java.util.ArrayList;
 
 /**
@@ -22,7 +24,9 @@ public class LabelData {
 
 	private LabelingTreeNode labelingTreeNode;
 
-	private final ArrayList< Integer > fragmentIndices;
+	private final TIntList fragmentIndices;
+
+	private String segmentSource;
 
 	LabelData() {
 		this( createId() );
@@ -33,7 +37,8 @@ public class LabelData {
 		useId( id );
 		segment = null;
 		labelingTreeNode = null;
-		fragmentIndices = new ArrayList<>();
+		fragmentIndices = new TIntArrayList();
+		segmentSource = null;
 	}
 
 	void setSegment( final LabelingSegment segment ) {
@@ -52,7 +57,7 @@ public class LabelData {
 		return labelingTreeNode;
 	}
 
-	public ArrayList< Integer > getFragmentIndices() {
+	public TIntList getFragmentIndices() {
 		return fragmentIndices;
 	}
 
@@ -70,4 +75,14 @@ public class LabelData {
 		if ( nextId < id + 1 )
 			nextId = id + 1;
 	}
+
+	public void setSegmentSource( String source ) {
+		this.segmentSource = source;
+
+	}
+
+	public String getSegmentSource() {
+		return segmentSource;
+	}
+
 }

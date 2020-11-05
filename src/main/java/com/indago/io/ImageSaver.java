@@ -9,6 +9,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgView;
 import net.imglib2.type.numeric.RealType;
+import org.scijava.Context;
 
 /**
  * Since loading and saving is still a hard thing to do right and the way to do
@@ -39,7 +40,7 @@ public class ImageSaver {
 //		IO.saveImg( filename, img );
 
 		try {
-			new ImgSaver().saveImg( filename, ImgView.wrap( rai, null ) );
+			new ImgSaver( new Context() ).saveImg( filename, ImgView.wrap( rai, null ) );
 		} catch ( ImgIOException | IncompatibleTypeException e ) {
 			e.printStackTrace();
 		}
