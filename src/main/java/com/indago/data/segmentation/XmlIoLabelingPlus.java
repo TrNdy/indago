@@ -8,15 +8,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.LongFunction;
+import java.util.stream.Collectors;
 
+import com.indago.data.segmentation.groundtruth.FlatForest;
 import net.imglib2.roi.io.labeling.LabelingIOService;
+import net.imglib2.roi.io.labeling.data.ImgLabelingContainer;
+import net.imglib2.roi.io.labeling.data.LabelingContainer;
 import net.imglib2.roi.labeling.ImgLabeling;
+import org.jcodings.util.Hash;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -79,20 +80,33 @@ public class XmlIoLabelingPlus {
 	@Parameter
 	public LabelingIOService labelingIOService;
 
-	public LabelingPlus loadFromBson( final String bsonFilename ) {
-		ImgLabeling imgLabeling = labelingIOService.open(bsonFilename);
+	public LabelingBuilder loadFromBson( final String bsonFilename ) {
+		ImgLabelingContainer imgLabelingContainer = labelingIOService.open(bsonFilename);
+		ImgLabeling imgLabeling = imgLabelingContainer.getImgLabeling();
 		LabelingPlus labelingPlus = new LabelingPlus(ImgView.wrap( imgLabeling.getIndexImg(), null ), imgLabeling);
-		return labelingPlus;
+		Map<String, Set<Integer>> sourceToLabel = new HashMap<String, Set<Integer>>();
+		final LabelingBuilder labelingBuilder = new LabelingBuilder( labelingPlus );
+		final FlatForest flat = new FlatForest( imgLabeling.getIndexImg(), new IntType( 0 ) );
+		for(Map.Entry<String, Set<Integer>> entry : sourceToLabel.entrySet()){
+			final Set< FlatForest.Node > filteredRoots = flat.roots().stream()
+					.filter( node -> node.size()>0 && entry.getValue().contains(node.iterator().next().numDimensions()))
+					.collect( Collectors.toSet() );
+			labelingBuilder.buildLabelingForest(()-> flat.roots(), entry.getKey() );
+		} 
+		return labelingBuilder;
 	}
 
 	public LabelingPlus loadFromBson( final String bsonFilename, final LongFunction<LabelData> idToLabel) {
-		ImgLabeling imgLabeling = labelingIOService.open(bsonFilename, idToLabel);
+		ImgLabelingContainer imgLabelingContainer =  labelingIOService.open(bsonFilename, idToLabel);
+		ImgLabeling imgLabeling = imgLabelingContainer.getImgLabeling();
 		LabelingPlus labelingPlus = new LabelingPlus(ImgView.wrap( imgLabeling.getIndexImg(), null ), imgLabeling);
 		return labelingPlus;
 	}
 
 	public void saveAsBson( final LabelingPlus labelingPlus, final String bsonFilename ) {
-		labelingIOService.save(labelingPlus.labeling, bsonFilename);
+		ImgLabelingContainer container = new ImgLabelingContainer();
+		container.setImgLabeling(labelingPlus.labeling);
+		labelingIOService.save(container, bsonFilename);
 	}
 
 	public LabelingPlus load( final String xmlFilename ) throws IOException {
