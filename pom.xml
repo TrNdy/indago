@@ -15,8 +15,8 @@
 
 		<!-- NB: Deploy releases to the ImageJ Maven repository. -->
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
-		<imglib2-roi.version>0.10.4</imglib2-roi.version>
-		<imglib2-roi-io.version>0.1.1-SNAPSHOT</imglib2-roi-io.version>
+		<imglib2-roi.version>0.11.0</imglib2-roi.version>
+		<imglib2-roi-io.version>0.2.0-SNAPSHOT</imglib2-roi-io.version>
 	</properties>
 
 	<groupId>com.indago</groupId>

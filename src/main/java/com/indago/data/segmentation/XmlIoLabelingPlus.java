@@ -13,11 +13,12 @@ import java.util.function.LongFunction;
 import java.util.stream.Collectors;
 
 import com.indago.data.segmentation.groundtruth.FlatForest;
+import com.indago.data.segmentation.groundtruth.ImageRegions;
 import net.imglib2.roi.io.labeling.LabelingIOService;
 import net.imglib2.roi.io.labeling.data.ImgLabelingContainer;
 import net.imglib2.roi.io.labeling.data.LabelingContainer;
 import net.imglib2.roi.labeling.ImgLabeling;
-import org.jcodings.util.Hash;
+import org.apache.commons.lang.StringUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -83,16 +84,50 @@ public class XmlIoLabelingPlus {
 	public LabelingBuilder loadFromBson( final String bsonFilename ) {
 		ImgLabelingContainer imgLabelingContainer = labelingIOService.open(bsonFilename);
 		ImgLabeling imgLabeling = imgLabelingContainer.getImgLabeling();
+		List<Set<Integer>> labelSets = imgLabeling.getMapping().getLabelSets();
+		List<Set<LabelData>> recastLabelSets = new LinkedList<>();
+		List<LabelData> recastLabels = new LinkedList<>();
+		for(Set<Integer> labelSet : labelSets){
+			Set<LabelData> newLabelSet = new HashSet<>();
+			for(Integer label : labelSet){
+				LabelData labelData = new LabelData(label);
+				//TODO: set data, maybe?
+
+				newLabelSet.add(labelData);
+				recastLabels.add(labelData);
+			}
+			recastLabelSets.add(newLabelSet);
+		}
+		imgLabeling = ImgLabeling.fromImageAndLabelSets(imgLabeling.getIndexImg(), recastLabelSets);
 		LabelingPlus labelingPlus = new LabelingPlus(ImgView.wrap( imgLabeling.getIndexImg(), null ), imgLabeling);
-		Map<String, Set<Integer>> sourceToLabel = new HashMap<String, Set<Integer>>();
+		Map<String, Set<Integer>> sourceToLabel = imgLabelingContainer.getSourceToLabel();
 		final LabelingBuilder labelingBuilder = new LabelingBuilder( labelingPlus );
-		final FlatForest flat = new FlatForest( imgLabeling.getIndexImg(), new IntType( 0 ) );
+
 		for(Map.Entry<String, Set<Integer>> entry : sourceToLabel.entrySet()){
-			final Set< FlatForest.Node > filteredRoots = flat.roots().stream()
-					.filter( node -> node.size()>0 && entry.getValue().contains(node.iterator().next().numDimensions()))
-					.collect( Collectors.toSet() );
-			labelingBuilder.buildLabelingForest(()-> flat.roots(), entry.getKey() );
-		} 
+			if(StringUtils.isNotEmpty(entry.getKey())){
+				HashSet<LabelingTreeNode> labelingTreeNodes = new HashSet<>();
+				labelingPlus.getSegments();
+
+				//labelingPlus.getLabeling().getMapping().getLabels().stream().filter(labelData -> labelData.);
+
+				//TODO: iterate over all segments
+				for(Integer segmentId : entry.getValue()){
+					Set<LabelData> labelDataSets = labelingPlus.getLabeling().getMapping().getLabelSets().get(segmentId);
+						for(LabelData labelData : labelDataSets){
+							labelingPlus.createSegmentAndTreeNode(labelData, entry.getKey());
+							labelingTreeNodes.add(labelData.getLabelingTreeNode());
+						}
+				}
+				final LabelingForest labelingForest = new LabelingForest(labelingTreeNodes);
+				labelingBuilder.labelingForests.add(labelingForest);
+			}
+
+		}
+		labelingPlus.getSegments();
+
+
+
+
 		return labelingBuilder;
 	}
 

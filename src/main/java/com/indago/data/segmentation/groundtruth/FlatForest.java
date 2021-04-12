@@ -31,7 +31,7 @@ public class FlatForest implements Forest< FlatForest.Node > {
 
 		private final ImageRegion pixels;
 
-		private Node( final ImageRegion pixels ) {
+		public Node(final ImageRegion pixels) {
 			this.pixels = pixels;
 		}
 
