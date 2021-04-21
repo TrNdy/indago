@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.LongFunction;
+import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 
 import com.indago.data.segmentation.groundtruth.FlatForest;
@@ -138,10 +139,10 @@ public class XmlIoLabelingPlus {
 		return labelingPlus;
 	}
 
-	public void saveAsBson( final LabelingPlus labelingPlus, final String bsonFilename ) {
+	public void saveAsBson(final LabelingPlus labelingPlus, final String bsonFilename, final ToLongFunction labelToId) {
 		ImgLabelingContainer container = new ImgLabelingContainer();
 		container.setImgLabeling(labelingPlus.labeling);
-		labelingIOService.save(container, bsonFilename);
+		labelingIOService.save(container, bsonFilename, labelToId);
 	}
 
 	public LabelingPlus load( final String xmlFilename ) throws IOException {

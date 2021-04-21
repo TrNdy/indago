@@ -32,13 +32,13 @@ public class XmlIoLabelingPlusTest {
         });
     }
 
-    //TODO: fix the saving in imglib2-roi-io
     @Test
-    @Ignore
     public void testSaveAsBson() {
         XmlIoLabelingPlus plus = new XmlIoLabelingPlus();
         plus.labelingIOService = context.getService(LabelingIOService.class);
         LabelingPlus p = plus.loadFromBson("src/test/resources/bson/example1.bson");
-        plus.saveAsBson(p, "src/test/resources/bson/save_test.bson");
+        plus.saveAsBson(p, "src/test/resources/bson/save_test.bson", label -> {
+            return ((LabelData)label).getId();
+        });
     }
 }
