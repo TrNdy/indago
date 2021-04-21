@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>sc.fiji</groupId>
-		<artifactId>pom-indago</artifactId>
-		<version>2.2.18</version>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>30.0.0</version>
 	</parent>
 
 	<properties>
@@ -17,6 +17,9 @@
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
 		<imglib2-roi.version>0.11.0</imglib2-roi.version>
 		<imglib2-roi-io.version>0.2.0-SNAPSHOT</imglib2-roi-io.version>
+		<indago-ui-elements.version>0.1.2</indago-ui-elements.version>
+		<gurobi-jar.version>8.1.0</gurobi-jar.version>
+
 	</properties>
 
 	<groupId>com.indago</groupId>
@@ -43,6 +46,7 @@
 		<dependency>
 			<groupId>com.indago</groupId>
 			<artifactId>indago-ui-elements</artifactId>
+			<version>${indago-ui-elements.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.scif</groupId>
@@ -68,6 +72,7 @@
 		<dependency>
 			<groupId>com.gurobi</groupId>
 			<artifactId>gurobi-jar</artifactId>
+			<version>${gurobi-jar.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>mpicbg</groupId>
@@ -83,8 +88,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.miglayout</groupId>
-			<artifactId>miglayout</artifactId>
-			<classifier>swing</classifier>
+			<artifactId>miglayout-swing</artifactId>
+			<version>${miglayout-swing.version}</version>
 		</dependency>
 
 		<!-- Test dependencies -->
@@ -150,6 +155,10 @@
 
 
 	<repositories>
+		<repository>
+			<id>scijava.public</id>
+			<url>https://maven.scijava.org/content/groups/public</url>
+		</repository>
 		<repository>
 			<id>imagej.public</id>
 			<url>https://maven.scijava.org/content/groups/public</url>

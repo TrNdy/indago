@@ -18,7 +18,7 @@ import io.scif.img.IO;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.TypeIdentity;
-import net.imglib2.display.RealARGBColorConverter;
+import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -58,8 +58,7 @@ public class PlayGround5 {
 		final LabelingForest labelingForest = labelingBuilder.buildLabelingForest( FilteredComponentTree.buildComponentTree( segments, type, minComponentSize, maxComponentSize, maxGrowthPerStep, darkToBright ) );
 		final RandomAccessibleInterval< LabelingType< LabelData > > labeling = labelingBuilder.getLabeling();
 
-		final RealARGBColorConverter< T > imageConverter = new RealARGBColorConverter.Imp0< T >( 0, 255 );
-		imageConverter.setColor( new ARGBType( 0xffffffff ) );
+		final RealARGBConverter< T > imageConverter = new RealARGBConverter< T >( 0, 255 );
 		final SegmentLabelSetARGBConverter labelingConverter = new SegmentLabelSetARGBConverter( new AlphaMixedSegmentLabelSetColor( new SegmentLabelColor() {
 			Random rand = new Random();
 			@Override
