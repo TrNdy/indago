@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>sc.fiji</groupId>
-		<artifactId>pom-indago</artifactId>
-		<version>2.2.18</version>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>30.0.0</version>
 	</parent>
 
 	<properties>
@@ -15,6 +15,11 @@
 
 		<!-- NB: Deploy releases to the ImageJ Maven repository. -->
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
+		<imglib2-roi.version>0.11.0</imglib2-roi.version>
+		<imglib2-roi-io.version>0.2.0-SNAPSHOT</imglib2-roi-io.version>
+		<indago-ui-elements.version>0.1.2</indago-ui-elements.version>
+		<gurobi-jar.version>8.1.0</gurobi-jar.version>
+
 	</properties>
 
 	<groupId>com.indago</groupId>
@@ -41,6 +46,7 @@
 		<dependency>
 			<groupId>com.indago</groupId>
 			<artifactId>indago-ui-elements</artifactId>
+			<version>${indago-ui-elements.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.scif</groupId>
@@ -51,12 +57,22 @@
 			<artifactId>imglib2-ij</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-roi</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-roi-io</artifactId>
+			<version>${imglib2-roi-io.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>nz.ac.waikato.cms.weka</groupId>
 			<artifactId>weka-dev</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.gurobi</groupId>
 			<artifactId>gurobi-jar</artifactId>
+			<version>${gurobi-jar.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>mpicbg</groupId>
@@ -72,8 +88,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.miglayout</groupId>
-			<artifactId>miglayout</artifactId>
-			<classifier>swing</classifier>
+			<artifactId>miglayout-swing</artifactId>
+			<version>${miglayout-swing.version}</version>
 		</dependency>
 
 		<!-- Test dependencies -->
@@ -140,12 +156,16 @@
 
 	<repositories>
 		<repository>
+			<id>scijava.public</id>
+			<url>https://maven.scijava.org/content/groups/public</url>
+		</repository>
+		<repository>
 			<id>imagej.public</id>
-			<url>http://maven.scijava.org/content/groups/public</url>
+			<url>https://maven.scijava.org/content/groups/public</url>
 		</repository>
 		<repository>
 			<id>erichseifert.de</id>
-			<url>http://mvn.erichseifert.de/maven2</url>
+			<url>https://mvn.erichseifert.de/maven2</url>
 		</repository>
 	</repositories>
 </project>

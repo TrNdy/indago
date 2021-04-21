@@ -1,5 +1,6 @@
 package com.indago.data.segmentation;
 
+import java.util.function.Supplier;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealLocalizable;
@@ -16,10 +17,12 @@ import net.imglib2.util.Intervals;
  */
 public class LabelingSegment implements Segment {
 
-	private final LabelRegion< LabelData > region;
+	private final Supplier< LabelRegion< LabelData > > regionSupplier;
 
-	protected LabelingSegment( final LabelRegion< LabelData > region ) {
-		this.region = region;
+	private LabelRegion< LabelData > region = null;
+
+	protected LabelingSegment( final Supplier< LabelRegion< LabelData > > region ) {
+		this.regionSupplier = region;
 	}
 
 	/**
@@ -30,23 +33,23 @@ public class LabelingSegment implements Segment {
 	 * @return unique serialization id of the backing {@code LabelRegion}.
 	 */
 	public int getId() {
-		return region.getLabel().getId();
+		return region().getLabel().getId();
 	}
 
 	@Override
 	public long getArea() {
-		return region.size();
+		return region().size();
 	}
 
 	@Override
 	public RealLocalizable getCenterOfMass() {
-		return region.getCenterOfMass();
+		return region().getCenterOfMass();
 	}
 
 	@Override
 	public IterableRegion< ? > getRegion()
 	{
-		return region;
+		return region();
 	}
 
 	/**
@@ -57,10 +60,10 @@ public class LabelingSegment implements Segment {
 	public boolean conflictsWith( final Segment segment ) {
 		final IterableRegion< ? > segmentRegion = segment.getRegion();
 		if ( segment instanceof LabelingSegment )
-			if ( Intervals.isEmpty( Intervals.intersect( this.region, segmentRegion ) ) )
+			if ( Intervals.isEmpty( Intervals.intersect( this.region(), segmentRegion ) ) )
 				return false;
 
-		final RandomAccess< BoolType > raMask = region.randomAccess();
+		final RandomAccess< BoolType > raMask = region().randomAccess();
 		final Cursor< ? > cSegment = segmentRegion.cursor();
 		while ( cSegment.hasNext() ) {
 			cSegment.fwd();
@@ -83,5 +86,22 @@ public class LabelingSegment implements Segment {
 			ret += String.format("%.0f:",region.getCenterOfMass().getDoublePosition( i ));
 		}
 		return ret;
+	}
+
+	public String getSegmentationSource() {
+		return region.getLabel().getSegmentSource();
+	}
+
+	private LabelRegion< LabelData > region()
+	{
+		if ( region == null )
+		{
+			synchronized ( this )
+			{
+				if ( region == null )
+					region = regionSupplier.get();
+			}
+		}
+		return region;
 	}
 }

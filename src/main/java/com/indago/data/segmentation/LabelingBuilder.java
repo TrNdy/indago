@@ -30,7 +30,22 @@ public class LabelingBuilder extends LabelingPlus {
 		super( labelingPlus );
 	}
 
-	public synchronized < T extends TreeNode< T > & Iterable< ? extends Localizable > > LabelingForest buildLabelingForest( final Forest< T > forest ) {
+	public synchronized < T extends TreeNode< T > & Iterable< ? extends Localizable > > LabelingForest buildLabelingForest(
+			final Forest< T > forest ) {
+		String segmentationSource = "";
+		return buildingLabelingForestWithSegmentationSource( forest, segmentationSource );
+	}
+
+	private < T extends TreeNode< T > & Iterable< ? extends Localizable > > LabelingForest buildingLabelingForestWithSegmentationSource(
+			final Forest< T > forest,
+			String segmentationSource ) {
+
+		return buildingLabelingForestWithSegmentationSource( forest, segmentationSource );
+	}
+
+	public synchronized < T extends TreeNode< T > & Iterable< ? extends Localizable > > LabelingForest buildLabelingForest(
+			final Forest< T > forest,
+			String segmentationSource ) {
 		// invalidate fragments and segments because we will add new labels
 		fragments = null;
 		segments = null;
@@ -61,7 +76,7 @@ public class LabelingBuilder extends LabelingPlus {
 		// build a LabelingForest using the structure of the original forest
 		final HashSet< LabelingTreeNode > roots = new HashSet<>();
 		for ( final T node : forest.roots() )
-			roots.add( buildLabelingTreeNodeFor( node, nodeToLabel ) );
+			roots.add( buildLabelingTreeNodeFor( node, nodeToLabel, segmentationSource ) );
 
 		// add new forest to list of forests ever added
 		final LabelingForest labelingForest = new LabelingForest( roots );
@@ -70,12 +85,15 @@ public class LabelingBuilder extends LabelingPlus {
 		return labelingForest;
 	}
 
-	private < T extends TreeNode< T > > LabelingTreeNode buildLabelingTreeNodeFor( final T node, final HashMap< T, LabelData > nodeToLabel ) {
+	private < T extends TreeNode< T > > LabelingTreeNode buildLabelingTreeNodeFor(
+			final T node,
+			final HashMap< T, LabelData > nodeToLabel,
+			final String segmentationSource ) {
 		final LabelData label = nodeToLabel.get( node );
-		createSegmentAndTreeNode( label );
+		createSegmentAndTreeNode( label, segmentationSource );
 		final LabelingTreeNode ltn = label.getLabelingTreeNode();
 		for ( final T c : node.getChildren() )
-			ltn.addChild( buildLabelingTreeNodeFor( c, nodeToLabel ) );
+			ltn.addChild( buildLabelingTreeNodeFor( c, nodeToLabel, segmentationSource ) );
 		return ltn;
 	}
 }

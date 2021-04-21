@@ -1,13 +1,25 @@
 package com.indago.data.segmentation;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.LongFunction;
+import java.util.function.ToLongFunction;
+import java.util.stream.Collectors;
 
+import com.indago.data.segmentation.groundtruth.FlatForest;
+import com.indago.data.segmentation.groundtruth.ImageRegions;
+import net.imglib2.roi.io.labeling.LabelingIOService;
+import net.imglib2.roi.io.labeling.data.ImgLabelingContainer;
+import net.imglib2.roi.io.labeling.data.LabelingContainer;
+import net.imglib2.roi.labeling.ImgLabeling;
+import org.apache.commons.lang.StringUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -35,6 +47,7 @@ import net.imglib2.roi.labeling.LabelingMapping;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
+import org.scijava.plugin.Parameter;
 
 /**
  * @author tpietzsch, jug
@@ -42,6 +55,8 @@ import net.imglib2.view.Views;
 public class XmlIoLabelingPlus {
 
 	public static final String SEGMENTLABELING_TAG = "SegmentLabeling";
+	public static final String SEGMENTLABELING_VERSION_ATTRIBUTE_NAME = "version";
+	public static final String SEGMENTLABELING_VERSION_ATTRIBUTE_CURRENT = "0.2";
 	public static final String BASEPATH_TAG = "BasePath";
 
 	public static final String INDEXIMG_TAG = "IndexImgFile";
@@ -49,6 +64,8 @@ public class XmlIoLabelingPlus {
 	public static final String LABELS_TAG = "Labels";
 
 	public static final String MAPPING_TAG = "Mapping";
+	public static final String MAPPING_BINARY_ATTRIBUTE_NAME = "binary";
+	public static final String LABELMAPFILE_TAG = "MappingFile";
 	public static final String MAPPING_ENTRY_TAG = "MappingEntry";
 	public static final String MAPPING_ENTRY_INDEX_TAG = "Index";
 	public static final String MAPPING_ENTRY_LABELS_TAG = "Labels";
@@ -61,6 +78,72 @@ public class XmlIoLabelingPlus {
 	public static final String LABELINGTREE_FOREST_ROOTS_TAG = "Roots";
 
 	public static boolean openIndexImageWithIJ = true;
+
+	@Parameter
+	public LabelingIOService labelingIOService;
+
+	public LabelingBuilder loadFromBson( final String bsonFilename ) {
+		ImgLabelingContainer imgLabelingContainer = labelingIOService.open(bsonFilename);
+		ImgLabeling imgLabeling = imgLabelingContainer.getImgLabeling();
+		List<Set<Integer>> labelSets = imgLabeling.getMapping().getLabelSets();
+		List<Set<LabelData>> recastLabelSets = new LinkedList<>();
+		List<LabelData> recastLabels = new LinkedList<>();
+		for(Set<Integer> labelSet : labelSets){
+			Set<LabelData> newLabelSet = new HashSet<>();
+			for(Integer label : labelSet){
+				LabelData labelData = new LabelData(label);
+				//TODO: set data, maybe?
+
+				newLabelSet.add(labelData);
+				recastLabels.add(labelData);
+			}
+			recastLabelSets.add(newLabelSet);
+		}
+		imgLabeling = ImgLabeling.fromImageAndLabelSets(imgLabeling.getIndexImg(), recastLabelSets);
+		LabelingPlus labelingPlus = new LabelingPlus(ImgView.wrap( imgLabeling.getIndexImg(), null ), imgLabeling);
+		Map<String, Set<Integer>> sourceToLabel = imgLabelingContainer.getSourceToLabel();
+		final LabelingBuilder labelingBuilder = new LabelingBuilder( labelingPlus );
+
+		for(Map.Entry<String, Set<Integer>> entry : sourceToLabel.entrySet()){
+			if(StringUtils.isNotEmpty(entry.getKey())){
+				HashSet<LabelingTreeNode> labelingTreeNodes = new HashSet<>();
+				labelingPlus.getSegments();
+
+				//labelingPlus.getLabeling().getMapping().getLabels().stream().filter(labelData -> labelData.);
+
+				//TODO: iterate over all segments
+				for(Integer segmentId : entry.getValue()){
+					Set<LabelData> labelDataSets = labelingPlus.getLabeling().getMapping().getLabelSets().get(segmentId);
+						for(LabelData labelData : labelDataSets){
+							labelingPlus.createSegmentAndTreeNode(labelData, entry.getKey());
+							labelingTreeNodes.add(labelData.getLabelingTreeNode());
+						}
+				}
+				final LabelingForest labelingForest = new LabelingForest(labelingTreeNodes);
+				labelingBuilder.labelingForests.add(labelingForest);
+			}
+
+		}
+		labelingPlus.getSegments();
+
+
+
+
+		return labelingBuilder;
+	}
+
+	public LabelingPlus loadFromBson( final String bsonFilename, final LongFunction<LabelData> idToLabel) {
+		ImgLabelingContainer imgLabelingContainer =  labelingIOService.open(bsonFilename, idToLabel);
+		ImgLabeling imgLabeling = imgLabelingContainer.getImgLabeling();
+		LabelingPlus labelingPlus = new LabelingPlus(ImgView.wrap( imgLabeling.getIndexImg(), null ), imgLabeling);
+		return labelingPlus;
+	}
+
+	public void saveAsBson(final LabelingPlus labelingPlus, final String bsonFilename, final ToLongFunction labelToId) {
+		ImgLabelingContainer container = new ImgLabelingContainer();
+		container.setImgLabeling(labelingPlus.labeling);
+		labelingIOService.save(container, bsonFilename, labelToId);
+	}
 
 	public LabelingPlus load( final String xmlFilename ) throws IOException {
 		return load( new File( xmlFilename ) );
@@ -84,7 +167,7 @@ public class XmlIoLabelingPlus {
 						indexImgFile.getAbsolutePath(),
 						new ArrayImgFactory<>( new IntType() ) ).get( 0 ).getImg();
 		final LabelingPlus labelingPlus = new LabelingPlus( indexImg );
-		fromXml( root, labelingPlus );
+		fromXml( root, labelingPlus, basePath );
 		return labelingPlus;
 	}
 
@@ -94,16 +177,23 @@ public class XmlIoLabelingPlus {
 		final String indexImgFilename =
 				xmlFilename.substring( 0, xmlFilename.length() - ".xml".length() ) + ".tif";
 		final File indexImgFile = new File( indexImgFilename );
-		final Document doc = new Document( toXml( labelingData, xmlFileDirectory, indexImgFile ) );
+		final String labelingMappingFilename =
+				xmlFilename.substring( 0, xmlFilename.length() - ".xml".length() ) + ".labelmap";
+		final File labelingMappingFile = new File( labelingMappingFilename );
+		final Document doc = new Document( toXml( labelingData, xmlFileDirectory, indexImgFile, labelingMappingFile ) );
 		final XMLOutputter xout = new XMLOutputter( Format.getPrettyFormat() );
 		xout.output( doc, new FileOutputStream( xmlFilename ) );
+
+		writeLabelingMapping( labelingData.getLabeling().getMapping(), labelingMappingFile );
 
 		final Img< IntType > img = ImgView.wrap( labelingData.getLabeling().getIndexImg(), null );
 		ImageSaver.saveAsTiff( indexImgFilename, img );
 	}
 
-	private void fromXml( final Element segmentLabeling, final LabelingPlus labelingPlus )
+	private void fromXml( final Element segmentLabeling, final LabelingPlus labelingPlus, final File basePath )
 			throws IOException {
+		final String version = segmentLabeling.getAttributeValue( SEGMENTLABELING_VERSION_ATTRIBUTE_NAME, "0" );
+
 		final TIntObjectMap< LabelData > idToLabelMap =
 				getIdToLabelMap( segmentLabeling, LABELS_TAG );
 
@@ -111,19 +201,30 @@ public class XmlIoLabelingPlus {
 		if ( mapping == null )
 			throw new IOException( "no <" + MAPPING_TAG + "> element found." );
 
-		final ArrayList< Set< LabelData > > labelSets = new ArrayList<>();
-		for ( final Element entry : mapping.getChildren( MAPPING_ENTRY_TAG ) ) {
-			final int i = XmlHelpers.getInt( entry, MAPPING_ENTRY_INDEX_TAG );
-			final int[] ids = XmlHelpers.getIntArray( entry, MAPPING_ENTRY_LABELS_TAG );
-			final HashSet< LabelData > labelSet = new HashSet<>( ids.length );
-			for ( final int id : ids )
-				labelSet.add( idToLabelMap.get( id ) );
-
-			while ( labelSets.size() <= i )
-				labelSets.add( null );
-			labelSets.set( i, labelSet );
+		final ArrayList< Set< LabelData > > labelSets;
+		final boolean binary = Boolean.parseBoolean( mapping.getAttributeValue( "binary" ) );
+		if ( binary && Objects.equals( version, SEGMENTLABELING_VERSION_ATTRIBUTE_CURRENT ) )
+		{
+			final File labelingMappingFile = XmlHelpers.loadPath( mapping, LABELMAPFILE_TAG, basePath );
+			labelSets = readLabelingMapping( labelingMappingFile, idToLabelMap );
 		}
-		new SegmentLabelingSerialisation( labelingPlus.getLabeling().getMapping() ).setLabelSets( labelSets );
+		else
+		{
+			labelSets = new ArrayList<>();
+			for ( final Element entry : mapping.getChildren( MAPPING_ENTRY_TAG ) )
+			{
+				final int i = XmlHelpers.getInt( entry, MAPPING_ENTRY_INDEX_TAG );
+				final int[] ids = XmlHelpers.getIntArray( entry, MAPPING_ENTRY_LABELS_TAG );
+				final HashSet< LabelData > labelSet = new HashSet<>( ids.length );
+				for ( final int id : ids )
+					labelSet.add( idToLabelMap.get( id ) );
+
+				while ( labelSets.size() <= i )
+					labelSets.add( null );
+				labelSets.set( i, labelSet );
+			}
+		}
+		labelingPlus.getLabeling().getMapping().setLabelSets( labelSets );
 
 		final Element labelingtree = segmentLabeling.getChild( LABELINGTREE_TAG );
 		if ( labelingtree == null )
@@ -133,12 +234,12 @@ public class XmlIoLabelingPlus {
 			final int id = XmlHelpers.getInt( node, LABELINGTREE_NODE_ID_TAG );
 			final LabelData label = idToLabelMap.get( id );
 			if ( label.getLabelingTreeNode() == null )
-				labelingPlus.createSegmentAndTreeNode( label );
+				labelingPlus.createSegmentAndTreeNode( label, "" );
 			final LabelingTreeNode ltn = label.getLabelingTreeNode();
 			for ( final int childId : XmlHelpers.getIntArray( node, LABELINGTREE_NODE_CHILDREN_TAG ) ) {
 				final LabelData childLabel = idToLabelMap.get( childId );
 				if ( childLabel.getLabelingTreeNode() == null )
-					labelingPlus.createSegmentAndTreeNode( childLabel );
+					labelingPlus.createSegmentAndTreeNode( childLabel, "" );
 				ltn.addChild( childLabel.getLabelingTreeNode() );
 			}
 		}
@@ -156,9 +257,18 @@ public class XmlIoLabelingPlus {
 			final LabelingPlus labelingPlus,
 			final File xmlFileDirectory,
 			final File indexImgFile ) {
+		return toXml( labelingPlus, xmlFileDirectory, indexImgFile, null );
+	}
+
+	private Element toXml(
+			final LabelingPlus labelingPlus,
+			final File xmlFileDirectory,
+			final File indexImgFile,
+			final File labelingMappingFile ) {
 		final LabelingMapping< LabelData > mapping = labelingPlus.getLabeling().getMapping();
 
 		final Element segmentLabeling = new Element( SEGMENTLABELING_TAG );
+		segmentLabeling.setAttribute( SEGMENTLABELING_VERSION_ATTRIBUTE_NAME, SEGMENTLABELING_VERSION_ATTRIBUTE_CURRENT );
 		segmentLabeling.addContent( XmlHelpers.pathElement(
 				BASEPATH_TAG,
 				xmlFileDirectory,
@@ -170,12 +280,25 @@ public class XmlIoLabelingPlus {
 		segmentLabeling.addContent( labelIdsElement( LABELS_TAG, mapping.getLabels() ) );
 
 		final Element indexMap = new Element( MAPPING_TAG );
-		int i = 0;
-		for ( final Set< LabelData > labelSet : new SegmentLabelingSerialisation( mapping ).getLabelSets() ) {
-			final Element entry = new Element( MAPPING_ENTRY_TAG );
-			entry.addContent( XmlHelpers.intElement( MAPPING_ENTRY_INDEX_TAG, i++ ) );
-			entry.addContent( labelIdsElement( MAPPING_ENTRY_LABELS_TAG, labelSet ) );
-			indexMap.addContent( entry );
+		if ( labelingMappingFile != null )
+		{
+			indexMap.setAttribute( MAPPING_BINARY_ATTRIBUTE_NAME, "true" );
+			indexMap.addContent( XmlHelpers.pathElement(
+					LABELMAPFILE_TAG,
+					labelingMappingFile,
+					xmlFileDirectory ) );
+		}
+		else
+		{
+			indexMap.setAttribute( MAPPING_BINARY_ATTRIBUTE_NAME, "false" );
+			int i = 0;
+			for ( final Set< LabelData > labelSet : mapping.getLabelSets() )
+			{
+				final Element entry = new Element( MAPPING_ENTRY_TAG );
+				entry.addContent( XmlHelpers.intElement( MAPPING_ENTRY_INDEX_TAG, i++ ) );
+				entry.addContent( labelIdsElement( MAPPING_ENTRY_LABELS_TAG, labelSet ) );
+				indexMap.addContent( entry );
+			}
 		}
 		segmentLabeling.addContent( indexMap );
 
@@ -185,6 +308,59 @@ public class XmlIoLabelingPlus {
 				labelingPlus.getLabelingForests() ) );
 
 		return segmentLabeling;
+	}
+
+	/**
+	 * File format:
+	 * int: number of labelsets
+	 * (labelset*)
+	 * labelset :=
+	 *   int: index of labelset
+	 *   int: number of labels n
+	 *   int[n]: label ids
+	 */
+	private void writeLabelingMapping( final LabelingMapping< LabelData > mapping, final File labelingMappingFile ) throws IOException
+	{
+		try ( final DataOutputStream dos = new DataOutputStream(
+				new BufferedOutputStream(
+						new FileOutputStream( labelingMappingFile ),
+						1024 * 1024 ) ) )
+		{
+			final List< Set< LabelData > > labelSets = mapping.getLabelSets();
+			dos.writeInt( labelSets.size() );
+			int i = 0;
+			for ( final Set< LabelData > labelSet : labelSets )
+			{
+				dos.writeInt( i++ );
+				dos.writeInt( labelSet.size() );
+				for ( final LabelData label : labelSet )
+					dos.writeInt( label.getId() );
+			}
+		}
+	}
+
+	private ArrayList< Set< LabelData > > readLabelingMapping( final File labelingMappingFile, final TIntObjectMap< LabelData > idToLabelMap ) throws IOException
+	{
+		try ( final DataInputStream dis = new DataInputStream(
+				new BufferedInputStream(
+						new FileInputStream( labelingMappingFile ),
+						1024 * 1024 ) ) )
+		{
+			final int numLabelSets = dis.readInt();
+			final ArrayList< Set< LabelData > > labelSets = new ArrayList<>( numLabelSets );
+			for ( int i = 0; i < numLabelSets; ++i )
+			{
+				final int index = dis.readInt();
+				final int numLabels = dis.readInt();
+				final HashSet< LabelData > labelSet = new HashSet<>( numLabels );
+				for ( int j = 0; j < numLabels; j++ )
+					labelSet.add( idToLabelMap.get( dis.readInt() ) );
+				while ( labelSets.size() <= index )
+					labelSets.add( null );
+				labelSets.set( i, labelSet );
+			}
+			return labelSets;
+		}
 	}
 
 	private File loadBasePath( final Element root, final File xmlFile ) {
@@ -269,24 +445,5 @@ public class XmlIoLabelingPlus {
 		while( out.hasNext() )
 			out.next().set( ( int ) in.next().get() );
 		return img;
-	}
-
-	private static class SegmentLabelingSerialisation
-			extends
-			LabelingMapping.SerialisationAccess< LabelData > {
-
-		public SegmentLabelingSerialisation( final LabelingMapping< LabelData > mapping ) {
-			super( mapping );
-		}
-
-		@Override
-		protected List< Set< LabelData > > getLabelSets() {
-			return super.getLabelSets();
-		}
-
-		@Override
-		protected void setLabelSets( final List< Set< LabelData > > labelSets ) {
-			super.setLabelSets( labelSets );
-		}
 	}
 }
